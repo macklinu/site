@@ -9,7 +9,11 @@ let FullHeightCenter = styled(Flex).attrs({
   height: 100vh;
 `
 
-let ColoredLink = styled(Link).attrs({ p: [0, 1] })`
+let ColoredLink = styled(({ children, bgColor, ...rest }) => (
+  <Link p={[0, 1]} {...rest}>
+    {children}
+  </Link>
+))`
   background-color: ${props => props.bgColor};
   color: white;
   text-decoration: none;
