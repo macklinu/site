@@ -75,7 +75,7 @@ function Layout({ children }) {
             >
               <html lang="en" />
             </Helmet>
-            <Border border={0} borderTop="4px solid" borderColor="teal">
+            <Border border={0} borderTop={4} borderColor="teal">
               <Container>{children}</Container>
             </Border>
           </Provider>
