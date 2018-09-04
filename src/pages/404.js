@@ -1,10 +1,22 @@
 import React from 'react'
 import Layout from '../components/layout'
+import { Heading, Text, Flex } from 'rebass'
+import styled from 'styled-components'
+
+let FullHeightCenter = styled(Flex).attrs({
+  alignItems: 'center',
+})`
+  height: 100vh;
+`
 
 const NotFoundPage = () => (
   <Layout>
-    <h1>NOT FOUND</h1>
-    <p>You just hit a route that doesn&#39;t exist... the sadness.</p>
+    <FullHeightCenter>
+      <Text>
+        <Heading>not found</Heading>
+        idk where that page is, sorry
+      </Text>
+    </FullHeightCenter>
   </Layout>
 )
 

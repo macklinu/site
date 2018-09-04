@@ -1,15 +1,39 @@
 import React from 'react'
-import { Link } from 'gatsby'
-
 import Layout from '../components/layout'
+import { Heading, Flex, Link } from 'rebass'
+import styled from 'styled-components'
 
-const IndexPage = () => (
-  <Layout>
-    <h1>Hi people</h1>
-    <p>Welcome to your new Gatsby site.</p>
-    <p>Now go build something great.</p>
-    <Link to="/page-2/">Go to page 2</Link>
-  </Layout>
-)
+let FullHeightCenter = styled(Flex).attrs({
+  alignItems: 'center',
+})`
+  height: 100vh;
+`
 
-export default IndexPage
+let ColoredLink = styled(Link).attrs({ p: [0, 1] })`
+  background-color: ${props => props.bgColor};
+  color: white;
+  text-decoration: none;
+`
+
+export default function IndexPage() {
+  return (
+    <Layout>
+      <FullHeightCenter>
+        <Heading fontSize={6}>
+          <span role="img" aria-label="Hand waving">
+            👋
+          </span>{' '}
+          i'm mackie. you may have seen me on{' '}
+          <ColoredLink bgColor="#1da1f2" href="https://twitter.com/macklinu">
+            twitter
+          </ColoredLink>{' '}
+          or{' '}
+          <ColoredLink bgColor="black" href="https://github.com/macklinu">
+            github
+          </ColoredLink>
+          .
+        </Heading>
+      </FullHeightCenter>
+    </Layout>
+  )
+}
