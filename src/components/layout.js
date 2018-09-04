@@ -25,7 +25,8 @@ function twitterMeta({ title, description, image }) {
     { name: 'twitter:title', content: title },
     { name: 'twitter:description', content: description },
     { name: 'twitter:site', content: '@macklinu' },
-    { name: 'twitter:image:src', content: image },
+    { name: 'twitter:image', content: image },
+    { name: 'twitter:image:alt', content: "mackie's face" },
   ]
 }
 
@@ -34,6 +35,7 @@ function openGraphMeta({ title, description, image }) {
     { name: 'og:title', content: title },
     { name: 'og:description', content: description },
     { name: 'og:image', content: image },
+    { name: 'og:image:alt', content: "mackie's face" },
     { name: 'og:site_name', content: title },
     { name: 'og:locale', content: 'en_US' },
     { name: 'og:type', content: 'website' },
