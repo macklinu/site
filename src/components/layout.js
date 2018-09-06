@@ -2,13 +2,17 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import Helmet from 'react-helmet'
 import { injectGlobal } from 'styled-components'
-import { Provider, Container, Border } from 'rebass'
+import { Provider, Container, theme } from 'rebass'
 import { StaticQuery, graphql } from 'gatsby'
 import mackie from '../images/mackie.jpg'
 
 injectGlobal`
 * { box-sizing: border-box; }
-body { margin: 0; }
+body {
+  margin: 0;
+  border-top: 4px solid;
+  border-top-color: ${theme.colors.teal};
+}
 `
 
 function googleMeta({ title, description, image }) {
@@ -77,9 +81,7 @@ function Layout({ children }) {
             >
               <html lang="en" />
             </Helmet>
-            <Border border={0} borderTop={4} borderColor="teal">
-              <Container>{children}</Container>
-            </Border>
+            <Container>{children}</Container>
           </Provider>
         )
       }}
