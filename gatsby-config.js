@@ -8,6 +8,21 @@ module.exports = {
     'gatsby-plugin-react-helmet',
     'gatsby-plugin-styled-components',
     {
+      resolve: 'gatsby-mdx',
+      options: {
+        defaultLayouts: {
+          posts: require.resolve('./src/layouts/post.js'),
+        },
+      },
+    },
+    {
+      resolve: 'gatsby-source-filesystem',
+      options: {
+        name: 'posts',
+        path: `${__dirname}/src/pages/posts/`,
+      },
+    },
+    {
       resolve: `gatsby-plugin-manifest`,
       options: {
         name: 'mackie.world',
