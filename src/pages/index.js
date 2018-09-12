@@ -21,11 +21,34 @@ let ColoredLink = styled(({ children, bgColor, ...rest }) => (
 `
 
 function getPostMetadata(data) {
-  return data.allMdx.edges.map(edge => ({
+  return data.allMarkdownRemark.edges.map(edge => ({
     title: edge.node.frontmatter.title,
     date: edge.node.frontmatter.date,
     slug: edge.node.fields.slug,
   }))
+}
+
+function IndexWithData(data) {
+  return (
+    <Layout>
+      <FullHeightCenter>
+        <Heading fontSize={6}>
+          <span role="img" aria-label="Hand waving">
+            👋
+          </span>{' '}
+          i'm mackie. you may have seen me on{' '}
+          <ColoredLink bgColor="#1da1f2" href="https://twitter.com/macklinu">
+            twitter
+          </ColoredLink>{' '}
+          or{' '}
+          <ColoredLink bgColor="black" href="https://github.com/macklinu">
+            github
+          </ColoredLink>
+          .
+        </Heading>
+      </FullHeightCenter>
+    </Layout>
+  )
 }
 
 export default function IndexPage() {
@@ -33,48 +56,25 @@ export default function IndexPage() {
     <StaticQuery
       query={graphql`
         {
-          allMdx(
+          allMarkdownRemark(
             filter: { frontmatter: { date: { ne: null } } }
             sort: { fields: [frontmatter___date], order: DESC }
           ) {
             edges {
               node {
+                fields {
+                  slug
+                }
                 frontmatter {
                   title
                   date
-                }
-                fields {
-                  slug
                 }
               }
             }
           }
         }
       `}
-    >
-      {data => (
-        <Layout>
-          <FullHeightCenter>
-            <Heading fontSize={6}>
-              <span role="img" aria-label="Hand waving">
-                👋
-              </span>{' '}
-              i'm mackie. you may have seen me on{' '}
-              <ColoredLink
-                bgColor="#1da1f2"
-                href="https://twitter.com/macklinu"
-              >
-                twitter
-              </ColoredLink>{' '}
-              or{' '}
-              <ColoredLink bgColor="black" href="https://github.com/macklinu">
-                github
-              </ColoredLink>
-              .
-            </Heading>
-          </FullHeightCenter>
-        </Layout>
-      )}
-    </StaticQuery>
+      render={IndexWithData}
+    />
   )
 }

@@ -39,7 +39,7 @@ from danger-plugin-jira-issue's `package.json`:
 }
 ```
 
-Happy publishing! 🚀
+Happy publishing! :rocket:
 
 [danger-plugin-jira-issue]: https://github.com/macklinu/danger-plugin-jira-issue
 [files]: https://docs.npmjs.com/files/package.json#files

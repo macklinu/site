@@ -8,11 +8,10 @@ module.exports = {
     'gatsby-plugin-react-helmet',
     'gatsby-plugin-styled-components',
     {
-      resolve: 'gatsby-mdx',
+      resolve: 'gatsby-transformer-remark',
       options: {
-        defaultLayouts: {
-          posts: require.resolve('./src/layouts/post.js'),
-        },
+        gfm: true,
+        plugins: ['gatsby-remark-emoji'],
       },
     },
     {
