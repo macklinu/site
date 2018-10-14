@@ -1,18 +1,14 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import Helmet from 'react-helmet'
-import { injectGlobal } from 'styled-components'
-import { Provider, Container, theme } from 'rebass'
+import { injectGlobal } from 'emotion'
 import { StaticQuery, graphql } from 'gatsby'
 import mackie from '../images/mackie.jpg'
 
+import 'tachyons'
+
 injectGlobal`
 * { box-sizing: border-box; }
-body {
-  margin: 0;
-  border-top: 4px solid;
-  border-top-color: ${theme.colors.teal};
-}
 `
 
 function googleMeta({ title, description, image }) {
@@ -63,7 +59,7 @@ function Layout({ children }) {
         let title = data.site.siteMetadata.title
         let description = data.site.siteMetadata.description
         return (
-          <Provider>
+          <>
             <Helmet
               title={title}
               meta={[
@@ -80,9 +76,10 @@ function Layout({ children }) {
               ]}
             >
               <html lang="en" />
+              <body className="sans-serif bg-white black-70" />
             </Helmet>
-            <Container>{children}</Container>
-          </Provider>
+            {children}
+          </>
         )
       }}
     />

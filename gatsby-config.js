@@ -6,7 +6,7 @@ module.exports = {
   },
   plugins: [
     'gatsby-plugin-react-helmet',
-    'gatsby-plugin-styled-components',
+    'gatsby-plugin-emotion',
     {
       resolve: 'gatsby-transformer-remark',
       options: {
@@ -22,7 +22,7 @@ module.exports = {
       },
     },
     {
-      resolve: `gatsby-plugin-manifest`,
+      resolve: 'gatsby-plugin-manifest',
       options: {
         name: 'mackie.world',
         short_name: 'mackie.world',

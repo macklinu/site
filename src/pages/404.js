@@ -1,23 +1,15 @@
 import React from 'react'
 import Layout from '../components/layout'
-import { Heading, Text, Flex } from 'rebass'
-import styled from 'styled-components'
+import Header from '../components/Header'
 
-let FullHeightCenter = styled(Flex).attrs({
-  alignItems: 'center',
-})`
-  height: 100vh;
-`
-
-const NotFoundPage = () => (
-  <Layout>
-    <FullHeightCenter>
-      <Text>
-        <Heading>not found</Heading>
-        idk where that page is, sorry
-      </Text>
-    </FullHeightCenter>
-  </Layout>
-)
-
-export default NotFoundPage
+export default function NotFoundPage() {
+  return (
+    <Layout>
+      <Header />
+      <section className="ph4">
+        <h1 class="f5 f4-ns fw6 black">😅</h1>
+        <h1 class="f5 f4-ns fw6 black">idk where that page is, sorry</h1>
+      </section>
+    </Layout>
+  )
+}

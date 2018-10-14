@@ -1,24 +1,8 @@
 import React from 'react'
-import { StaticQuery, graphql } from 'gatsby'
+import { StaticQuery, graphql, Link } from 'gatsby'
 import Layout from '../components/layout'
-import { Heading, Flex, Link } from 'rebass'
-import styled from 'styled-components'
-
-let FullHeightCenter = styled(Flex).attrs({
-  alignItems: 'center',
-})`
-  height: 100vh;
-`
-
-let ColoredLink = styled(({ children, bgColor, ...rest }) => (
-  <Link p={[0, 1]} {...rest}>
-    {children}
-  </Link>
-))`
-  background-color: ${props => props.bgColor};
-  color: white;
-  text-decoration: none;
-`
+import Header from '../components/Header'
+import Footer from '../components/Footer'
 
 function getPostMetadata(data) {
   return data.allMarkdownRemark.edges.map(edge => ({
@@ -31,22 +15,19 @@ function getPostMetadata(data) {
 function IndexWithData(data) {
   return (
     <Layout>
-      <FullHeightCenter>
-        <Heading fontSize={6}>
-          <span role="img" aria-label="Hand waving">
-            👋
-          </span>{' '}
-          i'm mackie. you may have seen me on{' '}
-          <ColoredLink bgColor="#1da1f2" href="https://twitter.com/macklinu">
-            twitter
-          </ColoredLink>{' '}
-          or{' '}
-          <ColoredLink bgColor="black" href="https://github.com/macklinu">
-            github
-          </ColoredLink>
-          .
-        </Heading>
-      </FullHeightCenter>
+      <Header />
+      <section className="ph4">
+        <h1 class="f5 f4-ns fw6 black">writings</h1>
+        {getPostMetadata(data).map(({ title, date, slug }) => (
+          <article className="bb b--black-10 mw7">
+            <Link to={slug} className="db pv2 no-underline black">
+              <h2 className="f6 f5-ns fw6 lh-title black-70">{title}</h2>
+              <h3 className="f6 fw4 mt0 black-60">{date}</h3>
+            </Link>
+          </article>
+        ))}
+      </section>
+      <Footer />
     </Layout>
   )
 }
