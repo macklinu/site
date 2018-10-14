@@ -5,9 +5,6 @@
   "version": "0.0.0",
   "author": "Macklin Underdown <macklinu@gmail.com>",
   "dependencies": {
-    "@mdx-js/mdx": "^0.15.2",
-    "@mdx-js/tag": "^0.15.0",
-    "@rebass/markdown": "^1.0.0",
     "emotion": "^9.2.12",
     "emotion-server": "^9.2.12",
     "gatsby": "^2.0.0",
