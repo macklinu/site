@@ -19,7 +19,6 @@
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
     "react-emotion": "^9.2.12",
-    "react-feather": "^1.1.4",
     "react-helmet": "^5.2.0",
     "rehype-react": "^3.0.3",
     "slash": "^2.0.0",

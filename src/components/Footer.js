@@ -1,7 +1,4 @@
 import * as React from 'react'
-import { css, cx } from 'emotion'
-import Twitter from 'react-feather/dist/icons/twitter'
-import GitHub from 'react-feather/dist/icons/github'
 
 function IconLink({ href, children }) {
   return (
@@ -14,12 +11,8 @@ function IconLink({ href, children }) {
 export default function Footer() {
   return (
     <footer className="pa4">
-      <IconLink href="https://twitter.com/macklinu">
-        <Twitter />
-      </IconLink>
-      <IconLink href="https://github.com/macklinu">
-        <GitHub />
-      </IconLink>
+      <IconLink href="https://twitter.com/macklinu">🐦 twitter</IconLink>
+      <IconLink href="https://github.com/macklinu">💻 github</IconLink>
     </footer>
   )
 }
