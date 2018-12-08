@@ -1,12 +1,12 @@
 import * as React from 'react'
 import { graphql } from 'gatsby'
 import rehypeReact from 'rehype-react'
-import { css, cx } from 'emotion'
+import styled from 'styled-components'
 import Layout from '../components/layout'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
 
-let renderAst = new rehypeReact({
+const renderAst = new rehypeReact({
   createElement: (component, props = {}, children = []) => {
     if (component === 'div') {
       return <React.Fragment {...props}>{children}</React.Fragment>
@@ -21,19 +21,13 @@ let renderAst = new rehypeReact({
       <blockquote {...props} className='ml0 mt0 pl3 bl bw2 b--blue' />
     ),
     p: props => <p {...props} className='measure-wide lh-copy' />,
-    pre: props => (
-      <pre
-        {...props}
-        className={cx(
-          'pa3 mt4 mb4 bg-light-gray',
-          css({
-            overflowX: 'auto',
-          })
-        )}
-      />
-    ),
+    pre: props => <Pre {...props} />,
   },
 }).Compiler
+
+const Pre = styled.pre.attrs({ className: 'pa3 mt4 mb4 bg-light-gray' })`
+  overflow-x: auto;
+`
 
 function formatDate(date) {
   return new Date(date).toLocaleDateString('en-US', {

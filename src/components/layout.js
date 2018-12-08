@@ -1,13 +1,13 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import Helmet from 'react-helmet'
-import { injectGlobal } from 'emotion'
+import { createGlobalStyle } from 'styled-components'
 import { StaticQuery, graphql } from 'gatsby'
 import mackie from '../images/mackie.jpg'
 
 import 'tachyons'
 
-injectGlobal`
+const Reset = createGlobalStyle`
 * { box-sizing: border-box; }
 `
 
@@ -76,6 +76,7 @@ function Layout({ children }) {
               ]}
             >
               <html lang='en' />
+              <Reset />
               <body className='sans-serif bg-white black-70' />
             </Helmet>
             {children}
