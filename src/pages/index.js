@@ -6,6 +6,7 @@ import Footer from '../components/Footer'
 
 function getPostMetadata(data) {
   return data.allMarkdownRemark.edges.map(edge => ({
+    id: edge.node.id,
     title: edge.node.frontmatter.title,
     date: edge.node.frontmatter.date,
     slug: edge.node.fields.slug,
@@ -34,6 +35,7 @@ export default function IndexPage() {
           ) {
             edges {
               node {
+                id
                 fields {
                   slug
                 }
@@ -54,7 +56,7 @@ export default function IndexPage() {
             <section className='ph4'>
               <h1 className='f5 f4-ns fw6 black'>writings</h1>
               {posts.map(post => (
-                <ArticleLink {...post} />
+                <ArticleLink key={post.id} {...post} />
               ))}
             </section>
             <Footer />
