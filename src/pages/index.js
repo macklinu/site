@@ -52,7 +52,7 @@ export default function IndexPage() {
           <Layout>
             <Header />
             <section className='ph4'>
-              <h1 class='f5 f4-ns fw6 black'>writings</h1>
+              <h1 className='f5 f4-ns fw6 black'>writings</h1>
               {posts.map(post => (
                 <ArticleLink {...post} />
               ))}
