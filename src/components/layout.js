@@ -75,8 +75,8 @@ function Layout({ children }) {
                 ...twitterMeta({ title, description, image: mackie }),
               ]}
             >
-              <html lang="en" />
-              <body className="sans-serif bg-white black-70" />
+              <html lang='en' />
+              <body className='sans-serif bg-white black-70' />
             </Helmet>
             {children}
           </>

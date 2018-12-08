@@ -16,11 +16,11 @@ let renderAst = new rehypeReact({
   },
   components: {
     // TODO support headings
-    a: props => <a {...props} className="link underline blue" />,
+    a: props => <a {...props} className='link underline blue' />,
     blockquote: props => (
-      <blockquote {...props} className="ml0 mt0 pl3 bl bw2 b--blue" />
+      <blockquote {...props} className='ml0 mt0 pl3 bl bw2 b--blue' />
     ),
-    p: props => <p {...props} className="measure-wide lh-copy" />,
+    p: props => <p {...props} className='measure-wide lh-copy' />,
     pre: props => (
       <pre
         {...props}
@@ -49,9 +49,9 @@ export default function Post(props) {
   return (
     <Layout>
       <Header />
-      <article className="ph4 mw7">
-        <h1 className="f5 f4-ns fw6 black">{post.frontmatter.title}</h1>
-        <time className="f6 fw4 mt0 black-60">
+      <article className='ph4 mw7'>
+        <h1 className='f5 f4-ns fw6 black'>{post.frontmatter.title}</h1>
+        <time className='f6 fw4 mt0 black-60'>
           {formatDate(post.frontmatter.date)}
         </time>
         {renderAst(post.htmlAst)}
