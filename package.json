@@ -8,7 +8,6 @@
     "babel-plugin-styled-components": "^1.9.2",
     "gatsby": "^2.0.67",
     "gatsby-plugin-manifest": "2.0.12",
-    "gatsby-plugin-offline": "^2.0.19",
     "gatsby-plugin-react-helmet": "3.0.4",
     "gatsby-plugin-styled-components": "^3.0.4",
     "gatsby-remark-emoji": "^0.0.2",
