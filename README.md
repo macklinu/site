@@ -13,7 +13,7 @@ yarn
 And develop from your CLI:
 
 ```sh
-yarn develop
+yarn dev
 ```
 
 To build for production, run:
