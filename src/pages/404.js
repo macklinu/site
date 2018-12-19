@@ -1,17 +1,22 @@
 import React from 'react'
 import Layout from '../components/layout'
-import Header from '../components/Header'
-import Footer from '../components/Footer'
+import Nav from '../components/Nav'
 
 export default function NotFoundPage() {
   return (
     <Layout>
-      <Header />
-      <section className='ph4'>
-        <h1 className='f5 f4-ns fw6 black'>😅</h1>
-        <h1 className='f5 f4-ns fw6 black'>idk where that page is, sorry</h1>
-      </section>
-      <Footer />
+      <Nav />
+      <Section>
+        <SectionHeading>😅 idk where that page is, sorry</SectionHeading>
+      </Section>
     </Layout>
   )
+}
+
+function Section({ children }) {
+  return <section className='mw7-ns center ph3 pv2'>{children}</section>
+}
+
+function SectionHeading({ children }) {
+  return <h2 className='f2 black'>{children}</h2>
 }

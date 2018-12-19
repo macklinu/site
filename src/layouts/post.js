@@ -1,13 +1,13 @@
 import * as React from 'react'
 import { graphql } from 'gatsby'
 import rehypeReact from 'rehype-react'
-import styled from 'styled-components'
 import Layout from '../components/layout'
-import Header from '../components/Header'
-import Footer from '../components/Footer'
+import Nav from '../components/Nav'
+
+import 'typeface-roboto-mono'
 
 const renderAst = new rehypeReact({
-  createElement: (component, props = {}, children = []) => {
+  createElement(component, props = {}, children = []) {
     if (component === 'div') {
       return <React.Fragment {...props}>{children}</React.Fragment>
     }
@@ -16,25 +16,43 @@ const renderAst = new rehypeReact({
   },
   components: {
     // TODO support headings
-    a: props => <a {...props} className='link underline blue' />,
-    blockquote: props => (
-      <blockquote {...props} className='ml0 mt0 pl3 bl bw2 b--blue' />
-    ),
-    p: props => <p {...props} className='measure-wide lh-copy' />,
-    pre: props => <Pre {...props} />,
+    a: A,
+    blockquote: Blockquote,
+    p: P,
+    pre: Pre,
+    code: Code,
   },
 }).Compiler
 
-const Pre = styled.pre.attrs({ className: 'pa3 mt4 mb4 bg-light-gray' })`
-  overflow-x: auto;
-`
+function A(props) {
+  return <a {...props} className='link underline blue' />
+}
 
-function formatDate(date) {
-  return new Date(date).toLocaleDateString('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-  })
+function Blockquote(props) {
+  return <blockquote {...props} className='ml0 mt0 pl3 bl bw2 b--light-green' />
+}
+
+function P(props) {
+  return <p {...props} className='lh-copy' />
+}
+
+function Pre(props) {
+  return (
+    <pre
+      className='pa3 mt4 mb4 bg-light-gray'
+      css={{ overflowX: 'auto' }}
+      {...props}
+    />
+  )
+}
+
+function Code(props) {
+  return (
+    <code
+      css={{ fontFamily: '"Roboto Mono", Consolas, monaco, monospace' }}
+      {...props}
+    />
+  )
 }
 
 export default function Post(props) {
@@ -42,15 +60,12 @@ export default function Post(props) {
 
   return (
     <Layout>
-      <Header />
-      <article className='ph4 mw7'>
-        <h1 className='f5 f4-ns fw6 black'>{post.frontmatter.title}</h1>
-        <time className='f6 fw4 mt0 black-60'>
-          {formatDate(post.frontmatter.date)}
-        </time>
+      <Nav />
+      <article className='mw7-ns center ph3 pv2'>
+        <h2 className='f2 black'>{post.frontmatter.title}</h2>
+        <time className='f6 fw4 mt0 black-70'>{post.frontmatter.date}</time>
         {renderAst(post.htmlAst)}
       </article>
-      <Footer />
     </Layout>
   )
 }
@@ -64,7 +79,7 @@ export const pageQuery = graphql`
       }
       frontmatter {
         title
-        date
+        date(formatString: "MMM D, Y")
       }
     }
   }

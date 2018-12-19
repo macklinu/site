@@ -1,6 +1,6 @@
 ---
 title: A Promise.all Analogy
-date: 08-15-2017
+date: 2017-08-15
 ---
 
 I've been splitting time this year in-between MI and MA, and as a result, I've

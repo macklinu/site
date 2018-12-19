@@ -1,6 +1,6 @@
 ---
 title: 'npm pack: A Dry-Run for npm Package Publishing'
-date: 05-20-2017
+date: 2017-05-20
 ---
 
 Have you ever wondered, "Where do my files go when I publish a package to npm?"
