@@ -134,22 +134,27 @@ function Writings({ posts }) {
     <Section>
       <SectionHeading>Writings</SectionHeading>
       <div className='flex flex-column'>
-        {posts.map(({ slug, title, id, tags }) => {
-          return (
-            <Link
-              key={id}
-              to={slug}
-              className='link br2 black bg-animate hover-bg-light-green pa3 bb b--black-10 br2 f4 flex flex-row justify-between'
-            >
-              <span className='ml2'>{title}</span>
-              {Array.from(tags).map(tag => (
-                <Label className='bg-blue white dib-ns dn'>{tag}</Label>
-              ))}
-            </Link>
-          )
-        })}
+        {posts.map(post => (
+          <Post key={post.id} {...post} />
+        ))}
       </div>
     </Section>
+  )
+}
+
+function Post({ slug, title, id, tags }) {
+  return (
+    <Link
+      to={slug}
+      className='link br2 black bg-animate hover-bg-light-green pa3 bb b--black-10 br2 f4 flex flex-row justify-between'
+    >
+      <span className='ml2'>{title}</span>
+      {Array.from(tags).map(tag => (
+        <Label key={`${id}:${tag}`} className='bg-blue white dib-ns dn'>
+          {tag}
+        </Label>
+      ))}
+    </Link>
   )
 }
 
