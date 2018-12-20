@@ -5,6 +5,8 @@ tags:
   - npm
 ---
 
+<banner variant='info'>Heads up! [`npm pack`][npm-pack] now has a `--dry-run` option, which will print the output of `npm pack` to your terminal and not generate a tarball. This wasn't available when this article was originally published. :raised_hands:</banner>
+
 Have you ever wondered, "Where do my files go when I publish a package to npm?"
 I have. I recently learned about [`npm pack`][npm-pack]. According to the
 [`npm publish`][npm-publish] documentation:

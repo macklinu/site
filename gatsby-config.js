@@ -11,7 +11,13 @@ module.exports = {
       resolve: 'gatsby-transformer-remark',
       options: {
         gfm: true,
-        plugins: ['gatsby-remark-emoji'],
+        plugins: [
+          { resolve: 'gatsby-remark-emoji' },
+          {
+            resolve: 'gatsby-remark-component',
+            options: { components: ['banner'] },
+          },
+        ],
       },
     },
     {

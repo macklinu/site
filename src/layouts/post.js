@@ -3,6 +3,7 @@ import { graphql } from 'gatsby'
 import rehypeReact from 'rehype-react'
 import Layout from '../components/layout'
 import Nav from '../components/Nav'
+import { FaExclamationTriangle, FaInfoCircle } from 'react-icons/fa'
 
 import 'typeface-roboto-mono'
 
@@ -21,8 +22,28 @@ const renderAst = new rehypeReact({
     p: P,
     pre: Pre,
     code: Code,
+    banner: Banner,
   },
 }).Compiler
+
+function Banner({ children, variant }) {
+  let icons = {
+    info: () => <FaInfoCircle />,
+    warning: () => <FaExclamationTriangle />,
+  }
+  let variants = {
+    info: 'bg-lightest-blue dark-blue',
+    warning: 'bg-light-yellow black-70',
+  }
+  return (
+    <div
+      className={[variants[variant], 'pv4 ph3 br2'].filter(Boolean).join(' ')}
+    >
+      {(icons[variant] || (() => null))()}
+      <span className='ml2'>{children}</span>
+    </div>
+  )
+}
 
 function A(props) {
   return <a {...props} className='link underline blue' />
