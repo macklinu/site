@@ -4,14 +4,21 @@ import Layout from '../components/layout'
 import Nav from '../components/Nav'
 import Link from '../components/Link'
 import Quote from '../components/Quote'
-import { FaHatWizard, FaTruckMonster, FaCode } from 'react-icons/fa'
+import { FaHatWizard, FaTruckMonster } from 'react-icons/fa'
+
+let getPostId = edge => edge.node.id
+let getPostTitle = edge => edge.node.frontmatter.title
+let getPostDate = edge => edge.node.frontmatter.date
+let getPostSlug = edge => edge.node.fields.slug
+let getPostTags = edge => new Set(edge.node.frontmatter.tags)
 
 function getPostMetadata(data) {
   return data.allMarkdownRemark.edges.map(edge => ({
-    id: edge.node.id,
-    title: edge.node.frontmatter.title,
-    date: edge.node.frontmatter.date,
-    slug: edge.node.fields.slug,
+    id: getPostId(edge),
+    title: getPostTitle(edge),
+    date: getPostDate(edge),
+    slug: getPostSlug(edge),
+    tags: getPostTags(edge),
   }))
 }
 
@@ -33,6 +40,7 @@ export default function IndexPage() {
                 frontmatter {
                   title
                   date(formatString: "MMM D, Y")
+                  tags
                 }
               }
             }
@@ -126,19 +134,29 @@ function Writings({ posts }) {
     <Section>
       <SectionHeading>Writings</SectionHeading>
       <div className='flex flex-column'>
-        {posts.map(({ slug, title, date, id }) => {
+        {posts.map(({ slug, title, id, tags }) => {
           return (
             <Link
               key={id}
               to={slug}
-              className='link br2 black bg-animate hover-bg-light-green pa3 bb b--black-10 br2 f4'
+              className='link br2 black bg-animate hover-bg-light-green pa3 bb b--black-10 br2 f4 flex flex-row justify-between'
             >
-              <FaCode className='hot-pink' />
               <span className='ml2'>{title}</span>
+              {Array.from(tags).map(tag => (
+                <Label className='bg-blue white dib-ns dn'>{tag}</Label>
+              ))}
             </Link>
           )
         })}
       </div>
     </Section>
+  )
+}
+
+function Label({ className, children }) {
+  return (
+    <span className={['pv1 ph2 br2 f5', className].filter(Boolean).join(' ')}>
+      {children}
+    </span>
   )
 }

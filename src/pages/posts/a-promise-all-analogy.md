@@ -1,6 +1,8 @@
 ---
 title: A Promise.all Analogy
 date: 2017-08-15
+tags:
+  - javascript
 ---
 
 I've been splitting time this year in-between MI and MA, and as a result, I've

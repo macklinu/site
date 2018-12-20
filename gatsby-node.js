@@ -20,6 +20,7 @@ exports.createPages = ({ graphql, actions: { createPage } }) => {
                 frontmatter {
                   title
                   date(formatString: "MMM D, Y")
+                  tags
                 }
               }
             }
@@ -53,15 +54,14 @@ exports.onCreateNode = ({ node, actions: { createNodeField }, getNode }) => {
     const { name } = path.parse(node.absolutePath)
     const slug = `/posts/${name}`
     createNodeField({ node, name: 'slug', value: slug })
-  } else if (
-    node.internal.type === 'MarkdownRemark' &&
-    typeof node.slug === 'undefined'
-  ) {
-    const fileNode = getNode(node.parent)
-    createNodeField({
-      node,
-      name: 'slug',
-      value: fileNode.fields.slug,
-    })
+  } else if (node.internal.type === 'MarkdownRemark') {
+    if (typeof node.slug === 'undefined') {
+      const fileNode = getNode(node.parent)
+      createNodeField({
+        node,
+        name: 'slug',
+        value: fileNode.fields.slug,
+      })
+    }
   }
 }
