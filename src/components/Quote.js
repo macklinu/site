@@ -7,14 +7,9 @@ const macro = Macro({
   Icon,
 })
 
-export default macro(({ Text, Author, Icon }, { className = '' }) => {
+export default macro(({ Text, Author, Icon }) => {
   return (
-    <blockquote
-      className={[
-        'ma1 br3 ph3 ph4-ns ba b--black-10 w-50-ns w-100 flex flex-column justify-between',
-        className,
-      ].join(' ')}
-    >
+    <blockquote className='ml0 mt0 pl3 bl bw2 b--light-green'>
       {Text}
       <cite className='flex items-center pb4'>
         {Icon}
@@ -25,7 +20,7 @@ export default macro(({ Text, Author, Icon }, { className = '' }) => {
 })
 
 function Text({ children }) {
-  return <p className='f3 lh-copy'>{children}</p>
+  return <p className='f3 lh-copy georgia'>{children}</p>
 }
 
 function Author({ children }) {

@@ -88,8 +88,8 @@ function Testimonials() {
   return (
     <Section>
       <SectionHeading>Testimonials</SectionHeading>
-      <div className='flex flex-row-ns flex-column justify-between pa1'>
-        <Quote className='bg-light-green black'>
+      <div className='flex flex-column justify-between pa1'>
+        <Quote>
           <Quote.Text>
             Mackie is very sweet and helpful, and his head is bald and smooth
             like a pumpkin.
@@ -107,7 +107,7 @@ function Testimonials() {
             <FaHatWizard className='hot-pink' />
           </Quote.Icon>
         </Quote>
-        <Quote className='bg-light-green black'>
+        <Quote>
           <Quote.Text>
             Nobody lives, loves or laughs harder than Mackie.
           </Quote.Text>
