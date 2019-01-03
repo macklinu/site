@@ -45,6 +45,15 @@ export default function IndexPage() {
               }
             }
           }
+          allProjectsYaml {
+            edges {
+              node {
+                id
+                name
+                url
+              }
+            }
+          }
         }
       `}
       render={data => {
@@ -54,6 +63,12 @@ export default function IndexPage() {
             <Nav />
             <Intro />
             <Testimonials />
+            <Projects
+              projects={data.allProjectsYaml.edges.map(edge => ({
+                url: edge.node.url,
+                name: edge.node.name,
+              }))}
+            />
             <Writings posts={posts} />
           </Layout>
         )
@@ -139,6 +154,30 @@ function Writings({ posts }) {
         ))}
       </div>
     </Section>
+  )
+}
+
+function Projects({ projects }) {
+  return (
+    <Section>
+      <SectionHeading>Projects</SectionHeading>
+      <div className='flex flex-column'>
+        {projects.map(project => (
+          <Project key={project.id} {...project} />
+        ))}
+      </div>
+    </Section>
+  )
+}
+
+function Project({ url, name }) {
+  return (
+    <Link
+      to={url}
+      className='link br2 black bg-animate hover-bg-light-green pa3 bb b--black-10 br2 f4'
+    >
+      <span className='ml2'>{name}</span>
+    </Link>
   )
 }
 

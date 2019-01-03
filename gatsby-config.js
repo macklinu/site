@@ -27,6 +27,13 @@ module.exports = {
         path: `${__dirname}/src/pages/posts/`,
       },
     },
+    'gatsby-transformer-yaml',
+    {
+      resolve: 'gatsby-source-filesystem',
+      options: {
+        path: `${__dirname}/src/data/`,
+      },
+    },
     {
       resolve: 'gatsby-plugin-manifest',
       options: {
