@@ -9,9 +9,9 @@ const macro = Macro({
 
 export default macro(({ Text, Author, Icon }) => {
   return (
-    <blockquote className='ml0 mt0 pl3 bl bw2 b--light-green'>
+    <blockquote className='ml0 mt0 pl3 bl bw2 b--light-blue'>
       {Text}
-      <cite className='flex items-center pb4'>
+      <cite className='flex items-center pb2'>
         {Icon}
         {Author}
       </cite>

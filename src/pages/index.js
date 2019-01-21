@@ -4,23 +4,7 @@ import Layout from '../components/layout'
 import Nav from '../components/Nav'
 import Link from '../components/Link'
 import Quote from '../components/Quote'
-import { FaHatWizard, FaTruckMonster } from 'react-icons/fa'
-
-let getPostId = edge => edge.node.id
-let getPostTitle = edge => edge.node.frontmatter.title
-let getPostDate = edge => edge.node.frontmatter.date
-let getPostSlug = edge => edge.node.fields.slug
-let getPostTags = edge => new Set(edge.node.frontmatter.tags)
-
-function getPostMetadata(data) {
-  return data.allMarkdownRemark.edges.map(edge => ({
-    id: getPostId(edge),
-    title: getPostTitle(edge),
-    date: getPostDate(edge),
-    slug: getPostSlug(edge),
-    tags: getPostTags(edge),
-  }))
-}
+import { FaHatWizard, FaTruckMonster, FaExternalLinkAlt } from 'react-icons/fa'
 
 export default function IndexPage() {
   return (
@@ -57,19 +41,27 @@ export default function IndexPage() {
         }
       `}
       render={data => {
-        let posts = getPostMetadata(data)
         return (
           <Layout>
             <Nav />
             <Intro />
-            <Testimonials />
             <Projects
               projects={data.allProjectsYaml.edges.map(edge => ({
+                id: edge.node.id,
                 url: edge.node.url,
                 name: edge.node.name,
               }))}
             />
-            <Writings posts={posts} />
+            <Writings
+              posts={data.allMarkdownRemark.edges.map(edge => ({
+                id: edge.node.id,
+                title: edge.node.frontmatter.title,
+                date: edge.node.frontmatter.date,
+                slug: edge.node.fields.slug,
+                tags: new Set(edge.node.frontmatter.tags),
+              }))}
+            />
+            <Testimonials />
           </Layout>
         )
       }}
@@ -82,14 +74,14 @@ function Section({ children }) {
 }
 
 function SectionHeading({ children }) {
-  return <h2 className='f2 black'>{children}</h2>
+  return <h2 className='f2'>{children}</h2>
 }
 
 function Intro() {
   return (
     <Section>
       <SectionHeading>Hi, my name is Mackie.</SectionHeading>
-      <p className='f4 lh-copy near-black'>
+      <p className='f4 lh-copy'>
         I am a <b>software engineer</b>, <b>musician</b>, and <b>artist</b>. I
         love contributing to open-source and working on JavaScript projects. I
         also like to play guitar, collect guitar pedals, bake cookies, and play
@@ -174,9 +166,10 @@ function Project({ url, name }) {
   return (
     <Link
       to={url}
-      className='link br2 black bg-animate hover-bg-light-green pa3 bb b--black-10 br2 f4'
+      className='link br2 dark-gray bg-animate hover-bg-lightest-blue pa3 bb b--black-10 br2 f4 flex flex-row justify-between'
     >
       <span className='ml2'>{name}</span>
+      <FaExternalLinkAlt className='pv1 ph2 br2' />
     </Link>
   )
 }
@@ -185,7 +178,7 @@ function Post({ slug, title, id, tags }) {
   return (
     <Link
       to={slug}
-      className='link br2 black bg-animate hover-bg-light-green pa3 bb b--black-10 br2 f4 flex flex-row justify-between'
+      className='link br2 dark-gray bg-animate hover-bg-lightest-blue pa3 bb b--black-10 br2 f4 flex flex-row justify-between'
     >
       <span className='ml2'>{title}</span>
       {Array.from(tags).map(tag => (
@@ -199,7 +192,7 @@ function Post({ slug, title, id, tags }) {
 
 function Label({ className, children }) {
   return (
-    <span className={['pv1 ph2 br2 f5', className].filter(Boolean).join(' ')}>
+    <span className={['pv1 ph2 br2 f6', className].filter(Boolean).join(' ')}>
       {children}
     </span>
   )

@@ -60,7 +60,7 @@ function P(props) {
 function Pre(props) {
   return (
     <pre
-      className='pa3 mt4 mb4 bg-light-gray'
+      className='pa3 mt4 mb4 bg-dark-gray washed-blue'
       css={{ overflowX: 'auto' }}
       {...props}
     />

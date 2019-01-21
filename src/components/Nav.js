@@ -1,5 +1,5 @@
 import React from 'react'
-import { FaGithub, FaTwitter, FaGhost } from 'react-icons/fa'
+import { FaGithub, FaTwitter, FaLinkedin, FaGhost } from 'react-icons/fa'
 import Link from './Link'
 
 export default function Nav() {
@@ -18,6 +18,9 @@ export default function Nav() {
           </Link>
           <Link href='https://twitter.com/macklinu'>
             <FaTwitter className='f4 v-mid' />
+          </Link>
+          <Link href='https://www.linkedin.com/in/macklinu'>
+            <FaLinkedin className='f4 v-mid' />
           </Link>
         </div>
       </div>
