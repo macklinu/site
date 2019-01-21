@@ -50,7 +50,7 @@ function A(props) {
 }
 
 function Blockquote(props) {
-  return <blockquote {...props} className='ml0 mt0 pl3 bl bw2 b--light-green' />
+  return <blockquote {...props} className='ml0 mt0 pl3 bl bw2 b--light-blue' />
 }
 
 function P(props) {

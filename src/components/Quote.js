@@ -20,7 +20,7 @@ export default macro(({ Text, Author, Icon }) => {
 })
 
 function Text({ children }) {
-  return <p className='f3 lh-copy georgia'>{children}</p>
+  return <p className='f3 lh-copy'>{children}</p>
 }
 
 function Author({ children }) {
