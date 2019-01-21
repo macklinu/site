@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { graphql } from 'gatsby'
 import rehypeReact from 'rehype-react'
+import { A, Blockquote, Code, P, Pre } from 'components'
 import Layout from '../components/layout'
 import Nav from '../components/Nav'
 import { FaExclamationTriangle, FaInfoCircle } from 'react-icons/fa'
@@ -42,37 +43,6 @@ function Banner({ children, variant }) {
       {(icons[variant] || (() => null))()}
       <span className='ml2'>{children}</span>
     </div>
-  )
-}
-
-function A(props) {
-  return <a {...props} className='link underline blue' />
-}
-
-function Blockquote(props) {
-  return <blockquote {...props} className='ml0 mt0 pl3 bl bw2 b--light-blue' />
-}
-
-function P(props) {
-  return <p {...props} className='lh-copy' />
-}
-
-function Pre(props) {
-  return (
-    <pre
-      className='pa3 mt4 mb4 bg-dark-gray washed-blue'
-      css={{ overflowX: 'auto' }}
-      {...props}
-    />
-  )
-}
-
-function Code(props) {
-  return (
-    <code
-      css={{ fontFamily: '"Roboto Mono", Consolas, monaco, monospace' }}
-      {...props}
-    />
   )
 }
 

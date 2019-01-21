@@ -4,20 +4,18 @@
 
 For an overview of the project structure please refer to the [Gatsby documentation - Building with Components](https://www.gatsbyjs.org/docs/building-with-components/).
 
-## Setup
+## Commands
 
-```sh
-yarn
-```
+- `yarn` - install dependencies
+- `yarn dev` - start a Gatsby dev server
+- `yarn build` - build a production-ready static site ready to be deployed (usually run by Netlify but sometimes can be helpful to verify something locally)
 
-And develop from your CLI:
+## Workspaces
 
-```sh
-yarn dev
-```
+This project uses [yarn workspaces](https://yarnpkg.com/lang/en/docs/cli/workspace/) to split out packages for more organized development (and also because I want to use yarn workspaces). Check out the `packages/` directory for more details:
 
-To build for production, run:
+- `components` - the design system for this website
 
-```sh
-yarn build
-```
+---
+
+:heart:

@@ -4,8 +4,12 @@
   "private": true,
   "version": "0.0.0",
   "author": "Macklin Underdown <macklinu@gmail.com>",
+  "workspaces": [
+    "packages/*"
+  ],
   "dependencies": {
     "babel-plugin-styled-components": "^1.10.0",
+    "components": "^0.0.1",
     "gatsby": "^2.0.91",
     "gatsby-plugin-manifest": "2.0.13",
     "gatsby-plugin-react-helmet": "3.0.5",
