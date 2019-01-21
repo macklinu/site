@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import Helmet from 'react-helmet'
 import { createGlobalStyle } from 'styled-components'
 import { StaticQuery, graphql } from 'gatsby'
-import mackie from '../images/mackie.jpg'
+import mackie from '../images/mackie.png'
 
 import 'tachyons'
 
