@@ -38,6 +38,16 @@ export default function IndexPage() {
               }
             }
           }
+          allOssYaml {
+            edges {
+              node {
+                id
+                name
+                url
+                type
+              }
+            }
+          }
         }
       `}
       render={data => {
@@ -45,13 +55,7 @@ export default function IndexPage() {
           <Layout>
             <Nav />
             <Intro />
-            <Projects
-              projects={data.allProjectsYaml.edges.map(edge => ({
-                id: edge.node.id,
-                url: edge.node.url,
-                name: edge.node.name,
-              }))}
-            />
+            <OSS projects={data.allOssYaml.edges.map(edge => edge.node)} />
             <Writings
               posts={data.allMarkdownRemark.edges.map(edge => ({
                 id: edge.node.id,
@@ -61,6 +65,14 @@ export default function IndexPage() {
                 tags: new Set(edge.node.frontmatter.tags),
               }))}
             />
+            <Projects
+              projects={data.allProjectsYaml.edges.map(edge => ({
+                id: edge.node.id,
+                url: edge.node.url,
+                name: edge.node.name,
+              }))}
+            />
+
             <Testimonials />
           </Layout>
         )
@@ -74,13 +86,61 @@ function Section({ children }) {
 }
 
 function SectionHeading({ children }) {
-  return <h2 className='f2'>{children}</h2>
+  return <h3 className='f3'>{children}</h3>
+}
+
+function OSS({ projects }) {
+  function classesForType(type) {
+    switch (type) {
+      case 'maintainer':
+        return 'bg-green white'
+      case 'contributor':
+        return 'bg-light-gray black'
+      default:
+        return 'bg-blue white'
+    }
+  }
+  return (
+    <Section>
+      <SectionHeading>Open Source</SectionHeading>
+      <div className='flex flex-column'>
+        {projects
+          .sort((a, b) => {
+            if (a.type === 'maintainer' && b.type === 'maintainer') {
+              return a.name.toLowerCase().localeCompare(b.name.toLowerCase())
+            }
+            return a.type === 'maintainer' ? -1 : 1
+          })
+          .map(({ id, name, type, url }) => (
+            <Link
+              key={id}
+              to={url}
+              className='link br2 dark-gray bg-animate hover-bg-lightest-blue pa3 bb b--black-10 br2 f4 flex flex-row justify-between'
+            >
+              <span className='ml2'>{name}</span>
+              <div
+                css={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  '& > *:not(:last-child)': { marginRight: 4 },
+                }}
+              >
+                <Label className={`${classesForType(type)} dib-ns dn`}>
+                  {type}
+                </Label>
+                <FaExternalLinkAlt className='pv1 ph2 br2' />
+              </div>
+            </Link>
+          ))}
+      </div>
+    </Section>
+  )
 }
 
 function Intro() {
   return (
     <Section>
-      <SectionHeading>Hi, my name is Mackie.</SectionHeading>
+      <h2 className='f2'>Hi, my name is Mackie.</h2>
       <p className='f4 lh-copy'>
         I am a <b>software engineer</b>, <b>musician</b>, and <b>artist</b>. I
         love contributing to open-source and working on JavaScript projects. I
@@ -181,11 +241,19 @@ function Post({ slug, title, id, tags }) {
       className='link br2 dark-gray bg-animate hover-bg-lightest-blue pa3 bb b--black-10 br2 f4 flex flex-row justify-between'
     >
       <span className='ml2'>{title}</span>
-      {Array.from(tags).map(tag => (
-        <Label key={`${id}:${tag}`} className='bg-blue white dib-ns dn'>
-          {tag}
-        </Label>
-      ))}
+      <div
+        css={{
+          display: 'flex',
+          alignItems: 'center',
+          '& > *:not(:last-child)': { marginRight: 4 },
+        }}
+      >
+        {Array.from(tags).map(tag => (
+          <Label key={`${id}:${tag}`} className='bg-blue white dib-ns dn'>
+            {tag}
+          </Label>
+        ))}
+      </div>
     </Link>
   )
 }

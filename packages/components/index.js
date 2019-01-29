@@ -10,7 +10,7 @@ const P = props => <p {...props} className='lh-copy' />
 
 const Pre = props => (
   <pre
-    className='pa3 mt4 mb4 bg-dark-gray washed-blue'
+    className='pa3 mt4 mb4 bg-dark-gray near-white'
     css={{ overflowX: 'auto' }}
     {...props}
   />
