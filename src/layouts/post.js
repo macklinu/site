@@ -1,12 +1,10 @@
 import * as React from 'react'
 import { graphql } from 'gatsby'
 import rehypeReact from 'rehype-react'
-import { A, Blockquote, Code, P, Pre } from 'components'
+import { A, Blockquote, Code, P, Pre, Heading } from 'components'
 import Layout from '../components/layout'
 import Nav from '../components/Nav'
 import { FaExclamationTriangle, FaInfoCircle } from 'react-icons/fa'
-
-import 'typeface-roboto-mono'
 
 const renderAst = new rehypeReact({
   createElement(component, props = {}, children = []) {
@@ -47,13 +45,15 @@ function Banner({ children, variant }) {
 }
 
 export default function Post(props) {
-  let post = props.data.markdownRemark
+  const post = props.data.markdownRemark
 
   return (
     <Layout>
       <Nav />
       <article className='mw7-ns center ph3 pv2'>
-        <h2 className='f2 black'>{post.frontmatter.title}</h2>
+        <Heading py={4} fontSize={[5, 6]}>
+          {post.frontmatter.title}
+        </Heading>
         <time className='f6 fw4 mt0 black-70'>{post.frontmatter.date}</time>
         {renderAst(post.htmlAst)}
       </article>

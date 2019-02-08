@@ -3,8 +3,13 @@ import { StaticQuery, graphql } from 'gatsby'
 import Layout from '../components/layout'
 import Nav from '../components/Nav'
 import Link from '../components/Link'
-import Quote from '../components/Quote'
-import { FaHatWizard, FaTruckMonster, FaExternalLinkAlt } from 'react-icons/fa'
+import { FaExternalLinkAlt } from 'react-icons/fa'
+import { Image, Flex, Box, Heading, Text, Card } from 'components'
+import face from '../images/mackie-face.png'
+
+const Avatar = props => (
+  <Image width={48} height={48} borderRadius={9999} {...props} />
+)
 
 export default function IndexPage() {
   return (
@@ -54,35 +59,29 @@ export default function IndexPage() {
         return (
           <Layout>
             <Nav />
-            <Intro />
-            <OSS projects={data.allOssYaml.edges.map(edge => edge.node)} />
+            {/* <Intro /> */}
+            <OSS projects={data.allOssYaml.edges.map(({ node }) => node)} />
             <Writings
-              posts={data.allMarkdownRemark.edges.map(edge => ({
-                id: edge.node.id,
-                title: edge.node.frontmatter.title,
-                date: edge.node.frontmatter.date,
-                slug: edge.node.fields.slug,
-                tags: new Set(edge.node.frontmatter.tags),
+              posts={data.allMarkdownRemark.edges.map(({ node }) => ({
+                id: node.id,
+                title: node.frontmatter.title,
+                date: node.frontmatter.date,
+                slug: node.fields.slug,
+                tags: new Set(node.frontmatter.tags),
               }))}
             />
             <Projects
-              projects={data.allProjectsYaml.edges.map(edge => ({
-                id: edge.node.id,
-                url: edge.node.url,
-                name: edge.node.name,
+              projects={data.allProjectsYaml.edges.map(({ node }) => ({
+                id: node.id,
+                url: node.url,
+                name: node.name,
               }))}
             />
-
-            <Testimonials />
           </Layout>
         )
       }}
     />
   )
-}
-
-function Section({ children }) {
-  return <section className='mw7-ns center ph3 pv2'>{children}</section>
 }
 
 function SectionHeading({ children }) {
@@ -101,7 +100,7 @@ function OSS({ projects }) {
     }
   }
   return (
-    <Section>
+    <>
       <SectionHeading>Open Source</SectionHeading>
       <div className='flex flex-column'>
         {projects
@@ -133,92 +132,61 @@ function OSS({ projects }) {
             </Link>
           ))}
       </div>
-    </Section>
+    </>
   )
 }
 
 function Intro() {
   return (
-    <Section>
-      <h2 className='f2'>Hi, my name is Mackie.</h2>
-      <p className='f4 lh-copy'>
-        I am a <b>software engineer</b>, <b>musician</b>, and <b>artist</b>. I
-        love contributing to open-source and working on JavaScript projects. I
-        also like to play guitar, collect guitar pedals, bake cookies, and play
-        video games.
-      </p>
-    </Section>
-  )
-}
-
-function Testimonials() {
-  return (
-    <Section>
-      <SectionHeading>Testimonials</SectionHeading>
-      <div className='flex flex-column justify-between pa1'>
-        <Quote>
-          <Quote.Text>
-            Mackie is very sweet and helpful, and his head is bald and smooth
-            like a pumpkin.
-          </Quote.Text>
-          <Quote.Author>
-            My wife{' '}
-            <Link
-              to='https://twitter.com/discountgourds'
-              className='link blue underline'
+    <Card
+      width={[1, 1, 1 / 2]}
+      bg='#f6f6ff'
+      borderRadius={8}
+      boxShadow='0 2px 16px rgba(0, 0, 0, 0.25)'
+    >
+      <Flex alignItems='center' py={3}>
+        <Avatar src={face} />
+        <Box ml={1}>
+          <Text>
+            The personal website of{' '}
+            <Text
+              css={{ textDecoration: 'none' }}
+              as={Link}
+              to='https://twitter.com/macklinu'
             >
-              @discountgourds
-            </Link>
-          </Quote.Author>
-          <Quote.Icon>
-            <FaHatWizard className='hot-pink' />
-          </Quote.Icon>
-        </Quote>
-        <Quote>
-          <Quote.Text>
-            Nobody lives, loves or laughs harder than Mackie.
-          </Quote.Text>
-          <Quote.Author>
-            My friend{' '}
-            <Link
-              to='https://twitter.com/davidklaw'
-              className='link blue underline'
-            >
-              @davidklaw
-            </Link>
-          </Quote.Author>
-          <Quote.Icon>
-            <FaTruckMonster className='hot-pink' />
-          </Quote.Icon>
-        </Quote>
-      </div>
-    </Section>
+              mackie
+            </Text>
+          </Text>
+          <Text>I make music, software, art, and cookies.</Text>
+        </Box>
+      </Flex>
+    </Card>
   )
 }
 
 function Writings({ posts }) {
   return (
-    <Section>
+    <>
       <SectionHeading>Writings</SectionHeading>
       <div className='flex flex-column'>
         {posts.map(post => (
           <Post key={post.id} {...post} />
         ))}
       </div>
-    </Section>
+    </>
   )
 }
 
 function Projects({ projects }) {
   return (
-    <Section>
+    <>
       <SectionHeading>Projects</SectionHeading>
       <div className='flex flex-column'>
         {projects.map(project => (
           <Project key={project.id} {...project} />
         ))}
       </div>
-    </Section>
+    </>
   )
 }
 

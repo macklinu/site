@@ -1,15 +1,10 @@
 import React from 'react'
 import { Link as GatsbyLink } from 'gatsby'
 
-export default function Link({
-  children,
-  to,
-  className = 'link br2 dark-gray bg-animate hover-bg-lightest-blue pa3',
-  ...props
-}) {
+const Link = ({ children, to, className, ...props }) => {
   // This assumes that any internal link (intended for Gatsby)
   // will start with exactly one slash, and that anything else is external.
-  let internal = /^\/(?!\/)/.test(to)
+  const internal = /^\/(?!\/)/.test(to)
 
   return internal ? (
     <GatsbyLink to={to} className={className} {...props}>
@@ -21,3 +16,5 @@ export default function Link({
     </a>
   )
 }
+
+export default Link

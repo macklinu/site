@@ -4,12 +4,22 @@ import Helmet from 'react-helmet'
 import { createGlobalStyle } from 'styled-components'
 import { StaticQuery, graphql } from 'gatsby'
 import mackie from '../images/mackie.jpg'
+import { Provider, Box, theme } from 'components'
+import { aztec } from 'hero-patterns'
 
 import 'tachyons'
+import 'typeface-faster-one'
+import 'typeface-roboto'
+import 'typeface-roboto-mono'
+import 'typeface-roboto-slab'
 
 const Reset = createGlobalStyle`
 * { box-sizing: border-box; }
 `
+
+const Container = props => (
+  <Box mx='auto' py={2} css={{ maxWidth: '48rem' }} {...props} />
+)
 
 function googleMeta({ title, description, image }) {
   return [
@@ -56,10 +66,10 @@ function Layout({ children }) {
         }
       `}
       render={data => {
-        let title = data.site.siteMetadata.title
-        let description = data.site.siteMetadata.description
+        const title = data.site.siteMetadata.title
+        const description = data.site.siteMetadata.description
         return (
-          <>
+          <Provider>
             <Helmet
               title={title}
               meta={[
@@ -77,10 +87,20 @@ function Layout({ children }) {
             >
               <html lang='en' />
               <Reset />
-              <body className='sans-serif bg-near-white dark-gray' />
             </Helmet>
-            {children}
-          </>
+            <Box
+              bg='orange.1'
+              css={{
+                backgroundImage: aztec(theme.colors.red[2], 0.4),
+                backgroundRepeat: 'repeat',
+                backgroundSize: '20%',
+                minHeight: '100vh',
+                height: '100%',
+              }}
+            >
+              <Container>{children}</Container>
+            </Box>
+          </Provider>
         )
       }}
     />
