@@ -9,7 +9,7 @@ export default function Link({
 }) {
   // This assumes that any internal link (intended for Gatsby)
   // will start with exactly one slash, and that anything else is external.
-  let internal = /^\/(?!\/)/.test(to)
+  const internal = /^\/(?!\/)/.test(to)
 
   return internal ? (
     <GatsbyLink to={to} className={className} {...props}>

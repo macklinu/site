@@ -8,6 +8,25 @@ import { FaExclamationTriangle, FaInfoCircle } from 'react-icons/fa'
 
 import 'typeface-roboto-mono'
 
+const Banner = ({ children, variant }) => {
+  const icons = {
+    info: () => <FaInfoCircle />,
+    warning: () => <FaExclamationTriangle />,
+  }
+  const variants = {
+    info: 'bg-lightest-blue dark-blue',
+    warning: 'bg-light-yellow black-70',
+  }
+  return (
+    <div
+      className={[variants[variant], 'pv4 ph3 br2'].filter(Boolean).join(' ')}
+    >
+      {(icons[variant] || (() => null))()}
+      <span className='ml2'>{children}</span>
+    </div>
+  )
+}
+
 const renderAst = new rehypeReact({
   createElement(component, props = {}, children = []) {
     if (component === 'div') {
@@ -27,27 +46,8 @@ const renderAst = new rehypeReact({
   },
 }).Compiler
 
-function Banner({ children, variant }) {
-  let icons = {
-    info: () => <FaInfoCircle />,
-    warning: () => <FaExclamationTriangle />,
-  }
-  let variants = {
-    info: 'bg-lightest-blue dark-blue',
-    warning: 'bg-light-yellow black-70',
-  }
-  return (
-    <div
-      className={[variants[variant], 'pv4 ph3 br2'].filter(Boolean).join(' ')}
-    >
-      {(icons[variant] || (() => null))()}
-      <span className='ml2'>{children}</span>
-    </div>
-  )
-}
-
-export default function Post(props) {
-  let post = props.data.markdownRemark
+const Post = props => {
+  const post = props.data.markdownRemark
 
   return (
     <Layout>
@@ -60,6 +60,8 @@ export default function Post(props) {
     </Layout>
   )
 }
+
+export default Post
 
 export const pageQuery = graphql`
   query($slug: String!) {
