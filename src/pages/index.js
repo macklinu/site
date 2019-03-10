@@ -3,8 +3,7 @@ import { StaticQuery, graphql } from 'gatsby'
 import Layout from '../components/layout'
 import Nav from '../components/Nav'
 import Link from '../components/Link'
-import Quote from '../components/Quote'
-import { FaHatWizard, FaTruckMonster, FaExternalLinkAlt } from 'react-icons/fa'
+import { FaExternalLinkAlt } from 'react-icons/fa'
 
 export default function IndexPage() {
   return (
@@ -72,8 +71,6 @@ export default function IndexPage() {
                 name: edge.node.name,
               }))}
             />
-
-            <Testimonials />
           </Layout>
         )
       }}
@@ -115,7 +112,7 @@ function OSS({ projects }) {
             <Link
               key={id}
               to={url}
-              className='link br2 dark-gray bg-animate hover-bg-lightest-blue pa3 bb b--black-10 br2 f4 flex flex-row justify-between'
+              className='link br2 black bg-animate hover-bg-moon-gray pa3 bb b--black-10 br2 f4 flex flex-row justify-between'
             >
               <span className='ml2'>{name}</span>
               <div
@@ -151,51 +148,6 @@ function Intro() {
   )
 }
 
-function Testimonials() {
-  return (
-    <Section>
-      <SectionHeading>Testimonials</SectionHeading>
-      <div className='flex flex-column justify-between pa1'>
-        <Quote>
-          <Quote.Text>
-            Mackie is very sweet and helpful, and his head is bald and smooth
-            like a pumpkin.
-          </Quote.Text>
-          <Quote.Author>
-            My wife{' '}
-            <Link
-              to='https://twitter.com/discountgourds'
-              className='link blue underline'
-            >
-              @discountgourds
-            </Link>
-          </Quote.Author>
-          <Quote.Icon>
-            <FaHatWizard className='hot-pink' />
-          </Quote.Icon>
-        </Quote>
-        <Quote>
-          <Quote.Text>
-            Nobody lives, loves or laughs harder than Mackie.
-          </Quote.Text>
-          <Quote.Author>
-            My friend{' '}
-            <Link
-              to='https://twitter.com/davidklaw'
-              className='link blue underline'
-            >
-              @davidklaw
-            </Link>
-          </Quote.Author>
-          <Quote.Icon>
-            <FaTruckMonster className='hot-pink' />
-          </Quote.Icon>
-        </Quote>
-      </div>
-    </Section>
-  )
-}
-
 function Writings({ posts }) {
   return (
     <Section>
@@ -226,7 +178,7 @@ function Project({ url, name }) {
   return (
     <Link
       to={url}
-      className='link br2 dark-gray bg-animate hover-bg-lightest-blue pa3 bb b--black-10 br2 f4 flex flex-row justify-between'
+      className='link br2 black bg-animate hover-bg-moon-gray pa3 bb b--black-10 br2 f4 flex flex-row justify-between'
     >
       <span className='ml2'>{name}</span>
       <FaExternalLinkAlt className='pv1 ph2 br2' />
@@ -238,7 +190,7 @@ function Post({ slug, title, id, tags }) {
   return (
     <Link
       to={slug}
-      className='link br2 dark-gray bg-animate hover-bg-lightest-blue pa3 bb b--black-10 br2 f4 flex flex-row justify-between'
+      className='link br2 black bg-animate hover-bg-moon-gray pa3 bb b--black-10 br2 f4 flex flex-row justify-between'
     >
       <span className='ml2'>{title}</span>
       <div

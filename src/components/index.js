@@ -3,7 +3,7 @@ import React from 'react'
 const A = props => <a {...props} className='link underline blue' />
 
 const Blockquote = props => (
-  <blockquote {...props} className='ml0 mt0 pl3 bl bw2 b--light-blue' />
+  <blockquote {...props} className='ml0 mt0 pl3 bl bw2 b--moon-gray' />
 )
 
 const P = props => <p {...props} className='lh-copy' />

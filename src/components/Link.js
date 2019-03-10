@@ -4,7 +4,7 @@ import { Link as GatsbyLink } from 'gatsby'
 export default function Link({
   children,
   to,
-  className = 'link br2 dark-gray bg-animate hover-bg-lightest-blue pa3',
+  className = 'link br2 black bg-animate hover-bg-moon-gray pa3',
   ...props
 }) {
   // This assumes that any internal link (intended for Gatsby)

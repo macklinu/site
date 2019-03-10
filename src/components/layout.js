@@ -77,7 +77,7 @@ function Layout({ children }) {
             >
               <html lang='en' />
               <Reset />
-              <body className='sans-serif bg-near-white dark-gray' />
+              <body className='sans-serif bg-white black' />
             </Helmet>
             {children}
           </>
