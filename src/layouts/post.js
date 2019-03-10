@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { graphql } from 'gatsby'
 import rehypeReact from 'rehype-react'
-import { A, Blockquote, Code, P, Pre } from 'components'
+import { A, Blockquote, Code, P, Pre } from '../components'
 import Layout from '../components/layout'
 import Nav from '../components/Nav'
 import { FaExclamationTriangle, FaInfoCircle } from 'react-icons/fa'
