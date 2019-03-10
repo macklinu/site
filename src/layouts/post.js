@@ -1,12 +1,13 @@
-import * as React from 'react'
-import { graphql } from 'gatsby'
-import rehypeReact from 'rehype-react'
-import { A, Blockquote, Code, P, Pre } from '../components'
-import Layout from '../components/layout'
-import Nav from '../components/Nav'
-import { FaExclamationTriangle, FaInfoCircle } from 'react-icons/fa'
-
 import 'typeface-roboto-mono'
+
+import { graphql } from 'gatsby'
+import * as React from 'react'
+import { FaExclamationTriangle, FaInfoCircle } from 'react-icons/fa'
+import rehypeReact from 'rehype-react'
+
+import { A, Blockquote, Code, P, Pre } from '../components'
+import Nav from '../components/Nav'
+import Layout from '../components/layout'
 
 const Banner = ({ children, variant }) => {
   const icons = {

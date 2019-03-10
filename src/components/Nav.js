@@ -1,5 +1,6 @@
 import React from 'react'
-import { FaGithub, FaTwitter, FaLinkedin, FaGhost } from 'react-icons/fa'
+import { FaGhost, FaGithub, FaLinkedin, FaTwitter } from 'react-icons/fa'
+
 import Link from './Link'
 
 const Nav = () => (

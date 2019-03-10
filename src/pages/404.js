@@ -1,6 +1,7 @@
 import React from 'react'
-import Layout from '../components/layout'
+
 import Nav from '../components/Nav'
+import Layout from '../components/layout'
 
 const Section = ({ children }) => (
   <section className='mw7-ns center ph3 pv2'>{children}</section>

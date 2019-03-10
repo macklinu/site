@@ -2,6 +2,10 @@ extends:
   - macklinu
   - macklinu/react
 
+plugins:
+  - import
+  - simple-import-sort
+
 rules:
   func-style:
     - error
@@ -11,3 +15,10 @@ rules:
   arrow-body-style:
     - error
     - as-needed
+  import/exports-last: error
+  import/default: error
+  import/group-exports: error
+  import/no-anonymous-default-export: error
+  import/no-duplicates: error
+  import/order: off
+  simple-import-sort/sort: error

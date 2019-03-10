@@ -1,11 +1,12 @@
-import React from 'react'
+import 'tachyons'
+
+import { StaticQuery, graphql } from 'gatsby'
 import PropTypes from 'prop-types'
+import React from 'react'
 import Helmet from 'react-helmet'
 import { createGlobalStyle } from 'styled-components'
-import { StaticQuery, graphql } from 'gatsby'
-import mackie from '../images/mackie.jpg'
 
-import 'tachyons'
+import mackie from '../images/mackie.jpg'
 
 const Reset = createGlobalStyle`
 * { box-sizing: border-box; }

@@ -39,6 +39,8 @@
   "devDependencies": {
     "eslint": "^5.15.1",
     "eslint-config-macklinu": "^1.4.0",
+    "eslint-plugin-import": "^2.16.0",
+    "eslint-plugin-simple-import-sort": "^3.0.0",
     "prettier": "^1.16.4"
   },
   "repository": {

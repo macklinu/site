@@ -1,9 +1,10 @@
-import React from 'react'
 import { StaticQuery, graphql } from 'gatsby'
-import Layout from '../components/layout'
-import Nav from '../components/Nav'
-import Link from '../components/Link'
+import React from 'react'
 import { FaExternalLinkAlt } from 'react-icons/fa'
+
+import Link from '../components/Link'
+import Nav from '../components/Nav'
+import Layout from '../components/layout'
 
 const IndexPage = () => (
   <StaticQuery
