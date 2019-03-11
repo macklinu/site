@@ -6,7 +6,7 @@ import React from 'react'
 import Helmet from 'react-helmet'
 import { createGlobalStyle } from 'styled-components'
 
-import mackie from '../images/mackie.jpg'
+import mackie from '../images/mackie-face.png'
 
 const Reset = createGlobalStyle`
 * { box-sizing: border-box; }
