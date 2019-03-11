@@ -1,4 +1,4 @@
-import { StaticQuery, graphql } from 'gatsby'
+import { graphql, useStaticQuery } from 'gatsby'
 import React from 'react'
 import { FaExternalLinkAlt } from 'react-icons/fa'
 
@@ -6,74 +6,73 @@ import Link from '../components/Link'
 import Nav from '../components/Nav'
 import Layout from '../components/layout'
 
-const IndexPage = () => (
-  <StaticQuery
-    query={graphql`
-      {
-        allMarkdownRemark(
-          filter: { frontmatter: { date: { ne: null } } }
-          sort: { fields: [frontmatter___date], order: DESC }
-        ) {
-          edges {
-            node {
-              id
-              fields {
-                slug
-              }
-              frontmatter {
-                title
-                date(formatString: "MMM D, Y")
-                tags
-              }
+const IndexPage = () => {
+  const data = useStaticQuery(graphql`
+    {
+      allMarkdownRemark(
+        filter: { frontmatter: { date: { ne: null } } }
+        sort: { fields: [frontmatter___date], order: DESC }
+      ) {
+        edges {
+          node {
+            id
+            fields {
+              slug
             }
-          }
-        }
-        allProjectsYaml {
-          edges {
-            node {
-              id
-              name
-              url
-            }
-          }
-        }
-        allOssYaml {
-          edges {
-            node {
-              id
-              name
-              url
-              type
+            frontmatter {
+              title
+              date(formatString: "MMM D, Y")
+              tags
             }
           }
         }
       }
-    `}
-    render={data => (
-      <Layout>
-        <Nav />
-        <Intro />
-        <OSS projects={data.allOssYaml.edges.map(edge => edge.node)} />
-        <Writings
-          posts={data.allMarkdownRemark.edges.map(edge => ({
-            id: edge.node.id,
-            title: edge.node.frontmatter.title,
-            date: edge.node.frontmatter.date,
-            slug: edge.node.fields.slug,
-            tags: new Set(edge.node.frontmatter.tags),
-          }))}
-        />
-        <Projects
-          projects={data.allProjectsYaml.edges.map(edge => ({
-            id: edge.node.id,
-            url: edge.node.url,
-            name: edge.node.name,
-          }))}
-        />
-      </Layout>
-    )}
-  />
-)
+      allProjectsYaml {
+        edges {
+          node {
+            id
+            name
+            url
+          }
+        }
+      }
+      allOssYaml {
+        edges {
+          node {
+            id
+            name
+            url
+            type
+          }
+        }
+      }
+    }
+  `)
+
+  return (
+    <Layout>
+      <Nav />
+      <Intro />
+      <OSS projects={data.allOssYaml.edges.map(edge => edge.node)} />
+      <Writings
+        posts={data.allMarkdownRemark.edges.map(edge => ({
+          id: edge.node.id,
+          title: edge.node.frontmatter.title,
+          date: edge.node.frontmatter.date,
+          slug: edge.node.fields.slug,
+          tags: new Set(edge.node.frontmatter.tags),
+        }))}
+      />
+      <Projects
+        projects={data.allProjectsYaml.edges.map(edge => ({
+          id: edge.node.id,
+          url: edge.node.url,
+          name: edge.node.name,
+        }))}
+      />
+    </Layout>
+  )
+}
 
 const Section = ({ children }) => (
   <section className='mw7-ns center ph3 pv2'>{children}</section>

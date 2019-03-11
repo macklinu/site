@@ -1,6 +1,6 @@
 import 'tachyons'
 
-import { StaticQuery, graphql } from 'gatsby'
+import { graphql, useStaticQuery } from 'gatsby'
 import PropTypes from 'prop-types'
 import React from 'react'
 import Helmet from 'react-helmet'
@@ -37,48 +37,45 @@ const openGraphMeta = ({ title, description, image }) => [
   { name: 'og:type', content: 'website' },
 ]
 
-const Layout = ({ children }) => (
-  <StaticQuery
-    query={graphql`
-      query SiteTitleQuery {
-        site {
-          siteMetadata {
-            title
-            description
-          }
+const Layout = ({ children }) => {
+  const data = useStaticQuery(graphql`
+    query SiteTitleQuery {
+      site {
+        siteMetadata {
+          title
+          description
         }
       }
-    `}
-    render={data => {
-      const title = data.site.siteMetadata.title
-      const description = data.site.siteMetadata.description
-      return (
-        <>
-          <Helmet
-            title={title}
-            meta={[
-              { charSet: 'utf-8' },
-              {
-                name: 'viewport',
-                content: 'width=device-width, initial-scale=1',
-              },
-              { name: 'description', content: description },
-              { name: 'image', content: mackie },
-              ...openGraphMeta({ title, description, image: mackie }),
-              ...googleMeta({ title, description, image: mackie }),
-              ...twitterMeta({ title, description, image: mackie }),
-            ]}
-          >
-            <html lang='en' />
-            <Reset />
-            <body className='sans-serif bg-white black' />
-          </Helmet>
-          {children}
-        </>
-      )
-    }}
-  />
-)
+    }
+  `)
+
+  const title = data.site.siteMetadata.title
+  const description = data.site.siteMetadata.description
+  return (
+    <>
+      <Helmet
+        title={title}
+        meta={[
+          { charSet: 'utf-8' },
+          {
+            name: 'viewport',
+            content: 'width=device-width, initial-scale=1',
+          },
+          { name: 'description', content: description },
+          { name: 'image', content: mackie },
+          ...openGraphMeta({ title, description, image: mackie }),
+          ...googleMeta({ title, description, image: mackie }),
+          ...twitterMeta({ title, description, image: mackie }),
+        ]}
+      >
+        <html lang='en' />
+        <Reset />
+        <body className='sans-serif bg-white black' />
+      </Helmet>
+      {children}
+    </>
+  )
+}
 
 Layout.propTypes = {
   children: PropTypes.node.isRequired,
