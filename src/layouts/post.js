@@ -5,9 +5,25 @@ import * as React from 'react'
 import { FaExclamationTriangle, FaInfoCircle } from 'react-icons/fa'
 import rehypeReact from 'rehype-react'
 
-import { A, Blockquote, Code, P, Pre } from '../components'
 import Nav from '../components/Nav'
 import Layout from '../components/layout'
+
+const A = props => <a {...props} className='link underline blue' />
+
+const Blockquote = props => (
+  <blockquote {...props} className='ml0 mt0 pl3 bl bw2 b--moon-gray' />
+)
+
+const P = props => <p {...props} className='lh-copy' />
+
+const Pre = props => <pre css={{ overflowX: 'auto' }} {...props} />
+
+const Code = props => (
+  <code
+    css={{ fontFamily: '"Roboto Mono", Consolas, monaco, monospace' }}
+    {...props}
+  />
+)
 
 const Banner = ({ children, variant }) => {
   const icons = {
@@ -28,6 +44,16 @@ const Banner = ({ children, variant }) => {
   )
 }
 
+const omit = (obj, properties) => {
+  const omittedProperties = new Set(properties)
+  return Object.keys(obj).reduce((newObj, key) => {
+    if (omittedProperties.has(key)) {
+      return newObj
+    }
+    return { ...newObj, [key]: obj[key] }
+  }, {})
+}
+
 const renderAst = new rehypeReact({
   createElement(component, props = {}, children = []) {
     if (component === 'div') {
@@ -44,6 +70,12 @@ const renderAst = new rehypeReact({
     pre: Pre,
     code: Code,
     banner: Banner,
+    img: props => (
+      <img
+        css={{ display: 'block', margin: '0 auto' }}
+        {...omit(props, ['children'])}
+      />
+    ),
   },
 }).Compiler
 
@@ -54,8 +86,10 @@ const Post = props => {
     <Layout>
       <Nav />
       <article className='mw7-ns center ph3 pv2'>
-        <h2 className='f2 black'>{post.frontmatter.title}</h2>
-        <time className='f6 fw4 mt0 black-70'>{post.frontmatter.date}</time>
+        <h2 className='f2'>{post.frontmatter.title}</h2>
+        <span className='f6 fw4 mt0 black-70'>
+          {post.frontmatter.date} • {post.timeToRead}-ish min read
+        </span>
         {renderAst(post.htmlAst)}
       </article>
     </Layout>
@@ -73,8 +107,9 @@ export const pageQuery = graphql`
       }
       frontmatter {
         title
-        date(formatString: "MMM D, Y")
+        date(formatString: "MMMM DD, Y")
       }
+      timeToRead
     }
   }
 `

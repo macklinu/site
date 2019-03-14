@@ -7,15 +7,21 @@ module.exports = {
   plugins: [
     'gatsby-plugin-react-helmet',
     'gatsby-plugin-styled-components',
+    'gatsby-plugin-sharp',
     {
       resolve: 'gatsby-transformer-remark',
       options: {
         gfm: true,
         plugins: [
+          { resolve: 'gatsby-remark-prismjs' },
           { resolve: 'gatsby-remark-emoji' },
           {
             resolve: 'gatsby-remark-component',
             options: { components: ['banner'] },
+          },
+          {
+            resolve: 'gatsby-remark-images',
+            options: {},
           },
         ],
       },

@@ -19,9 +19,10 @@ exports.createPages = ({ graphql, actions: { createPage } }) => {
                 }
                 frontmatter {
                   title
-                  date(formatString: "MMM D, Y")
+                  date(formatString: "MMMM D, Y")
                   tags
                 }
+                timeToRead
               }
             }
           }
