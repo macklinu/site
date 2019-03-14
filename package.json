@@ -37,7 +37,7 @@
   "scripts": {
     "dev": "gatsby develop",
     "build": "gatsby build",
-    "lint": "eslint 'src/**/*.js'",
+    "lint": "eslint '**/*.js'",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "devDependencies": {

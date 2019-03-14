@@ -1,7 +1,7 @@
 const path = require('path')
 const slash = require('slash')
 
-exports.createPages = ({ graphql, actions: { createPage } }) => {
+const createPages = ({ graphql, actions: { createPage } }) => {
   const blogPostTemplate = path.resolve('src/layouts/post.js')
 
   return new Promise((resolve, reject) => {
@@ -51,7 +51,7 @@ exports.createPages = ({ graphql, actions: { createPage } }) => {
   })
 }
 
-exports.onCreateNode = ({ node, actions: { createNodeField }, getNode }) => {
+const onCreateNode = ({ node, actions: { createNodeField }, getNode }) => {
   if (node.internal.type === 'File') {
     const { name } = path.parse(node.absolutePath)
     const slug = `/posts/${name}`
@@ -67,3 +67,5 @@ exports.onCreateNode = ({ node, actions: { createNodeField }, getNode }) => {
     }
   }
 }
+
+module.exports = { createPages, onCreateNode }
