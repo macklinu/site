@@ -37,7 +37,7 @@ const openGraphMeta = ({ title, description, image }) => [
   { name: 'og:type', content: 'website' },
 ]
 
-const Layout = ({ children }) => {
+const Layout = ({ children, meta = {} }) => {
   const data = useStaticQuery(graphql`
     query SiteTitleQuery {
       site {
@@ -49,8 +49,10 @@ const Layout = ({ children }) => {
     }
   `)
 
-  const title = data.site.siteMetadata.title
-  const description = data.site.siteMetadata.description
+  const title = meta.title
+    ? `${meta.title} | ${data.site.siteMetadata.title}`
+    : data.site.siteMetadata.title
+  const description = meta.description || data.site.siteMetadata.description
   return (
     <>
       <Helmet

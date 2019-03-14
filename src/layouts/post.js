@@ -89,7 +89,7 @@ const Post = props => {
   const post = props.data.markdownRemark
 
   return (
-    <Layout>
+    <Layout meta={{ title: post.frontmatter.title, description: post.excerpt }}>
       <Nav />
       <article className='mw7-ns center ph3 pv2'>
         <h2 className='f2'>{post.frontmatter.title}</h2>
@@ -116,6 +116,7 @@ export const pageQuery = graphql`
         date(formatString: "MMMM DD, Y")
       }
       timeToRead
+      excerpt
     }
   }
 `

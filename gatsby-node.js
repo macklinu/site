@@ -23,6 +23,7 @@ exports.createPages = ({ graphql, actions: { createPage } }) => {
                   tags
                 }
                 timeToRead
+                excerpt
               }
             }
           }
