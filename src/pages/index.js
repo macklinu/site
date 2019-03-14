@@ -131,8 +131,7 @@ const Intro = () => (
     <p className='f4 lh-copy'>
       I am a <b>software engineer</b>, <b>musician</b>, and <b>artist</b>. I
       love contributing to open-source and working on JavaScript projects. I
-      also like to play guitar, collect guitar pedals, bake cookies, and play
-      video games.
+      also love guitar 🎸, piano 🎹, cookies 🍪, and video games 🎮.
     </p>
   </CenteredSection>
 )
