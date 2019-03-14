@@ -1,7 +1,7 @@
 import 'typeface-roboto-mono'
 
 import { graphql } from 'gatsby'
-import * as React from 'react'
+import React from 'react'
 import { FaExclamationTriangle, FaInfoCircle } from 'react-icons/fa'
 import rehypeReact from 'rehype-react'
 
@@ -27,8 +27,8 @@ const Code = props => (
 
 const Banner = ({ children, variant }) => {
   const icons = {
-    info: () => <FaInfoCircle />,
-    warning: () => <FaExclamationTriangle />,
+    info: FaInfoCircle,
+    warning: FaExclamationTriangle,
   }
   const variants = {
     info: 'bg-lightest-blue dark-blue',
@@ -38,12 +38,18 @@ const Banner = ({ children, variant }) => {
     <div
       className={[variants[variant], 'pv4 ph3 br2'].filter(Boolean).join(' ')}
     >
-      {(icons[variant] || (() => null))()}
+      {React.createElement(icons[variant])}
       <span className='ml2'>{children}</span>
     </div>
   )
 }
 
+/**
+ * Duplicates an object, omitting specified property names.
+ *
+ * @param {*} obj The object to copy.
+ * @param {string[]} properties A list of properties to omit.
+ */
 const omit = (obj, properties) => {
   const omittedProperties = new Set(properties)
   return Object.keys(obj).reduce((newObj, key) => {
@@ -88,7 +94,7 @@ const Post = props => {
       <article className='mw7-ns center ph3 pv2'>
         <h2 className='f2'>{post.frontmatter.title}</h2>
         <span className='f6 fw4 mt0 black-70'>
-          {post.frontmatter.date} • {post.timeToRead}-ish min read
+          {post.frontmatter.date} • {post.timeToRead} min read
         </span>
         {renderAst(post.htmlAst)}
       </article>

@@ -2,8 +2,11 @@ import { graphql, useStaticQuery } from 'gatsby'
 import React from 'react'
 import { FaExternalLinkAlt } from 'react-icons/fa'
 
+import CenteredSection from '../components/CenteredSection'
 import Link from '../components/Link'
 import Nav from '../components/Nav'
+import PageHeading from '../components/PageHeading'
+import SectionHeading from '../components/SectionHeading'
 import Layout from '../components/layout'
 
 const IndexPage = () => {
@@ -74,12 +77,6 @@ const IndexPage = () => {
   )
 }
 
-const Section = ({ children }) => (
-  <section className='mw7-ns center ph3 pv2'>{children}</section>
-)
-
-const SectionHeading = ({ children }) => <h3 className='f3'>{children}</h3>
-
 const OSS = ({ projects }) => {
   const classesForType = type => {
     switch (type) {
@@ -92,7 +89,7 @@ const OSS = ({ projects }) => {
     }
   }
   return (
-    <Section>
+    <CenteredSection>
       <SectionHeading>Open Source</SectionHeading>
       <div className='flex flex-column'>
         {projects
@@ -124,42 +121,42 @@ const OSS = ({ projects }) => {
             </Link>
           ))}
       </div>
-    </Section>
+    </CenteredSection>
   )
 }
 
 const Intro = () => (
-  <Section>
-    <h2 className='f2'>Hi, my name is Mackie.</h2>
+  <CenteredSection>
+    <PageHeading>Hi, my name is Mackie.</PageHeading>
     <p className='f4 lh-copy'>
       I am a <b>software engineer</b>, <b>musician</b>, and <b>artist</b>. I
       love contributing to open-source and working on JavaScript projects. I
       also like to play guitar, collect guitar pedals, bake cookies, and play
       video games.
     </p>
-  </Section>
+  </CenteredSection>
 )
 
 const Writings = ({ posts }) => (
-  <Section>
+  <CenteredSection>
     <SectionHeading>Writings</SectionHeading>
     <div className='flex flex-column'>
       {posts.map(post => (
         <Post key={post.id} {...post} />
       ))}
     </div>
-  </Section>
+  </CenteredSection>
 )
 
 const Projects = ({ projects }) => (
-  <Section>
+  <CenteredSection>
     <SectionHeading>Projects</SectionHeading>
     <div className='flex flex-column'>
       {projects.map(project => (
         <Project key={project.id} {...project} />
       ))}
     </div>
-  </Section>
+  </CenteredSection>
 )
 
 const Project = ({ url, name }) => (

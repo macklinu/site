@@ -1,11 +1,8 @@
 import React from 'react'
 
+import CenteredSection from '../components/CenteredSection'
 import Nav from '../components/Nav'
 import Layout from '../components/layout'
-
-const Section = ({ children }) => (
-  <section className='mw7-ns center ph3 pv2'>{children}</section>
-)
 
 const SectionHeading = ({ children }) => (
   <h2 className='f2 black'>{children}</h2>
@@ -14,9 +11,9 @@ const SectionHeading = ({ children }) => (
 const NotFoundPage = () => (
   <Layout>
     <Nav />
-    <Section>
+    <CenteredSection>
       <SectionHeading>😅 idk where that page is, sorry</SectionHeading>
-    </Section>
+    </CenteredSection>
   </Layout>
 )
 
