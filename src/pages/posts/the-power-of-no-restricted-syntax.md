@@ -13,7 +13,7 @@ The main ESLint rule to take advantage of this feature is [`no-restricted-syntax
 
 ### Example: Restrict a node type
 
-For example, maybe you don't want to permit the usage of [default exports](https://developer.mozilla.org/en-US/docs/web/javascript/reference/statements/export#Using_the_default_export) in your codebase (like [the GitHub Desktop decided](https://github.com/desktop/desktop/blob/0a06a201f2b21e6908ac307c937527aa1fe98d11/.eslintrc.yml#L75-L79)). You can disallow it with the `no-restricted-syntax` rule, but we'll first need to understand which node type we are looking for.
+For example, maybe you don't want to permit the usage of [default exports](https://developer.mozilla.org/en-US/docs/web/javascript/reference/statements/export#Using_the_default_export) in your codebase (like [the GitHub Desktop team decided](https://github.com/desktop/desktop/blob/0a06a201f2b21e6908ac307c937527aa1fe98d11/.eslintrc.yml#L75-L79)). You can disallow it with the `no-restricted-syntax` rule, but we'll first need to understand which node type we are looking for.
 
 Luckily there is a tool called [AST Explorer][], which allows you to type in JavaScript code and view the resulting AST, as would be parsed by ESLint.
 
