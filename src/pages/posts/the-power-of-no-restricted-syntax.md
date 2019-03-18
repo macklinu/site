@@ -1,6 +1,6 @@
 ---
 title: The Power of ESLint's no-restricted-syntax
-date: 2019-03-11
+date: 2019-03-18
 tags:
   - eslint
 ---
