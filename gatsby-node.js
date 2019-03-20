@@ -1,70 +1,59 @@
 const path = require('path')
 const slash = require('slash')
 
-const createPages = ({ graphql, actions: { createPage } }) => {
+const createPages = async ({ graphql, actions: { createPage } }) => {
   const blogPostTemplate = path.resolve('src/layouts/post.js')
 
-  return new Promise((resolve, reject) => {
-    graphql(
-      `
-        {
-          allMarkdownRemark(
-            filter: { frontmatter: { date: { ne: null } } }
-            sort: { fields: [frontmatter___date], order: DESC }
-          ) {
-            edges {
-              node {
-                fields {
-                  slug
-                }
-                frontmatter {
-                  title
-                  date(formatString: "MMMM D, Y")
-                  tags
-                }
-                timeToRead
-                excerpt
+  const result = await graphql(
+    `
+      {
+        allMarkdownRemark(
+          filter: { frontmatter: { date: { ne: null } } }
+          sort: { fields: [frontmatter___date], order: DESC }
+        ) {
+          edges {
+            node {
+              fields {
+                slug
               }
+              frontmatter {
+                title
+                date(formatString: "MMMM D, Y")
+                tags
+              }
+              timeToRead
+              excerpt
             }
           }
         }
-      `
-    ).then(result => {
-      if (result.errors) {
-        reject(result.errors)
-        return
       }
+    `
+  )
 
-      // Create blog posts pages.
-      result.data.allMarkdownRemark.edges.forEach(edge => {
-        createPage({
-          path: edge.node.fields.slug, // required
-          component: slash(blogPostTemplate),
-          context: {
-            slug: edge.node.fields.slug,
-          },
-        })
-      })
+  if (result.errors) {
+    throw result.errors
+  }
 
-      resolve()
+  // Create blog posts pages.
+  result.data.allMarkdownRemark.edges.forEach(edge => {
+    createPage({
+      path: edge.node.fields.slug, // required
+      component: slash(blogPostTemplate),
+      context: {
+        slug: edge.node.fields.slug,
+      },
     })
   })
 }
 
-const onCreateNode = ({ node, actions: { createNodeField }, getNode }) => {
-  if (node.internal.type === 'File') {
-    const { name } = path.parse(node.absolutePath)
-    const slug = `/posts/${name}`
-    createNodeField({ node, name: 'slug', value: slug })
-  } else if (node.internal.type === 'MarkdownRemark') {
-    if (typeof node.slug === 'undefined') {
-      const fileNode = getNode(node.parent)
-      createNodeField({
-        node,
-        name: 'slug',
-        value: fileNode.fields.slug,
-      })
-    }
+const onCreateNode = ({ node, actions: { createNodeField } }) => {
+  if (node.internal.type === 'MarkdownRemark') {
+    const directoryName = path.basename(path.dirname(node.fileAbsolutePath))
+    createNodeField({
+      node,
+      name: 'slug',
+      value: `posts/${directoryName}`,
+    })
   }
 }
 
