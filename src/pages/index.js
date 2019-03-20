@@ -89,7 +89,7 @@ const OSS = ({ projects }) => {
   }
   return (
     <CenteredSection>
-      <SectionHeading>Open Source</SectionHeading>
+      <SectionHeading>Open Source 🤖</SectionHeading>
       <div className='flex flex-column'>
         {projects
           .sort((a, b) => {
@@ -137,7 +137,7 @@ const Intro = () => (
 
 const Writings = ({ posts }) => (
   <CenteredSection>
-    <SectionHeading>Writings</SectionHeading>
+    <SectionHeading>Writings 📝</SectionHeading>
     <div className='flex flex-column'>
       {posts.map(post => (
         <Post key={post.id} {...post} />
@@ -148,7 +148,7 @@ const Writings = ({ posts }) => (
 
 const Projects = ({ projects }) => (
   <CenteredSection>
-    <SectionHeading>Projects</SectionHeading>
+    <SectionHeading>Projects 👷‍♂️</SectionHeading>
     <div className='flex flex-column'>
       {projects.map(project => (
         <Project key={project.id} {...project} />
