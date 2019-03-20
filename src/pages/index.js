@@ -56,7 +56,6 @@ const IndexPage = () => {
     <Layout>
       <Nav />
       <Intro />
-      <OSS projects={data.allOssYaml.edges.map(edge => edge.node)} />
       <Writings
         posts={data.allMarkdownRemark.edges.map(edge => ({
           id: edge.node.id,
@@ -73,6 +72,7 @@ const IndexPage = () => {
           name: edge.node.name,
         }))}
       />
+      <OSS projects={data.allOssYaml.edges.map(edge => edge.node)} />
     </Layout>
   )
 }
