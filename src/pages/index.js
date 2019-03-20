@@ -62,7 +62,6 @@ const IndexPage = () => {
           title: edge.node.frontmatter.title,
           date: edge.node.frontmatter.date,
           slug: edge.node.fields.slug,
-          tags: new Set(edge.node.frontmatter.tags),
         }))}
       />
       <Projects
@@ -168,25 +167,12 @@ const Project = ({ url, name }) => (
   </Link>
 )
 
-const Post = ({ slug, title, id, tags }) => (
+const Post = ({ slug, title }) => (
   <Link
     to={slug}
     className='link br2 black bg-animate hover-bg-moon-gray pa3 bb b--black-10 br2 f4 flex flex-row justify-between'
   >
     <span className='ml2'>{title}</span>
-    <div
-      css={{
-        display: 'flex',
-        alignItems: 'center',
-        '& > *:not(:last-child)': { marginRight: 4 },
-      }}
-    >
-      {Array.from(tags).map(tag => (
-        <Label key={`${id}:${tag}`} className='bg-blue white dib-ns dn'>
-          {tag}
-        </Label>
-      ))}
-    </div>
   </Link>
 )
 
