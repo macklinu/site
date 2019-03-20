@@ -41,7 +41,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "devDependencies": {
-    "eslint": "^5.15.1",
+    "eslint": "^5.15.3",
     "eslint-config-macklinu": "^1.4.0",
     "eslint-plugin-import": "^2.16.0",
     "eslint-plugin-simple-import-sort": "^3.0.0",
