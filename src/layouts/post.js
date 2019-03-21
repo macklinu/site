@@ -5,8 +5,8 @@ import React from 'react'
 import { FaExclamationTriangle, FaInfoCircle } from 'react-icons/fa'
 import rehypeReact from 'rehype-react'
 
+import Layout from '../components/Layout'
 import Nav from '../components/Nav'
-import Layout from '../components/layout'
 
 const A = props => <a {...props} className='link underline blue' />
 

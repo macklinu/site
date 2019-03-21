@@ -1,8 +1,8 @@
 import React from 'react'
 
 import CenteredSection from '../components/CenteredSection'
+import Layout from '../components/Layout'
 import Nav from '../components/Nav'
-import Layout from '../components/layout'
 
 const SectionHeading = ({ children }) => (
   <h2 className='f2 black'>{children}</h2>

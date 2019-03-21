@@ -3,11 +3,11 @@ import React from 'react'
 import { FaExternalLinkAlt } from 'react-icons/fa'
 
 import CenteredSection from '../components/CenteredSection'
+import Layout from '../components/Layout'
 import Link from '../components/Link'
 import Nav from '../components/Nav'
 import PageHeading from '../components/PageHeading'
 import SectionHeading from '../components/SectionHeading'
-import Layout from '../components/layout'
 
 const IndexPage = () => {
   const data = useStaticQuery(graphql`
