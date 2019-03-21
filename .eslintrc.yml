@@ -1,6 +1,7 @@
 extends:
   - macklinu
   - macklinu/react
+  - macklinu/jest
 
 plugins:
   - import

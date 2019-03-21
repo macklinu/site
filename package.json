@@ -38,13 +38,16 @@
     "dev": "gatsby develop",
     "build": "gatsby build",
     "lint": "eslint '**/*.js'",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "devDependencies": {
+    "babel-jest": "^24.5.0",
+    "babel-preset-gatsby": "^0.1.9",
     "eslint": "^5.15.3",
     "eslint-config-macklinu": "^1.4.0",
     "eslint-plugin-import": "^2.16.0",
     "eslint-plugin-simple-import-sort": "^3.0.0",
+    "jest": "^24.5.0",
     "prettier": "^1.16.4"
   },
   "repository": {

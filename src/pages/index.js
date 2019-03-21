@@ -8,6 +8,7 @@ import Link from '../components/Link'
 import Nav from '../components/Nav'
 import PageHeading from '../components/PageHeading'
 import SectionHeading from '../components/SectionHeading'
+import { ossComparator } from '../utils/comparator'
 
 const IndexPage = () => {
   const data = useStaticQuery(graphql`
@@ -91,34 +92,27 @@ const OSS = ({ projects }) => {
     <CenteredSection>
       <SectionHeading>Open Source 🤖</SectionHeading>
       <div className='flex flex-column'>
-        {projects
-          .sort((a, b) => {
-            if (a.type === 'maintainer' && b.type === 'maintainer') {
-              return a.name.toLowerCase().localeCompare(b.name.toLowerCase())
-            }
-            return a.type === 'maintainer' ? -1 : 1
-          })
-          .map(({ id, name, type, url }) => (
-            <Link
-              key={id}
-              to={url}
-              className='link br2 black bg-animate hover-bg-moon-gray pa3 bb b--black-10 br2 f4 flex flex-row justify-between'
+        {projects.sort(ossComparator).map(({ id, name, type, url }) => (
+          <Link
+            key={id}
+            to={url}
+            className='link br2 black bg-animate hover-bg-moon-gray pa3 bb b--black-10 br2 f4 flex flex-row justify-between'
+          >
+            <span className='ml2'>{name}</span>
+            <div
+              css={{
+                display: 'flex',
+                alignItems: 'center',
+                '& > *:not(:last-child)': { marginRight: 4 },
+              }}
             >
-              <span className='ml2'>{name}</span>
-              <div
-                css={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  '& > *:not(:last-child)': { marginRight: 4 },
-                }}
-              >
-                <Label className={`${classesForType(type)} dib-ns dn`}>
-                  {type}
-                </Label>
-                <FaExternalLinkAlt className='pv1 ph2 br2' />
-              </div>
-            </Link>
-          ))}
+              <Label className={`${classesForType(type)} dib-ns dn`}>
+                {type}
+              </Label>
+              <FaExternalLinkAlt className='pv1 ph2 br2' />
+            </div>
+          </Link>
+        ))}
       </div>
     </CenteredSection>
   )
