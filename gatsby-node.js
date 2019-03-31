@@ -7,22 +7,14 @@ const createPages = async ({ graphql, actions: { createPage } }) => {
   const result = await graphql(
     `
       {
-        allMarkdownRemark(
-          filter: { frontmatter: { date: { ne: null } } }
-          sort: { fields: [frontmatter___date], order: DESC }
-        ) {
+        allMdx {
           edges {
             node {
+              id
               fields {
                 slug
               }
-              frontmatter {
-                title
-                date(formatString: "MMMM D, Y")
-                tags
-              }
-              timeToRead
-              excerpt
+              fileAbsolutePath
             }
           }
         }
@@ -35,7 +27,7 @@ const createPages = async ({ graphql, actions: { createPage } }) => {
   }
 
   // Create blog posts pages.
-  result.data.allMarkdownRemark.edges.forEach(edge => {
+  result.data.allMdx.edges.forEach(edge => {
     createPage({
       path: edge.node.fields.slug, // required
       component: slash(blogPostTemplate),
@@ -47,12 +39,12 @@ const createPages = async ({ graphql, actions: { createPage } }) => {
 }
 
 const onCreateNode = ({ node, actions: { createNodeField } }) => {
-  if (node.internal.type === 'MarkdownRemark') {
+  if (node.internal.type === 'Mdx') {
     const directoryName = path.basename(path.dirname(node.fileAbsolutePath))
     createNodeField({
       node,
       name: 'slug',
-      value: `posts/${directoryName}`,
+      value: `/posts/${directoryName}`,
     })
   }
 }

@@ -9,19 +9,10 @@ module.exports = {
     'gatsby-plugin-styled-components',
     'gatsby-plugin-sharp',
     {
-      resolve: 'gatsby-transformer-remark',
+      resolve: 'gatsby-mdx',
       options: {
-        gfm: true,
-        plugins: [
-          {
-            resolve: 'gatsby-remark-emoji',
-          },
-          {
-            resolve: 'gatsby-remark-component',
-            options: {
-              components: ['banner'],
-            },
-          },
+        mdPlugins: [require('remark-emoji')],
+        gatsbyRemarkPlugins: [
           {
             resolve: 'gatsby-remark-images',
           },

@@ -30,7 +30,7 @@ const ListItem = styled('li')(
 const IndexPage = () => {
   const data = useStaticQuery(graphql`
     {
-      allMarkdownRemark(
+      allMdx(
         filter: { frontmatter: { date: { ne: null } } }
         sort: { fields: [frontmatter___date], order: DESC }
       ) {
@@ -82,7 +82,7 @@ const IndexPage = () => {
       <Box as='section' my={3}>
         <Heading lineHeight={1.25}>things i've written 📝</Heading>
         <List>
-          {data.allMarkdownRemark.edges.map(({ node }) => (
+          {data.allMdx.edges.map(({ node }) => (
             <ListItem key={node.id}>
               <NavLink to={node.fields.slug}>{node.frontmatter.title}</NavLink>
             </ListItem>
