@@ -1,6 +1,3 @@
-import 'normalize.css'
-import 'typeface-roboto'
-
 import css from '@styled-system/css'
 import { graphql, useStaticQuery } from 'gatsby'
 import PropTypes from 'prop-types'

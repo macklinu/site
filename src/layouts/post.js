@@ -1,5 +1,3 @@
-import 'typeface-roboto-mono'
-
 import css from '@styled-system/css'
 import { graphql } from 'gatsby'
 import React from 'react'
