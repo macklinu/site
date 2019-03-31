@@ -1,16 +1,17 @@
-import 'tachyons'
+import 'normalize.css'
+import 'typeface-roboto'
 
+import css from '@styled-system/css'
 import { graphql, useStaticQuery } from 'gatsby'
 import PropTypes from 'prop-types'
 import React from 'react'
 import Helmet from 'react-helmet'
-import { createGlobalStyle } from 'styled-components'
+import styled, { ThemeProvider, createGlobalStyle } from 'styled-components'
 
 import mackie from '../images/mackie-face.png'
-
-const Reset = createGlobalStyle`
-* { box-sizing: border-box; }
-`
+import Nav from './nav'
+import theme from './theme'
+import { Box, Flex, Text } from '.'
 
 const googleMeta = ({ title, description, image }) => [
   { itemprop: 'name', content: title },
@@ -37,6 +38,34 @@ const openGraphMeta = ({ title, description, image }) => [
   { name: 'og:type', content: 'website' },
 ]
 
+const Container = styled(Box)(
+  css({
+    width: '100%',
+    maxWidth: 1024,
+    mx: 'auto',
+    p: 4,
+  })
+)
+
+Container.defaultProps = {
+  as: 'main',
+}
+
+const Global = createGlobalStyle(
+  css({
+    body: {
+      margin: 0,
+      fontFamily: 'sans',
+      lineHeight: 1.5,
+      color: 'text',
+      backgroundColor: 'background',
+      transitionProperty: 'background-color, color',
+      transitionDuration: '.2s',
+      transitionTimingFunction: 'ease-out',
+    },
+  })
+)
+
 const Layout = ({ children, meta = {} }) => {
   const data = useStaticQuery(graphql`
     query SiteTitleQuery {
@@ -54,28 +83,34 @@ const Layout = ({ children, meta = {} }) => {
     : data.site.siteMetadata.title
   const description = meta.description || data.site.siteMetadata.description
   return (
-    <>
-      <Helmet
-        title={title}
-        meta={[
-          { charSet: 'utf-8' },
-          {
-            name: 'viewport',
-            content: 'width=device-width, initial-scale=1',
-          },
-          { name: 'description', content: description },
-          { name: 'image', content: mackie },
-          ...openGraphMeta({ title, description, image: mackie }),
-          ...googleMeta({ title, description, image: mackie }),
-          ...twitterMeta({ title, description, image: mackie }),
-        ]}
-      >
-        <html lang='en' />
-        <Reset />
-        <body className='sans-serif bg-white black' />
-      </Helmet>
-      {children}
-    </>
+    <ThemeProvider theme={theme}>
+      <>
+        <Helmet
+          title={title}
+          meta={[
+            { charSet: 'utf-8' },
+            {
+              name: 'viewport',
+              content: 'width=device-width, initial-scale=1',
+            },
+            { name: 'description', content: description },
+            { name: 'image', content: mackie },
+            ...openGraphMeta({ title, description, image: mackie }),
+            ...googleMeta({ title, description, image: mackie }),
+            ...twitterMeta({ title, description, image: mackie }),
+          ]}
+        >
+          <html lang='en' />
+        </Helmet>
+        <Global />
+        <Text>
+          <Flex flexDirection='column'>
+            <Nav />
+            <Container>{children}</Container>
+          </Flex>
+        </Text>
+      </>
+    </ThemeProvider>
   )
 }
 

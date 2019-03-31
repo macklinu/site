@@ -2,7 +2,7 @@ module.exports = {
   siteMetadata: {
     title: 'mackie.world',
     description:
-      'my name is mackie. i am a software engineer, musician, and artist. welcome to my site.',
+      'my name is mackie. i am a software engineer and musician. welcome to my site.',
   },
   plugins: [
     'gatsby-plugin-react-helmet',
@@ -13,15 +13,17 @@ module.exports = {
       options: {
         gfm: true,
         plugins: [
-          { resolve: 'gatsby-remark-prismjs' },
-          { resolve: 'gatsby-remark-emoji' },
+          {
+            resolve: 'gatsby-remark-emoji',
+          },
           {
             resolve: 'gatsby-remark-component',
-            options: { components: ['banner'] },
+            options: {
+              components: ['banner'],
+            },
           },
           {
             resolve: 'gatsby-remark-images',
-            options: {},
           },
         ],
       },

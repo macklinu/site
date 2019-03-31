@@ -1,48 +1,73 @@
 import 'typeface-roboto-mono'
 
+import css from '@styled-system/css'
 import { graphql } from 'gatsby'
 import React from 'react'
-import { FaExclamationTriangle, FaInfoCircle } from 'react-icons/fa'
 import rehypeReact from 'rehype-react'
+import styled from 'styled-components'
 
-import Layout from '../components/Layout'
-import Nav from '../components/Nav'
+import { Box, Heading, Text } from '../components'
+import Layout from '../components/layout'
+import NavLink from '../components/nav-link'
 
-const A = props => <a {...props} className='link underline blue' />
+const A = props => <NavLink {...props} />
 
 const Blockquote = props => (
-  <blockquote {...props} className='ml0 mt0 pl3 bl bw2 b--moon-gray' />
+  <Text
+    as='blockquote'
+    {...props}
+    css={css({
+      marginLeft: 0,
+      borderLeft: '2px solid black',
+      paddingLeft: 3,
+    })}
+  />
 )
 
-const P = props => <p {...props} className='lh-copy' />
+const P = props => (
+  <Text as='p' fontSize={[2, 3]} lineHeight={1.625} {...props} />
+)
 
-const Pre = props => <pre css={{ overflowX: 'auto' }} {...props} />
-
-const Code = props => (
-  <code
-    css={{ fontFamily: '"Roboto Mono", Consolas, monaco, monospace' }}
+const Pre = props => (
+  <Text
+    fontSize={[2, 3]}
+    as='pre'
+    backgroundColor='code'
+    px={2}
+    color='text'
+    css={{ overflowX: 'auto' }}
     {...props}
   />
 )
 
-const Banner = ({ children, variant }) => {
-  const icons = {
-    info: FaInfoCircle,
-    warning: FaExclamationTriangle,
-  }
-  const variants = {
-    info: 'bg-lightest-blue dark-blue',
-    warning: 'bg-light-yellow black-70',
-  }
-  return (
-    <div
-      className={[variants[variant], 'pv4 ph3 br2'].filter(Boolean).join(' ')}
-    >
-      {React.createElement(icons[variant])}
-      <span className='ml2'>{children}</span>
-    </div>
-  )
-}
+const Code = props => (
+  <Text fontSize={[2, 3]} color='text' as='code' fontFamily='mono' {...props} />
+)
+
+const Banner = ({ children }) => (
+  <Box backgroundColor='tertiary' py={3} px={3} borderRadius={2}>
+    <Text>{children}</Text>
+  </Box>
+)
+
+const List = styled('ul')({
+  listStyle: 'none',
+  paddingLeft: 0,
+})
+
+const ListItem = styled('li')(
+  css({
+    py: 1,
+    fontSize: 3,
+    lineHeight: 1.25,
+  }),
+  css({
+    '&::before': {
+      content: '"-"',
+      paddingRight: 2,
+    },
+  })
+)
 
 /**
  * Duplicates an object, omitting specified property names.
@@ -61,23 +86,26 @@ const omit = (obj, properties) => {
 }
 
 const renderAst = new rehypeReact({
-  createElement(component, props = {}, children = []) {
-    if (component === 'div') {
-      return <React.Fragment {...props}>{children}</React.Fragment>
-    }
-
-    return React.createElement(component, props, children)
-  },
+  createElement: React.createElement,
   components: {
-    // TODO support headings
-    a: A,
+    h1: props => <Heading as='h1' my={4} fontSize={[5, 6]} {...props} />,
+    h2: props => <Heading as='h2' my={4} fontSize={[4, 5]} {...props} />,
+    h3: props => <Heading as='h3' my={4} fontSize={3} {...props} />,
+    h4: props => <Heading as='h4' my={4} fontSize={2} {...props} />,
+    h5: props => <Heading as='h5' my={4} fontSize={1} {...props} />,
+    h6: props => <Heading as='h6' my={4} fontSize={0} {...props} />,
     blockquote: Blockquote,
     p: P,
+    a: A,
     pre: Pre,
     code: Code,
     banner: Banner,
+    ul: List,
+    li: ListItem,
     img: props => (
-      <img
+      <Box
+        as='img'
+        py={2}
         css={{ display: 'block', margin: '0 auto' }}
         {...omit(props, ['children'])}
       />
@@ -89,15 +117,23 @@ const Post = props => {
   const post = props.data.markdownRemark
 
   return (
-    <Layout meta={{ title: post.frontmatter.title, description: post.excerpt }}>
-      <Nav />
-      <article className='mw7-ns center ph3 pv2'>
-        <h2 className='f2'>{post.frontmatter.title}</h2>
-        <span className='f6 fw4 mt0 black-70'>
-          {post.frontmatter.date} • {post.timeToRead} min read
-        </span>
-        {renderAst(post.htmlAst)}
-      </article>
+    <Layout
+      meta={{
+        title: post.frontmatter.title,
+        description: post.excerpt,
+      }}
+    >
+      <>
+        <Box as='header' py={2}>
+          <Heading fontSize={[4, 5]} lineHeight={1.25}>
+            {post.frontmatter.title}
+          </Heading>
+          <Text as='span' fontFamily='mono' fontSize={2} lineHeight={1.5}>
+            {post.frontmatter.date}
+          </Text>
+        </Box>
+        <Box as='article'>{renderAst(post.htmlAst)}</Box>
+      </>
     </Layout>
   )
 }
