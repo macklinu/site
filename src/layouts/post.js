@@ -92,12 +92,12 @@ const renderAst = new rehypeReact({
     return React.createElement(component, props, children)
   },
   components: {
-    h1: props => <Heading as='h1' my={4} fontSize={[5, 6]} {...props} />,
-    h2: props => <Heading as='h2' my={4} fontSize={[4, 5]} {...props} />,
-    h3: props => <Heading as='h3' my={4} fontSize={3} {...props} />,
-    h4: props => <Heading as='h4' my={4} fontSize={2} {...props} />,
-    h5: props => <Heading as='h5' my={4} fontSize={1} {...props} />,
-    h6: props => <Heading as='h6' my={4} fontSize={0} {...props} />,
+    h1: props => <Heading as='h1' my={[3, 4]} fontSize={[5, 6]} {...props} />,
+    h2: props => <Heading as='h2' my={[3, 4]} fontSize={[4, 5]} {...props} />,
+    h3: props => <Heading as='h3' my={[3, 4]} fontSize={3} {...props} />,
+    h4: props => <Heading as='h4' my={[3, 4]} fontSize={2} {...props} />,
+    h5: props => <Heading as='h5' my={[3, 4]} fontSize={1} {...props} />,
+    h6: props => <Heading as='h6' my={[3, 4]} fontSize={0} {...props} />,
     blockquote: Blockquote,
     p: P,
     a: A,
@@ -110,7 +110,11 @@ const renderAst = new rehypeReact({
       <Box
         as='img'
         py={2}
-        css={{ display: 'block', margin: '0 auto' }}
+        css={{
+          display: 'block',
+          margin: '0 auto',
+          maxWidth: '100%',
+        }}
         {...omit(props, ['children'])}
       />
     ),
