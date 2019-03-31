@@ -8,8 +8,8 @@ const theme = {
     code: '#F6FAFC',
   },
   fonts: {
-    sans: 'Roboto, system-ui, sans-serif',
-    mono: 'Roboto Mono, Menlo, monospace',
+    sans: 'system-ui, Helvetica, sans-serif',
+    mono: 'Menlo, monospace',
   },
 }
 
