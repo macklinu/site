@@ -1,19 +1,16 @@
 import React from 'react'
 
-import CenteredSection from '../components/CenteredSection'
-import Layout from '../components/Layout'
-import Nav from '../components/Nav'
-
-const SectionHeading = ({ children }) => (
-  <h2 className='f2 black'>{children}</h2>
-)
+import { Heading } from '../components'
+import Layout from '../components/layout'
 
 const NotFoundPage = () => (
   <Layout>
-    <Nav />
-    <CenteredSection>
-      <SectionHeading>😅 idk where that page is, sorry</SectionHeading>
-    </CenteredSection>
+    <Heading>
+      <span role='img' aria-label='Upside-down Smiley Face'>
+        🙃
+      </span>{' '}
+      idk where that page is, sorry
+    </Heading>
   </Layout>
 )
 

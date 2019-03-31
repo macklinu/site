@@ -1,1 +1,1 @@
-import './src/styles/prism-github.css'
+import 'normalize.css'
