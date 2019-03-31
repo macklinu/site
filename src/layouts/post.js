@@ -13,14 +13,15 @@ import NavLink from '../components/nav-link'
 const A = props => <NavLink {...props} />
 
 const Blockquote = props => (
-  <Text
+  <Box
     as='blockquote'
-    {...props}
     css={css({
       marginLeft: 0,
-      borderLeft: '2px solid black',
-      paddingLeft: 3,
+      // todo figure out how to use a theme color name instead of a hex color code
+      borderLeft: '2px solid #3392BB',
+      paddingLeft: 2,
     })}
+    {...props}
   />
 )
 
@@ -45,8 +46,8 @@ const Code = props => (
 )
 
 const Banner = ({ children }) => (
-  <Box backgroundColor='tertiary' py={3} px={3} borderRadius={2}>
-    <Text>{children}</Text>
+  <Box backgroundColor='tertiary' borderRadius={2}>
+    <P p={2}>{children}</P>
   </Box>
 )
 
@@ -86,7 +87,12 @@ const omit = (obj, properties) => {
 }
 
 const renderAst = new rehypeReact({
-  createElement: React.createElement,
+  createElement(component, props = {}, children = []) {
+    if (component === 'div') {
+      return <React.Fragment {...props}>{children}</React.Fragment>
+    }
+    return React.createElement(component, props, children)
+  },
   components: {
     h1: props => <Heading as='h1' my={4} fontSize={[5, 6]} {...props} />,
     h2: props => <Heading as='h2' my={4} fontSize={[4, 5]} {...props} />,
