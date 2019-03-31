@@ -6,11 +6,10 @@ import { graphql, useStaticQuery } from 'gatsby'
 import PropTypes from 'prop-types'
 import React from 'react'
 import Helmet from 'react-helmet'
-import styled, { ThemeProvider, createGlobalStyle } from 'styled-components'
+import styled, { createGlobalStyle } from 'styled-components'
 
 import mackie from '../images/mackie-face.png'
 import Nav from './nav'
-import theme from './theme'
 import { Box, Flex, Text } from '.'
 
 const googleMeta = ({ title, description, image }) => [
@@ -83,34 +82,32 @@ const Layout = ({ children, meta = {} }) => {
     : data.site.siteMetadata.title
   const description = meta.description || data.site.siteMetadata.description
   return (
-    <ThemeProvider theme={theme}>
-      <>
-        <Helmet
-          title={title}
-          meta={[
-            { charSet: 'utf-8' },
-            {
-              name: 'viewport',
-              content: 'width=device-width, initial-scale=1',
-            },
-            { name: 'description', content: description },
-            { name: 'image', content: mackie },
-            ...openGraphMeta({ title, description, image: mackie }),
-            ...googleMeta({ title, description, image: mackie }),
-            ...twitterMeta({ title, description, image: mackie }),
-          ]}
-        >
-          <html lang='en' />
-        </Helmet>
-        <Global />
-        <Text>
-          <Flex flexDirection='column'>
-            <Nav />
-            <Container>{children}</Container>
-          </Flex>
-        </Text>
-      </>
-    </ThemeProvider>
+    <>
+      <Helmet
+        title={title}
+        meta={[
+          { charSet: 'utf-8' },
+          {
+            name: 'viewport',
+            content: 'width=device-width, initial-scale=1',
+          },
+          { name: 'description', content: description },
+          { name: 'image', content: mackie },
+          ...openGraphMeta({ title, description, image: mackie }),
+          ...googleMeta({ title, description, image: mackie }),
+          ...twitterMeta({ title, description, image: mackie }),
+        ]}
+      >
+        <html lang='en' />
+      </Helmet>
+      <Global />
+      <Text>
+        <Flex flexDirection='column'>
+          <Nav />
+          <Container>{children}</Container>
+        </Flex>
+      </Text>
+    </>
   )
 }
 
