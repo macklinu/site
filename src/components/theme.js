@@ -1,15 +1,14 @@
 const theme = {
   colors: {
-    text: '#004461',
-    background: '#F8EAF4',
-    primary: '#0073A5',
-    secondary: '#3392BB',
-    tertiary: '#CDE5EE',
-    code: '#F6FAFC',
+    text: '#525EDC',
+    background: '#F9F9FA',
+    parent: '#F9DCE1',
+    accent: '#46A46C',
   },
   fonts: {
     sans: 'system-ui, Helvetica, sans-serif',
     mono: 'Menlo, monospace',
+    serif: 'Merriweather, georgia, serif',
   },
 }
 

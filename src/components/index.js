@@ -87,18 +87,10 @@ Heading.defaultProps = {
   fontWeight: 'bold',
 }
 
-const Link = styled(Box)(
-  css({
-    color: 'primary',
-    '&:hover': {
-      color: 'secondary',
-    },
-  })
-)
+const Link = styled(Box)(css({ color: 'text' }))
 
 Link.defaultProps = {
   as: 'a',
-  color: 'primary',
 }
 
 export { Box, Flex, Text, Heading, Link }

@@ -16,7 +16,7 @@ const Blockquote = props => (
     css={css({
       marginLeft: 0,
       // todo figure out how to use a theme color name instead of a hex color code
-      borderLeft: '2px solid #3392BB',
+      borderLeft: '2px solid #525EDC',
       paddingLeft: 2,
     })}
     {...props}
@@ -31,9 +31,10 @@ const Pre = props => (
   <Text
     fontSize={[2, 3]}
     as='pre'
-    backgroundColor='code'
-    px={2}
+    p={2}
     color='text'
+    border='solid 1px #525EDC'
+    borderRadius={2}
     css={{ overflowX: 'auto' }}
     {...props}
   />

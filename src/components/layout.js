@@ -41,6 +41,8 @@ const Container = styled(Box)(
     maxWidth: 1024,
     mx: 'auto',
     p: 4,
+    backgroundColor: 'background',
+    borderRadius: 2,
   })
 )
 
@@ -52,10 +54,10 @@ const Global = createGlobalStyle(
   css({
     body: {
       margin: 0,
-      fontFamily: 'sans',
+      fontFamily: 'serif',
       lineHeight: 1.5,
       color: 'text',
-      backgroundColor: 'background',
+      backgroundColor: 'parent',
       transitionProperty: 'background-color, color',
       transitionDuration: '.2s',
       transitionTimingFunction: 'ease-out',
