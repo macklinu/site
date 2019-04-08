@@ -2,8 +2,9 @@ import css from '@styled-system/css'
 import { graphql, useStaticQuery } from 'gatsby'
 import React from 'react'
 import styled from 'styled-components'
+import { FiCode, FiBookOpen, FiBox, FiStar } from 'react-icons/fi'
 
-import { Box, Heading, Text } from '../components'
+import { Box, Heading, Text, Spacer, Flex } from '../components'
 import Layout from '../components/layout'
 import NavLink from '../components/nav-link'
 import { ossComparator } from '../utils/comparator'
@@ -80,7 +81,11 @@ const IndexPage = () => {
         </Text>
       </Box>
       <Box as='section' my={3}>
-        <Heading lineHeight={1.25}>things i've written 📝</Heading>
+        <Flex flexDirection='row' alignItems='center' height='100%'>
+          <FiBookOpen css={css({ fontSize: 4 })} />
+          <Spacer marginRight={2} />
+          <Heading lineHeight={1.25}>Writings</Heading>
+        </Flex>
         <List>
           {data.allMarkdownRemark.edges.map(({ node }) => (
             <ListItem key={node.id}>
@@ -90,7 +95,11 @@ const IndexPage = () => {
         </List>
       </Box>
       <Box as='section' my={3}>
-        <Heading lineHeight={1.25}>things i've built 👷‍♂️</Heading>
+        <Flex flexDirection='row' alignItems='center' height='100%'>
+          <FiBox css={css({ fontSize: 4 })} />
+          <Spacer marginRight={2} />
+          <Heading lineHeight={1.25}>Projects</Heading>
+        </Flex>
         <List>
           {data.allProjectsYaml.edges.map(({ node }) => (
             <ListItem key={node.id}>
@@ -100,7 +109,11 @@ const IndexPage = () => {
         </List>
       </Box>
       <Box as='section' my={3}>
-        <Heading lineHeight={1.25}>open source contributions 🤖</Heading>
+        <Flex flexDirection='row' alignItems='center'>
+          <FiCode css={css({ fontSize: 4 })} />
+          <Spacer marginRight={2} />
+          <Heading lineHeight={1.25}>Open Source Contributions</Heading>
+        </Flex>
         <List>
           {data.allOssYaml.edges
             .map(edge => edge.node)
@@ -108,13 +121,6 @@ const IndexPage = () => {
             .map(oss => (
               <ListItem key={oss.id}>
                 <NavLink to={oss.url}>{oss.name}</NavLink>
-                {oss.type === 'maintainer' && (
-                  <abbr title='I am a maintainer of this project!'>
-                    <Text marginLeft={1} as='span'>
-                      💖
-                    </Text>
-                  </abbr>
-                )}
               </ListItem>
             ))}
         </List>

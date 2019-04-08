@@ -2,52 +2,106 @@ const path = require('path')
 const slash = require('slash')
 
 const createPages = async ({ graphql, actions: { createPage } }) => {
-  const blogPostTemplate = path.resolve('src/layouts/post.js')
-
-  const result = await graphql(
-    `
+  const getPosts = () =>
+    graphql(`
       {
         allMarkdownRemark(
-          filter: { frontmatter: { date: { ne: null } } }
+          filter: {
+            frontmatter: { date: { ne: null } }
+            fields: { collection: { eq: "posts" } }
+          }
           sort: { fields: [frontmatter___date], order: DESC }
         ) {
-          edges {
-            node {
-              fields {
-                slug
-              }
-              frontmatter {
-                title
-                date(formatString: "MMMM D, Y")
-                tags
-              }
-              timeToRead
-              excerpt
+          nodes {
+            fields {
+              slug
             }
           }
         }
       }
-    `
-  )
+    `).then(result => {
+      if (result.errors) {
+        throw result.errors
+      }
+      return result
+    })
+  const getNotes = () =>
+    graphql(`
+      {
+        allMarkdownRemark(filter: { fields: { collection: { eq: "notes" } } }) {
+          edges {
+            node {
+              htmlAst
+              parent {
+                ... on File {
+                  name
+                  base
+                  relativePath
+                  relativeDirectory
+                }
+              }
+            }
+          }
+        }
+      }
+    `).then(result => {
+      if (result.errors) {
+        throw result.errors
+      }
+      return result
+    })
+  const Post = require.resolve('./src/layouts/post.js')
+  const Note = require.resolve('./src/components/note.js')
+  const Notes = require.resolve('./src/components/notes.js')
 
-  if (result.errors) {
-    throw result.errors
-  }
+  const [posts, notes] = await Promise.all([getPosts(), getNotes()])
 
-  // Create blog posts pages.
-  result.data.allMarkdownRemark.edges.forEach(edge => {
+  const groupedNotes = {}
+
+  notes.data.allMarkdownRemark.edges.forEach(({ node }) => {
+    const { name, relativeDirectory } = node.parent
+    const slug = path.join('notes', relativeDirectory, name)
+
+    if (!groupedNotes[relativeDirectory]) {
+      groupedNotes[relativeDirectory] = []
+    }
+    groupedNotes[relativeDirectory].push({ name, slug })
+
     createPage({
-      path: edge.node.fields.slug, // required
-      component: slash(blogPostTemplate),
-      context: {
-        slug: edge.node.fields.slug,
-      },
+      path: `/${slug}`,
+      component: slash(Note),
+      context: { ...node },
+    })
+  })
+
+  Object.keys(groupedNotes).forEach(key => {
+    groupedNotes[key].sort()
+  })
+
+  createPage({
+    path: '/notes',
+    component: slash(Notes),
+    context: { groupedNotes },
+  })
+
+  posts.data.allMarkdownRemark.nodes.forEach(({ fields: { slug } }) => {
+    createPage({
+      path: slug,
+      component: slash(Post),
+      context: { slug },
     })
   })
 }
 
-const onCreateNode = ({ node, actions: { createNodeField } }) => {
+const onCreateNode = ({ node, actions: { createNodeField }, getNode }) => {
   if (node.internal.type === 'MarkdownRemark') {
+    const parent = getNode(node.parent)
+    createNodeField({
+      node,
+      name: 'collection',
+      value: parent.sourceInstanceName,
+    })
+
     const directoryName = path.basename(path.dirname(node.fileAbsolutePath))
     createNodeField({
       node,
