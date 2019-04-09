@@ -3,7 +3,7 @@ import React from 'react'
 import rehypeReact from 'rehype-react'
 import styled from 'styled-components'
 
-import { Box, Heading, Text } from '../components'
+import { Box, Heading, Text, Spacer } from '../components'
 import Layout from '../components/layout'
 import NavLink from '../components/nav-link'
 
@@ -122,8 +122,12 @@ const renderAst = new rehypeReact({
   },
 }).Compiler
 
-const Note = ({ pageContext: { htmlAst } }) => (
+const Note = ({ pageContext: { htmlAst, slug } }) => (
   <Layout>
+    <Text as='span' border='1px solid' borderRadius={2} p={2}>
+      /{slug}
+    </Text>
+    <Spacer mb={4} />
     <Box as='article'>{renderAst(htmlAst)}</Box>
   </Layout>
 )

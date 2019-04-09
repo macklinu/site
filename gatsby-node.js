@@ -70,7 +70,7 @@ const createPages = async ({ graphql, actions: { createPage } }) => {
     createPage({
       path: `/${slug}`,
       component: slash(Note),
-      context: { ...node },
+      context: { ...node, slug },
     })
   })
 
