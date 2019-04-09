@@ -15,7 +15,7 @@ const Blockquote = props => (
     css={css({
       marginLeft: 0,
       // todo figure out how to use a theme color name instead of a hex color code
-      borderLeft: '2px solid #3392BB',
+      borderLeft: '2px solid #525EDC',
       paddingLeft: 2,
     })}
     {...props}
