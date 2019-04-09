@@ -75,7 +75,7 @@ const createPages = async ({ graphql, actions: { createPage } }) => {
   })
 
   Object.keys(groupedNotes).forEach(key => {
-    groupedNotes[key].sort()
+    groupedNotes[key] = groupedNotes[key].sort()
   })
 
   createPage({
