@@ -30,9 +30,10 @@ const Pre = props => (
   <Text
     fontSize={[2, 3]}
     as='pre'
-    backgroundColor='code'
-    px={2}
+    p={2}
     color='text'
+    border='solid 1px #525EDC'
+    borderRadius={2}
     css={{ overflowX: 'auto' }}
     {...props}
   />
