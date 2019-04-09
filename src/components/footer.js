@@ -1,9 +1,9 @@
 import css from '@styled-system/css'
 import React from 'react'
+import { FiLink } from 'react-icons/fi'
 import styled from 'styled-components'
 
 import NavLink from './nav-link'
-import { FiLink } from 'react-icons/fi'
 import { Box, Flex } from './'
 
 const Container = styled(Box)(

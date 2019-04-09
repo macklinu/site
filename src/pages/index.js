@@ -1,10 +1,10 @@
 import css from '@styled-system/css'
 import { graphql, useStaticQuery } from 'gatsby'
 import React from 'react'
+import { FiBookOpen, FiBox, FiCode } from 'react-icons/fi'
 import styled from 'styled-components'
-import { FiCode, FiBookOpen, FiBox, FiStar } from 'react-icons/fi'
 
-import { Box, Heading, Text, Spacer, Flex } from '../components'
+import { Box, Flex, Heading, Spacer, Text } from '../components'
 import Layout from '../components/layout'
 import NavLink from '../components/nav-link'
 import { ossComparator } from '../utils/comparator'
