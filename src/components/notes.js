@@ -22,7 +22,7 @@ const List = styled('ul')(
 
 const ListItem = styled('li')(
   css({
-    lineHeight: 1.25,
+    lineHeight: 1.5,
     paddingLeft: 2,
   }),
   css({
@@ -41,15 +41,17 @@ const Notes = ({ pageContext: { groupedNotes } }) => (
         .sort()
         .map(([type, names]) => (
           <Box key={type}>
-            <Text>
+            <Text fontSize={3}>
               <Folder css={css({ marginRight: 2 })} />
               {type}
             </Text>
             <List>
               {names.map(({ slug, name }) => (
                 <ListItem key={name}>
-                  <File css={css({ marginRight: 2 })} />
-                  <NavLink to={slug}>{name}</NavLink>
+                  <File css={css({ marginRight: 2, fontSize: 3 })} />
+                  <NavLink fontSize={3} to={slug}>
+                    {name}
+                  </NavLink>
                 </ListItem>
               ))}
             </List>

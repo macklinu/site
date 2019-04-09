@@ -18,7 +18,7 @@ const ListItem = styled('li')(
   css({
     py: 1,
     fontSize: 3,
-    lineHeight: 1.25,
+    lineHeight: 1.5,
   }),
   css({
     '&::before': {
