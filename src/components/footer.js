@@ -21,6 +21,7 @@ const Footer = () => (
     <Flex
       flexDirection='row'
       alignItems='center'
+      justifyContent='flex-end'
       css={css({
         '> *': {
           marginRight: 2,
