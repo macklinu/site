@@ -1592,6 +1592,15 @@
     "@webassemblyjs/wast-parser" "1.7.11"
     "@xtuc/long" "4.2.1"
 
+"@weknow/gatsby-remark-twitter@^0.2.1":
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/@weknow/gatsby-remark-twitter/-/gatsby-remark-twitter-0.2.1.tgz#d3e7d72d4b25d4d5d115f4d569dfb5c8b7e31c7f"
+  integrity sha512-Z8VRSIfh86/phIbOTY0HfWBqddsCq7Yvok9+rgSBScuB1tqHs6wkzFULCC9Sg3E/PfsFb5qVwZQbGNIENtVUrA==
+  dependencies:
+    babel-runtime "^6.26.0"
+    node-fetch "^2.3.0"
+    unist-util-visit "^1.1.3"
+
 "@xtuc/ieee754@^1.2.0":
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/@xtuc/ieee754/-/ieee754-1.2.0.tgz#eef014a3145ae477a1cbc00cd1e552336dceb790"
@@ -6382,9 +6391,9 @@ graceful-fs@^4.1.11, graceful-fs@^4.1.2, graceful-fs@^4.1.6:
   integrity sha1-TK+tdrxi8C+gObL5Tpo906ORpyU=
 
 graphql-compose@^6.0.3:
-  version "6.1.0"
-  resolved "https://registry.yarnpkg.com/graphql-compose/-/graphql-compose-6.1.0.tgz#f9140a7d5430d763a3743de2ef3f5763f7cdafbb"
-  integrity sha512-SHyRuamg3BD6E9Gg4uemWrywJuzEsgggNcFFAVM6N7Y7dLiqtkS5s6rEf37hqYM0lpGikc8XyzMt6cHscXAQgA==
+  version "6.1.4"
+  resolved "https://registry.yarnpkg.com/graphql-compose/-/graphql-compose-6.1.4.tgz#3c9b9688c622a5c82fdf65744f9af93e0eb4dc00"
+  integrity sha512-xMfLkUMRRIbVvsp8KhiB6VR7ZYiaerzubL07yWmqWa8GB64kvlkRHMBZfuDeka+U5NncF+if5fcJJusvsc1zMg==
   dependencies:
     graphql-type-json "^0.2.2"
     object-path "^0.11.4"
@@ -9310,7 +9319,7 @@ node-fetch@2.1.2:
   resolved "http://registry.npmjs.org/node-fetch/-/node-fetch-2.1.2.tgz#ab884e8e7e57e38a944753cec706f788d1768bb5"
   integrity sha1-q4hOjn5X44qUR1POxwb3iNF2i7U=
 
-node-fetch@2.3.0:
+node-fetch@2.3.0, node-fetch@^2.3.0:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.3.0.tgz#1a1d940bbfb916a1d3e0219f037e89e71f8c5fa5"
   integrity sha512-MOd8pV3fxENbryESLgVIeaGKrdl+uaYhCSSVkjeOb/31/njTpcis5aWfdqgNlHIrKOLRbMnfPINPOML2CIFeXA==
@@ -11102,6 +11111,11 @@ react-hot-loader@^4.6.2:
     react-lifecycles-compat "^3.0.4"
     shallowequal "^1.0.2"
     source-map "^0.7.3"
+
+react-icons@^3.5.0:
+  version "3.5.0"
+  resolved "https://registry.yarnpkg.com/react-icons/-/react-icons-3.5.0.tgz#a6135480e3bcbc63f5dd045193ef2a814263d8d1"
+  integrity sha512-LuKUcavgPWjPrRkIdNbsGw8LqcnhfNN0AGCtU4Td1UkOenJSIWbYppSJrD6zi/TDZOHtTs9opu6ZKB/NFWk21g==
 
 react-is@^16.6.0:
   version "16.6.3"
@@ -13476,7 +13490,7 @@ unist-util-visit-parents@^2.0.0, unist-util-visit-parents@^2.0.1:
   dependencies:
     unist-util-is "^2.1.2"
 
-unist-util-visit@^1.0.0, unist-util-visit@^1.1.0, unist-util-visit@^1.1.1, unist-util-visit@^1.3.0:
+unist-util-visit@^1.0.0, unist-util-visit@^1.1.0, unist-util-visit@^1.1.1, unist-util-visit@^1.1.3, unist-util-visit@^1.3.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/unist-util-visit/-/unist-util-visit-1.4.0.tgz#1cb763647186dc26f5e1df5db6bd1e48b3cc2fb1"
   integrity sha512-FiGu34ziNsZA3ZUteZxSFaczIjGmksfSgdKqBfOejrrfzyUy5b7YrlzT1Bcvi+djkYDituJDy2XB7tGTeBieKw==

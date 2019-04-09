@@ -41,6 +41,10 @@ Box.propTypes = {
   ...fontSize.propTypes,
 }
 
+const Spacer = styled('div')({ boxSizing: 'border-box' }, space)
+
+Spacer.displayName = 'Spacer'
+
 const Flex = styled(Box)(
   { display: 'flex' },
   flexWrap,
@@ -93,4 +97,4 @@ Link.defaultProps = {
   as: 'a',
 }
 
-export { Box, Flex, Text, Heading, Link }
+export { Box, Flex, Text, Heading, Link, Spacer }

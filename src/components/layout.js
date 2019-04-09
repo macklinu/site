@@ -6,6 +6,7 @@ import Helmet from 'react-helmet'
 import styled, { ThemeProvider, createGlobalStyle } from 'styled-components'
 
 import mackie from '../images/mackie-face.png'
+import Footer from './footer'
 import Nav from './nav'
 import theme from './theme'
 import { Box, Flex, Text } from '.'
@@ -41,7 +42,6 @@ const Container = styled(Box)(
     maxWidth: 1024,
     mx: 'auto',
     p: 4,
-    backgroundColor: 'background',
     borderRadius: 2,
   })
 )
@@ -105,7 +105,8 @@ const Layout = ({ children, meta = {} }) => {
         <Text>
           <Flex flexDirection='column'>
             <Nav />
-            <Container>{children}</Container>
+            <Container backgroundColor='background'>{children}</Container>
+            <Footer />
           </Flex>
         </Text>
       </>

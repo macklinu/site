@@ -1,0 +1,23 @@
+## fthrsn
+
+I used to make music as fthrsn from 2011-2013.
+
+### Albums
+
+- [middle school swag (2012)](https://fthrsn.bandcamp.com/album/middle-school-swag)
+- [hysteria (2011)](https://fthrsn.bandcamp.com/album/hysteria)
+
+### Singles
+
+- [oooweeooo](https://soundcloud.com/fthrsn/oooweeooo)
+- [saria's swag](https://soundcloud.com/fthrsn/sarias-swag)
+
+### Artists I Shared a Stage With
+
+- kohwi
+- lou breed
+- subvader
+- dreampeter
+- sad souls
+- chrome sparks
+- ...many more i can't think of right now

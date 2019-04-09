@@ -1,5 +1,4 @@
 import css from '@styled-system/css'
-import { graphql } from 'gatsby'
 import React from 'react'
 import rehypeReact from 'rehype-react'
 import styled from 'styled-components'
@@ -119,48 +118,14 @@ const renderAst = new rehypeReact({
         {...omit(props, ['children'])}
       />
     ),
+    br: props => <br {...omit(props, ['children'])} />,
   },
 }).Compiler
 
-const Post = props => {
-  const post = props.data.markdownRemark
+const Note = ({ pageContext: { htmlAst } }) => (
+  <Layout>
+    <Box as='article'>{renderAst(htmlAst)}</Box>
+  </Layout>
+)
 
-  return (
-    <Layout
-      meta={{
-        title: post.frontmatter.title,
-        description: post.excerpt,
-      }}
-    >
-      <>
-        <Box as='header' py={2}>
-          <Heading fontSize={[4, 5]} lineHeight={1.25}>
-            {post.frontmatter.title}
-          </Heading>
-          <Text as='span' fontFamily='mono' fontSize={2} lineHeight={1.5}>
-            {post.frontmatter.date}
-          </Text>
-        </Box>
-        <Box as='article'>{renderAst(post.htmlAst)}</Box>
-      </>
-    </Layout>
-  )
-}
-
-export default Post
-
-export const pageQuery = graphql`
-  query($slug: String!) {
-    markdownRemark(fields: { slug: { eq: $slug } }) {
-      htmlAst
-      fields {
-        slug
-      }
-      frontmatter {
-        title
-        date(formatString: "MMMM DD, Y")
-      }
-      excerpt
-    }
-  }
-`
+export default Note

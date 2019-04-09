@@ -14,6 +14,9 @@ module.exports = {
         gfm: true,
         plugins: [
           {
+            resolve: '@weknow/gatsby-remark-twitter',
+          },
+          {
             resolve: 'gatsby-remark-emoji',
           },
           {
@@ -33,6 +36,13 @@ module.exports = {
       options: {
         name: 'posts',
         path: `${__dirname}/src/pages/posts/`,
+      },
+    },
+    {
+      resolve: 'gatsby-source-filesystem',
+      options: {
+        name: 'notes',
+        path: `${__dirname}/src/pages/notes/`,
       },
     },
     'gatsby-transformer-yaml',
