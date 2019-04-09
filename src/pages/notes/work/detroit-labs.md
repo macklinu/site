@@ -3,7 +3,7 @@
 - Domino's Pizza
 - GM
 - DTE Energy
-- Lineage Logistics
+- Lineage Logistics (including [Klondike][] design system)
 
 ### Side projects
 
@@ -12,3 +12,5 @@
 - self.conference
 
 Mentorship program - Android
+
+[klondike]: https://detroit-labs.github.io/klondike/
