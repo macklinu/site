@@ -96,17 +96,25 @@ const createPages = async ({ graphql, actions: { createPage } }) => {
 const onCreateNode = ({ node, actions: { createNodeField }, getNode }) => {
   if (node.internal.type === 'MarkdownRemark') {
     const parent = getNode(node.parent)
+    const collection = parent.sourceInstanceName
+    const directoryName = path.basename(path.dirname(node.fileAbsolutePath))
+    const slug = [
+      collection,
+      directoryName,
+      collection === 'notes' && parent.name,
+    ]
+      .filter(Boolean)
+      .join('/')
+
     createNodeField({
       node,
       name: 'collection',
-      value: parent.sourceInstanceName,
+      value: collection,
     })
-
-    const directoryName = path.basename(path.dirname(node.fileAbsolutePath))
     createNodeField({
       node,
       name: 'slug',
-      value: `posts/${directoryName}`,
+      value: slug,
     })
   }
 }

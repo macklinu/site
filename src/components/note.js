@@ -1,9 +1,10 @@
 import css from '@styled-system/css'
+import { graphql } from 'gatsby'
 import React from 'react'
 import rehypeReact from 'rehype-react'
 import styled from 'styled-components'
 
-import { Box, Heading, Text, Spacer } from '../components'
+import { Box, Heading, Spacer, Text } from '../components'
 import Layout from '../components/layout'
 import NavLink from '../components/nav-link'
 
@@ -122,7 +123,14 @@ const renderAst = new rehypeReact({
   },
 }).Compiler
 
-const Note = ({ pageContext: { htmlAst, slug } }) => (
+const Note = ({
+  data: {
+    markdownRemark: {
+      htmlAst,
+      fields: { slug },
+    },
+  },
+}) => (
   <Layout>
     <Text as='span' border='1px solid' borderRadius={2} p={2}>
       /{slug}
@@ -133,3 +141,14 @@ const Note = ({ pageContext: { htmlAst, slug } }) => (
 )
 
 export default Note
+
+export const pageQuery = graphql`
+  query($slug: String!) {
+    markdownRemark(fields: { slug: { eq: $slug } }) {
+      htmlAst
+      fields {
+        slug
+      }
+    }
+  }
+`
