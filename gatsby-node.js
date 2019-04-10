@@ -74,14 +74,20 @@ const createPages = async ({ graphql, actions: { createPage } }) => {
     })
   })
 
-  Object.keys(groupedNotes).forEach(key => {
-    groupedNotes[key] = groupedNotes[key].sort()
-  })
-
   createPage({
     path: '/notes',
     component: slash(Notes),
-    context: { groupedNotes },
+    context: {
+      groupedNotes: Object.keys(groupedNotes).reduce(
+        (obj, key) => ({
+          ...obj,
+          [key]: groupedNotes[key].sort((a, b) =>
+            a.name.toLowerCase().localeCompare(b.name.toLowerCase())
+          ),
+        }),
+        {}
+      ),
+    },
   })
 
   posts.data.allMarkdownRemark.nodes.forEach(({ fields: { slug } }) => {
