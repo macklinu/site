@@ -23,9 +23,7 @@ const Blockquote = props => (
   />
 )
 
-const P = props => (
-  <Text as='p' fontSize={[2, 3]} lineHeight={1.625} {...props} />
-)
+const P = props => <Text as='p' fontSize={3} lineHeight={1.625} {...props} />
 
 const Pre = props => (
   <Text
