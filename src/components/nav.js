@@ -2,8 +2,8 @@ import css from '@styled-system/css'
 import React from 'react'
 import styled from 'styled-components'
 
-import NavLink from './nav-link'
 import { Box, Flex } from './'
+import NavLink from './nav-link'
 
 const Container = styled(Box)(
   css({

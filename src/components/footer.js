@@ -3,8 +3,8 @@ import React from 'react'
 import { FiLink } from 'react-icons/fi'
 import styled from 'styled-components'
 
-import NavLink from './nav-link'
 import { Box, Flex } from './'
+import NavLink from './nav-link'
 
 const Container = styled(Box)(
   css({

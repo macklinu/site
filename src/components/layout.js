@@ -3,13 +3,13 @@ import { graphql, useStaticQuery } from 'gatsby'
 import PropTypes from 'prop-types'
 import React from 'react'
 import Helmet from 'react-helmet'
-import styled, { ThemeProvider, createGlobalStyle } from 'styled-components'
+import styled, { createGlobalStyle, ThemeProvider } from 'styled-components'
 
 import mackie from '../images/mackie-face.png'
+import { Box, Flex, Text } from '.'
 import Footer from './footer'
 import Nav from './nav'
 import theme from './theme'
-import { Box, Flex, Text } from '.'
 
 const googleMeta = ({ title, description, image }) => [
   { itemprop: 'name', content: title },
