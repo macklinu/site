@@ -1,11 +1,22 @@
 ---
 title: 'npm pack: A Dry-Run for npm Package Publishing'
 date: 2017-05-20
+bannerImage: ./banner.jpg
+bannerCredit: Photo by Leone Venter on Unsplash
 tags:
   - npm
 ---
 
-<banner>Heads up! [`npm pack`][npm-pack] now has a `--dry-run` option, which will print the output of `npm pack` to your terminal and not generate a tarball. This wasn't available when this article was originally published. :raised_hands:</banner>
+import { Banner } from 'gatsby-theme-macklinu-portfolio'
+
+<Banner className='mb-4' title='Heads up!'>
+
+[`npm pack`][npm-pack] now has a `--dry-run` option, which will
+print the output of `npm pack` to your terminal and not generate a tarball.
+This wasn't available when this article was originally published.
+🙌
+
+</Banner>
 
 Have you ever wondered, "Where do my files go when I publish a package to npm?"
 I have. I recently learned about [`npm pack`][npm-pack]. According to the
@@ -43,7 +54,7 @@ from danger-plugin-jira-issue's `package.json`:
 }
 ```
 
-Happy publishing! :rocket:
+Happy publishing! 🚀
 
 [danger-plugin-jira-issue]: https://github.com/macklinu/danger-plugin-jira-issue
 [files]: https://docs.npmjs.com/files/package.json#files

@@ -1,6 +1,8 @@
 ---
 title: The Power of ESLint's no-restricted-syntax
 date: 2019-03-18
+bannerImage: ./banner.jpg
+bannerCredit: Photo by [Steinar Engeland](https://unsplash.com/@steinart) on Unsplash
 tags:
   - eslint
 ---
@@ -55,11 +57,11 @@ rules:
 
 There are a couple of considerations to make when using `no-restricted-syntax`.
 
-:thinking: **Can you represent the violation using an AST selector?** This is the first step of the process. Although you have access to many useful selectors, sometimes it will be easier to maintain an ESLint rule than a highly complex AST selector. Also, some static analysis requires handling a myriad of cases that may be impossible to write with a selector. Don't be afraid to type some examples into [AST Explorer][], and if you find patterns that can be represented by operators (like `=`) or regular expressions, you definitely have a chance to use the `no-restricted-syntax` rule over writing your own.
+🤔 **Can you represent the violation using an AST selector?** This is the first step of the process. Although you have access to many useful selectors, sometimes it will be easier to maintain an ESLint rule than a highly complex AST selector. Also, some static analysis requires handling a myriad of cases that may be impossible to write with a selector. Don't be afraid to type some examples into [AST Explorer][], and if you find patterns that can be represented by operators (like `=`) or regular expressions, you definitely have a chance to use the `no-restricted-syntax` rule over writing your own.
 
 ![A list of ESLint selectors](./eslint-selectors.png)
 
-:thinking: **Do you want the ability to auto-fix a violation?** That is not supported by `no-restricted-syntax`, so you would need to write your own rule. However, sometimes trying to write ESLint fixers for syntax errors can sneakily introduce bugs unless you have thorough unit tests of your custom ESLint rules. If you don't mind manually changing `instanceof Array` to `Array.isArray()`, for example, then `no-restricted-syntax` is a simpler, quicker way to go.
+🤔 **Do you want the ability to auto-fix a violation?** That is not supported by `no-restricted-syntax`, so you would need to write your own rule. However, sometimes trying to write ESLint fixers for syntax errors can sneakily introduce bugs unless you have thorough unit tests of your custom ESLint rules. If you don't mind manually changing `instanceof Array` to `Array.isArray()`, for example, then `no-restricted-syntax` is a simpler, quicker way to go.
 
 In the end, there is no "right" answer. Experiment and see what works for you and your needs. My hope is that you've learned something new about ESLint, AST selectors, and the `no-restricted-syntax` rule.
 
