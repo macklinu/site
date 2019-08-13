@@ -19,8 +19,7 @@
   "scripts": {
     "dev": "gatsby develop",
     "build": "gatsby build",
-    "lint": "eslint '**/*.js'",
-    "test": "jest"
+    "lint": "eslint '**/*.js'"
   },
   "devDependencies": {
     "eslint": "^6.0.1",
