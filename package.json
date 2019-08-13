@@ -6,14 +6,10 @@
   "author": "Macklin Underdown <macklinu@gmail.com>",
   "dependencies": {
     "gatsby": "^2.13.31",
-    "gatsby-plugin-manifest": "2.2.3",
-    "gatsby-plugin-react-helmet": "3.1.2",
-    "gatsby-source-filesystem": "^2.1.5",
+    "gatsby-plugin-manifest": "^2.2.5",
     "gatsby-theme-macklinu-portfolio": "^1.1.0",
-    "gatsby-transformer-sharp": "^2.2.6",
-    "react": "^16.8.6",
-    "react-dom": "^16.8.6",
-    "react-helmet": "^5.2.1",
+    "react": "^16.9.0",
+    "react-dom": "^16.9.0",
     "slash": "^3.0.0"
   },
   "keywords": [
