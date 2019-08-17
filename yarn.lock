@@ -5729,10 +5729,10 @@ gatsby-telemetry@^1.1.11:
     stack-utils "1.0.2"
     uuid "3.3.2"
 
-gatsby-theme-macklinu-portfolio@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/gatsby-theme-macklinu-portfolio/-/gatsby-theme-macklinu-portfolio-1.1.0.tgz#29c2adca38c36b4068210a3b3eb40d80f135445d"
-  integrity sha512-HfGjX6IHeBWzRqjmULyU5jE5OB7PferNVTHDSiVpMghwasU14NEOLP5qxP845YGvo3Q0GIojXxzgYVHf10/aCA==
+gatsby-theme-macklinu-portfolio@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/gatsby-theme-macklinu-portfolio/-/gatsby-theme-macklinu-portfolio-1.2.0.tgz#b28b4f808da3a8b336ed358ae94dc3773d25c2f7"
+  integrity sha512-yrhX3B1skeh3oo9ca06ImtOBqsSEG5CcAkwkLJglM13UA1ptrUYAAEKqajc4wOCCqdRIKtPDxG07ie4R984inQ==
   dependencies:
     "@macklinu/cx" "^1.0.4"
     "@mdx-js/mdx" "^1.1.6"

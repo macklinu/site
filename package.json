@@ -7,7 +7,7 @@
   "dependencies": {
     "gatsby": "^2.13.31",
     "gatsby-plugin-manifest": "^2.2.5",
-    "gatsby-theme-macklinu-portfolio": "^1.1.0",
+    "gatsby-theme-macklinu-portfolio": "^1.2.0",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
     "slash": "^3.0.0"
