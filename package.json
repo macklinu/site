@@ -6,7 +6,8 @@
   "author": "Mackie Underdown <macklinu@users.noreply.github.com>",
   "license": "MIT",
   "scripts": {
-    "dev": "gatsby develop"
+    "dev": "gatsby develop",
+    "build": "gatsby build"
   },
   "dependencies": {
     "@emotion/core": "^10.0.28",
