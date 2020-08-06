@@ -25,16 +25,18 @@ export default function IndexPage() {
   `)
   return (
     <PageLayout>
-      {query.allMdx.nodes.map(({ id, fields, frontmatter }) => {
-        return (
-          <div key={id} className='py-1'>
-            <Link to={fields.slug}>{frontmatter.title}</Link>
-            <date className='ml-4 text-sm text-gray-500'>
-              {frontmatter.date}
-            </date>
-          </div>
-        )
-      })}
+      <main className='prose'>
+        {query.allMdx.nodes.map(({ id, fields, frontmatter }) => {
+          return (
+            <div key={id} className='py-1'>
+              <Link to={fields.slug}>{frontmatter.title}</Link>
+              <time className='ml-4 text-sm text-gray-700'>
+                {frontmatter.date}
+              </time>
+            </div>
+          )
+        })}
+      </main>
     </PageLayout>
   )
 }

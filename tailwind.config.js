@@ -1,8 +1,18 @@
 module.exports = {
   purge: ['src/**/*.js'],
   theme: {
-    extend: {},
+    typography(theme) {
+      return {
+        default: {
+          css: {
+            a: {
+              color: theme('colors.blue.700'),
+            },
+          },
+        },
+      }
+    },
   },
   variants: {},
-  plugins: [require('./tailwind-typography')],
+  plugins: [require('@tailwindcss/typography')],
 }

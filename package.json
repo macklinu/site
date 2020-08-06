@@ -15,6 +15,7 @@
     "@macklinu/cx": "^1.0.4",
     "@mdx-js/mdx": "^1.6.4",
     "@mdx-js/react": "^1.6.4",
+    "@tailwindcss/typography": "^0.2.0",
     "gatsby": "^2.22.9",
     "gatsby-plugin-emotion": "^4.3.2",
     "gatsby-plugin-mdx": "^1.2.12",
@@ -30,8 +31,7 @@
     "react-dom": "^16.13.1",
     "react-helmet-async": "^1.0.6",
     "remark-emoji": "^2.1.0",
-    "tailwindcss": "^1.4.6",
-    "tailwindcss-typography": "^3.1.0"
+    "tailwindcss": "^1.6.2"
   },
   "devDependencies": {
     "prettier": "^2.0.5"

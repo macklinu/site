@@ -14,6 +14,6 @@ export const PageLayout = ({ children }) => (
       </Link>
     </header>
     <div className='py-2' />
-    <main className='rich-text'>{children}</main>
+    {children}
   </div>
 )
