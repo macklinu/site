@@ -1,6 +1,7 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core'
 import { graphql, useStaticQuery, Link } from 'gatsby'
+import { DateTime } from 'luxon'
 import { PageLayout } from '../page-layout'
 
 export default function IndexPage() {
@@ -14,7 +15,7 @@ export default function IndexPage() {
           id
           frontmatter {
             title
-            date(formatString: "YYYY-MM-DD")
+            date
           }
           fields {
             slug
@@ -28,10 +29,12 @@ export default function IndexPage() {
       <main className='prose'>
         {query.allMdx.nodes.map(({ id, fields, frontmatter }) => {
           return (
-            <div key={id} className='py-1'>
+            <div key={id} className='py-1 flex flex-row justify-between'>
               <Link to={fields.slug}>{frontmatter.title}</Link>
               <time className='ml-4 text-sm text-gray-700'>
-                {frontmatter.date}
+                {DateTime.fromISO(frontmatter.date).toLocaleString(
+                  DateTime.DATE_FULL
+                )}
               </time>
             </div>
           )
