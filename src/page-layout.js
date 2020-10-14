@@ -6,7 +6,7 @@ import face from './mackie-face.png'
 export const PageLayout = ({ children }) => (
   <>
     <GlobalStyles />
-    <div tw='py-4 max-w-3xl mx-auto'>
+    <div tw='antialiased py-4 max-w-3xl mx-auto'>
       <header>
         <Link to='/'>
           <div tw='inline-flex flex-row items-center'>
