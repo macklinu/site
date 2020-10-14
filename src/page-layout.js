@@ -12,7 +12,7 @@ export const PageLayout = ({ children }) => (
           <div tw='inline-flex flex-row items-center'>
             <img alt="mackie's face" tw='h-8 w-8' src={face} />
             <div tw='px-1' />
-            <h1 tw='font-black text-2xl'>mackie.world</h1>
+            <h1 tw='font-black text-2xl'>mackie</h1>
           </div>
         </Link>
       </header>
