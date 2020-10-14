@@ -21,7 +21,6 @@
     "gatsby-plugin-mdx": "^1.2.46",
     "gatsby-plugin-next-seo": "^1.6.1",
     "gatsby-plugin-page-creator": "^2.3.32",
-    "gatsby-plugin-postcss": "^3.0.1",
     "gatsby-plugin-sharp": "^2.6.42",
     "gatsby-remark-emoji": "^0.0.3",
     "gatsby-remark-emojis": "^0.4.3",
@@ -32,9 +31,18 @@
     "react-dom": "^16.13.1",
     "react-helmet-async": "^1.0.7",
     "remark-emoji": "^2.1.0",
-    "tailwindcss": "^1.9.0"
+    "twin.macro": "^1.10.0"
   },
   "devDependencies": {
     "prettier": "^2.1.2"
+  },
+  "babelMacros": {
+    "twin": {
+      "config": "tailwind.config.js",
+      "preset": "emotion",
+      "debugProp": true,
+      "debugPlugins": false,
+      "debug": false
+    }
   }
 }

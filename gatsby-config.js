@@ -34,7 +34,6 @@ module.exports = {
       },
     },
     `gatsby-plugin-emotion`,
-    `gatsby-plugin-postcss`,
     `gatsby-plugin-next-seo`,
   ],
 }

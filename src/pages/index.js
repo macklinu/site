@@ -1,8 +1,8 @@
-/** @jsx jsx */
-import { jsx } from '@emotion/core'
+import * as React from 'react'
 import { graphql, useStaticQuery, Link } from 'gatsby'
 import { DateTime } from 'luxon'
 import { PageLayout } from '../page-layout'
+import 'twin.macro'
 
 export default function IndexPage() {
   const query = useStaticQuery(graphql`
@@ -26,19 +26,19 @@ export default function IndexPage() {
   `)
   return (
     <PageLayout>
-      <main className='prose'>
-        {query.allMdx.nodes.map(({ id, fields, frontmatter }) => {
-          return (
-            <div key={id} className='py-1 flex flex-row justify-between'>
-              <Link to={fields.slug}>{frontmatter.title}</Link>
-              <time className='ml-4 text-sm text-gray-700'>
-                {DateTime.fromISO(frontmatter.date).toLocaleString(
-                  DateTime.DATE_FULL
-                )}
-              </time>
-            </div>
-          )
-        })}
+      <main tw='prose'>
+        {query.allMdx.nodes.map(
+          ({ id, fields, frontmatter: { title, date } }) => {
+            return (
+              <div key={id} tw='py-1 flex flex-row justify-between'>
+                <Link to={fields.slug}>{title}</Link>
+                <time tw='ml-4 text-sm text-gray-700'>
+                  {DateTime.fromISO(date).toLocaleString(DateTime.DATE_FULL)}
+                </time>
+              </div>
+            )
+          }
+        )}
       </main>
     </PageLayout>
   )
