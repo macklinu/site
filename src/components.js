@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Link as GatsbyLink } from 'gatsby'
-import tw, { styled } from 'twin.macro'
+import tw from 'twin.macro'
 
 export const Link = ({
   children,
