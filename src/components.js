@@ -30,8 +30,7 @@ export const Link = ({
   )
 }
 
-export const NavLink = tw(
-  Link
-)`text-lg font-bold hover:underline p-2 transition duration-500 ease-in-out`
+// prettier-ignore
+export const NavLink = tw(Link)`text-lg font-bold hover:underline p-2 transition duration-500 ease-in-out`
 
 export const Container = tw.div`max-w-3xl mx-auto`
