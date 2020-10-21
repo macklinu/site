@@ -34,7 +34,7 @@ const AboutPage = () => {
         </section>
         <Container>
           <article tw='prose lg:prose-lg max-w-none py-4 px-4 mb-4'>
-            <figure tw='float-left flex flex-col pr-6 mb-0!'>
+            <figure tw='float-left flex flex-col pr-6 mb-4!'>
               <Img fixed={data.file.childImageSharp.fixed} />
               <figcaption>Photo taken by my friend Nazir</figcaption>
             </figure>
