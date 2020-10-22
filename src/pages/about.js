@@ -49,11 +49,11 @@ const AboutPage = () => {
             <p>
               I have experience with Android and full-stack web engineering
               (Node.js, TypeScript, React), with job experiences ranging from
-              startups in San Francisco as well as large companies in Detroit
-              and throughout the United States, both in-person and remote. In
-              addition to these contributions, I have also contributed to
-              various open source projects, such as maintaining a couple of
-              widely used ESLint plugins for period of time
+              startups in San Francisco to large companies in Detroit and
+              throughout the United States, both in-person and remote. In
+              addition to this experience, I have also contributed to various
+              open source software projects, such as maintaining a couple of
+              widely used ESLint plugins for a period of time
               <sup>
                 <Link to='https://github.com/jest-community/eslint-plugin-jest'>
                   [1]
