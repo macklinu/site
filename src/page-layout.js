@@ -1,5 +1,5 @@
 import * as React from 'react'
-import tw, { GlobalStyles } from 'twin.macro'
+import { GlobalStyles } from 'twin.macro'
 import { Container, NavLink } from './components'
 import face from './mackie-face.png'
 

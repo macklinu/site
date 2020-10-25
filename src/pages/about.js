@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { graphql, useStaticQuery } from 'gatsby'
 import Img from 'gatsby-image'
+import { GatsbySeo } from 'gatsby-plugin-next-seo'
 import { PageLayout } from '../page-layout'
 import { Container, Link } from '../components'
 import 'twin.macro'
@@ -19,6 +20,7 @@ const AboutPage = () => {
   `)
   return (
     <PageLayout>
+      <GatsbySeo title='About' />
       <main tw='flex flex-col max-w-none'>
         <section tw='py-20 bg-gradient-to-b from-yellow-200 to-orange-200'>
           <Container tw='max-w-3xl px-4'>

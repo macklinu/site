@@ -1,6 +1,7 @@
 import * as React from 'react'
-import { PageLayout } from './page-layout'
 import { DateTime } from 'luxon'
+import { GatsbySeo, BlogPostJsonLd } from 'gatsby-plugin-next-seo'
+import { PageLayout } from './page-layout'
 import { Container } from './components'
 import 'twin.macro'
 
@@ -19,11 +20,19 @@ const PostTitle = ({ title, date }) => (
 
 const PostLayout = ({
   children,
+  path,
   pageContext: {
     frontmatter: { title, date },
   },
 }) => (
   <PageLayout>
+    <GatsbySeo title={title} />
+    <BlogPostJsonLd
+      url={`https://mackie.world${path}`}
+      title={title}
+      datePublished={date}
+      authorName='Mackie Underdown'
+    />
     <PostTitle title={title} date={date} />
     <Container>
       <article tw='prose lg:prose-lg max-w-none py-4 px-4'>{children}</article>

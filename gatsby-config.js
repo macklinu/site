@@ -42,6 +42,17 @@ module.exports = {
       },
     },
     `gatsby-plugin-emotion`,
-    `gatsby-plugin-next-seo`,
+    {
+      resolve: `gatsby-plugin-next-seo`,
+      options: {
+        title: 'mackie.world',
+        titleTemplate: '%s | mackie.world',
+        twitter: {
+          handle: '@macklinu',
+          site: '@macklinu',
+          cardType: 'summary',
+        },
+      },
+    },
   ],
 }
