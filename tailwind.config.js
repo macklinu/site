@@ -1,17 +1,19 @@
+const colors = require('tailwindcss/colors')
+
 module.exports = {
   theme: {
-    typography(theme) {
-      return {
-        default: {
+    colors,
+    extend: {
+      typography: (theme) => ({
+        DEFAULT: {
           css: {
             a: {
               color: theme('colors.blue.700'),
             },
           },
         },
-      }
+      }),
     },
   },
-  variants: {},
   plugins: [require('@tailwindcss/typography')],
 }

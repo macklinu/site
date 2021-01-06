@@ -20,7 +20,7 @@ const Header = () => (
 )
 
 const Footer = () => (
-  <footer tw='py-8 bg-purple-200'>
+  <footer tw='py-8 bg-purple-100'>
     <Container tw='flex flex-row items-center'>
       <div tw='mx-auto' />
       <div tw='flex flex-row space-x-4 justify-end'>

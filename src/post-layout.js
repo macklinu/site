@@ -6,7 +6,7 @@ import { Container } from './components'
 import 'twin.macro'
 
 const PostTitle = ({ title, date }) => (
-  <div tw='py-16 bg-gradient-to-r from-orange-200 to-red-200'>
+  <div tw='py-16 bg-gradient-to-r from-orange-100 to-red-100'>
     <Container tw='px-4'>
       <h1 tw='font-extrabold text-3xl leading-9 tracking-tight'>{title}</h1>
       {date ? (

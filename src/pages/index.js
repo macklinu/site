@@ -58,7 +58,7 @@ const IndexPage = () => {
     <PageLayout>
       <GatsbySeo titleTemplate='%s' />
       <main tw='flex flex-col max-w-none'>
-        <section tw='py-20 bg-gradient-to-b from-yellow-200 to-orange-200'>
+        <section tw='py-20 bg-gradient-to-b from-yellow-100 to-orange-100'>
           <Container tw='max-w-3xl px-4'>
             <p tw='font-medium text-4xl leading-snug'>
               <span role='img' aria-label='Waving hand'>
@@ -70,7 +70,7 @@ const IndexPage = () => {
             </p>
           </Container>
         </section>
-        <section tw='py-8 bg-gradient-to-b from-orange-200 to-red-200'>
+        <section tw='py-8 bg-gradient-to-b from-orange-100 to-red-100'>
           <Container tw='max-w-3xl px-4'>
             <SectionHeading tw='pb-4'>Writing</SectionHeading>
             <ul tw='space-y-4'>
@@ -89,7 +89,7 @@ const IndexPage = () => {
             </ul>
           </Container>
         </section>
-        <section tw='py-8 bg-gradient-to-b from-red-200 to-purple-200'>
+        <section tw='py-8 bg-gradient-to-b from-red-100 to-purple-100'>
           <Container tw='max-w-3xl px-4'>
             <SectionHeading tw='pb-4'>Projects</SectionHeading>
             <ul tw='space-y-4'>

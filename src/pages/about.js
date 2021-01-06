@@ -22,7 +22,7 @@ const AboutPage = () => {
     <PageLayout>
       <GatsbySeo title='About' />
       <main tw='flex flex-col max-w-none'>
-        <section tw='py-20 bg-gradient-to-b from-yellow-200 to-orange-200'>
+        <section tw='py-20 bg-gradient-to-b from-yellow-100 to-orange-100'>
           <Container tw='max-w-3xl px-4'>
             <p tw='font-medium text-4xl leading-snug'>
               <span role='img' aria-label='Waving hand'>
