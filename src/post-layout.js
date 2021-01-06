@@ -35,7 +35,17 @@ const PostLayout = ({
     />
     <PostTitle title={title} date={date} />
     <Container>
-      <article tw='prose lg:prose-lg max-w-none py-4 px-4'>{children}</article>
+      <article
+        tw='prose lg:prose-lg max-w-none py-4 px-4'
+        css={{
+          pre: {
+            paddingLeft: 0,
+            paddingRight: 0,
+          },
+        }}
+      >
+        {children}
+      </article>
     </Container>
   </PageLayout>
 )
