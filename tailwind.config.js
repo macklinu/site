@@ -8,7 +8,7 @@ module.exports = {
         DEFAULT: {
           css: {
             a: {
-              color: theme('colors.blue.700'),
+              color: theme('colors.blue.600'),
             },
           },
         },
