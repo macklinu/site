@@ -7,7 +7,7 @@ If you come from Java, you may be used to the [StringBuilder][] or [StringJoiner
 
 ### Template Literal
 
-When building a string with known, defined variables, I tend to use a [template literal][], which is a specific type of string that allows for creating strings with variables or expressions inside the string.
+When building a string with known, defined variables, I tend to use a [template literal][], which is a specific type of string that allows for creating strings that contain variables or expressions.
 
 For example, if the Detroit Pistons are playing at home against the Cleveland Cavaliers, you might represent that in the box score as "CLE @ DET". To build that with a template literal looks like this:
 
@@ -43,7 +43,7 @@ Sometimes this approach can be overkill for simply joining two strings with a se
 
 I usually reach for the Array-based string building approach when I am dealing with multiple pieces of dynamic data, where some of the pieces are optional, and I can safely remove undefined data from the final output string.
 
-For example, let's build a title string that you might display in the browser tab for a specific game. Here are the requirements:
+For example, let's build a title string that you might display in a browser tab for a specific game. Here are the requirements:
 
 - Always display "NBA" at the start of the string.
 - When you are on the game box score page, show "{Away Team Abbreviation} @ {Home Team Abbreviation}".
