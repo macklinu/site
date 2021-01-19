@@ -9,7 +9,7 @@ import tw from 'twin.macro'
 const SectionHeading = tw.h2`leading-9 tracking-tight text-3xl font-extrabold`
 
 const Post = ({ title, date, href }) => (
-  <div tw='flex flex-row justify-between items-baseline'>
+  <div tw='flex flex-col'>
     <Link
       tw='text-xl tracking-tight font-medium hover:underline text-gray-900'
       to={href}
@@ -58,7 +58,7 @@ const IndexPage = () => {
     <PageLayout>
       <GatsbySeo titleTemplate='%s' />
       <main tw='flex flex-col max-w-none'>
-        <section tw='py-20 bg-gradient-to-b from-yellow-100 to-orange-100'>
+        <section tw='py-12 sm:py-20 bg-gradient-to-b from-yellow-100 to-orange-100'>
           <Container tw='max-w-3xl px-4'>
             <p tw='font-medium text-4xl leading-snug'>
               <span role='img' aria-label='Waving hand'>
@@ -81,8 +81,8 @@ const IndexPage = () => {
                   title: node.frontmatter.title,
                   date: node.frontmatter.date,
                 }))
-                .map((props) => (
-                  <li key={props.id}>
+                .map(({ id, ...props }) => (
+                  <li key={id}>
                     <Post {...props} />
                   </li>
                 ))}

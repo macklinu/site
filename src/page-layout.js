@@ -13,7 +13,7 @@ const Header = () => (
       </div>
     </NavLink>
     <div tw='mx-auto' />
-    <div tw='flex flex-row space-x-4 items-center'>
+    <div tw='flex flex-row space-x-4 items-center mx-2'>
       <NavLink to='/about'>about</NavLink>
     </div>
   </header>
@@ -23,7 +23,7 @@ const Footer = () => (
   <footer tw='py-8 bg-purple-100'>
     <Container tw='flex flex-row items-center'>
       <div tw='mx-auto' />
-      <div tw='flex flex-row space-x-4 justify-end'>
+      <div tw='flex flex-row space-x-4 justify-end mx-2'>
         <NavLink to='https://github.com/macklinu'>github</NavLink>
         <NavLink to='https://twitter.com/macklinu'>twitter</NavLink>
         <NavLink to='https://linkedin.com/in/macklinu'>linkedin</NavLink>
