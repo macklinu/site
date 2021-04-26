@@ -73,6 +73,11 @@ const AboutPage = () => {
               piano, and producing in Ableton Live. I also love to play
               basketball and video games.
             </p>
+            <p>
+              If you are curious about my work experience, please review my{' '}
+              <Link to='https://linkedin.com/in/macklinu'>LinkedIn</Link> or{' '}
+              <Link to='/resume'>resume</Link>.
+            </p>
           </article>
         </Container>
       </main>
