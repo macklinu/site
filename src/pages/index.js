@@ -55,7 +55,7 @@ const IndexPage = () => {
           id
           frontmatter {
             title
-            date
+            date(formatString: "YYYY-MM-DD")
           }
           fields {
             slug
@@ -87,7 +87,7 @@ const IndexPage = () => {
               {query.allMdx.nodes
                 .map((node) => ({
                   id: node.id,
-                  href: node.fields.slug,
+                  href: node.fields?.slug,
                   title: node.frontmatter.title,
                   date: node.frontmatter.date,
                 }))

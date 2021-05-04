@@ -12,7 +12,7 @@ const PostTitle = ({ title, date }) => (
       </h1>
       {date ? (
         <time className='text-base text-gray-700 font-medium my-2'>
-          {DateTime.fromISO(date).toLocaleString(DateTime.DATE_FULL)}
+          {DateTime.fromISO(date).toUTC().toLocaleString(DateTime.DATE_FULL)}
         </time>
       ) : null}
     </Container>
