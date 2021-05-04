@@ -3,14 +3,15 @@ import { DateTime } from 'luxon'
 import { GatsbySeo, BlogPostJsonLd } from 'gatsby-plugin-next-seo'
 import { PageLayout } from './page-layout'
 import { Container } from './components'
-import 'twin.macro'
 
 const PostTitle = ({ title, date }) => (
-  <div tw='py-16 bg-gradient-to-r from-orange-100 to-red-100'>
-    <Container tw='px-4'>
-      <h1 tw='font-extrabold text-3xl leading-9 tracking-tight'>{title}</h1>
+  <div className='py-16 bg-gradient-to-r from-orange-100 to-red-100'>
+    <Container className='px-4'>
+      <h1 className='font-extrabold text-3xl leading-9 tracking-tight'>
+        {title}
+      </h1>
       {date ? (
-        <time tw='text-base text-gray-700 font-medium my-2'>
+        <time className='text-base text-gray-700 font-medium my-2'>
           {DateTime.fromISO(date).toLocaleString(DateTime.DATE_FULL)}
         </time>
       ) : null}
@@ -36,7 +37,7 @@ const PostLayout = ({
     <PostTitle title={title} date={date} />
     <Container>
       <article
-        tw='prose lg:prose-lg max-w-none py-4 px-4'
+        className='prose lg:prose-lg max-w-none py-4 px-4'
         css={{
           pre: {
             paddingLeft: 0,

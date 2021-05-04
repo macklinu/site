@@ -1,43 +1,36 @@
 import * as React from 'react'
-import { graphql, useStaticQuery } from 'gatsby'
-import Img from 'gatsby-image'
+import { StaticImage } from 'gatsby-plugin-image'
 import { GatsbySeo } from 'gatsby-plugin-next-seo'
 import { PageLayout } from '../page-layout'
 import { Container, Link } from '../components'
-import 'twin.macro'
 
 const AboutPage = () => {
-  const data = useStaticQuery(graphql`
-    query {
-      file(relativePath: { eq: "mackie-bday.jpg" }) {
-        childImageSharp {
-          fixed(width: 280) {
-            ...GatsbyImageSharpFixed
-          }
-        }
-      }
-    }
-  `)
   return (
     <PageLayout>
       <GatsbySeo title='About' />
-      <main tw='flex flex-col max-w-none'>
-        <section tw='py-20 bg-gradient-to-b from-yellow-100 to-orange-100'>
-          <Container tw='max-w-3xl px-4'>
-            <p tw='font-medium text-4xl leading-snug'>
+      <main className='flex flex-col max-w-none'>
+        <section className='py-20 bg-gradient-to-b from-yellow-100 to-orange-100'>
+          <Container className='max-w-3xl px-4'>
+            <p className='font-medium text-4xl leading-snug'>
               <span role='img' aria-label='Waving hand'>
                 👋
               </span>{' '}
-              I'm <span tw='font-bold'>Mackie</span>, a software engineer and
-              musician. I enjoy creating music, art, and software and helping
-              others do the same.
+              I'm <span className='font-bold'>Mackie</span>, a software engineer
+              and musician. I enjoy creating music, art, and software and
+              helping others do the same.
             </p>
           </Container>
         </section>
         <Container>
-          <article tw='prose lg:prose-lg max-w-none py-4 px-4 mb-4'>
-            <figure tw='float-left flex flex-col pr-6 mb-4!'>
-              <Img fixed={data.file.childImageSharp.fixed} />
+          <article className='prose lg:prose-lg max-w-none py-4 px-4 mb-4'>
+            <figure className='float-left flex flex-col pr-6 pt-8'>
+              <StaticImage
+                src='../images/mackie-bday.jpg'
+                alt='mackie at his surprise birthday party'
+                height={320}
+                placeholder='blurred'
+                transformOptions={{ fit: 'cover' }}
+              />
               <figcaption>Photo taken by my friend Nazir</figcaption>
             </figure>
             <p>

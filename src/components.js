@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Link as GatsbyLink } from 'gatsby'
-import tw from 'twin.macro'
+import cx from '@macklinu/cx'
 
 export const Link = ({
   children,
@@ -30,7 +30,20 @@ export const Link = ({
   )
 }
 
-// prettier-ignore
-export const NavLink = tw(Link)`text-lg font-bold hover:underline p-2 transition duration-500 ease-in-out`
+export const NavLink = ({ className, children, ...props }) => (
+  <Link
+    className={cx(
+      'text-lg font-bold hover:underline p-2 transition duration-500 ease-in-out',
+      className
+    )}
+    {...props}
+  >
+    {children}
+  </Link>
+)
 
-export const Container = tw.div`max-w-3xl mx-auto`
+export const Container = ({ children, className, ...props }) => (
+  <div className={cx('max-w-3xl mx-auto', className)} {...props}>
+    {children}
+  </div>
+)
