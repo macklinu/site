@@ -48,7 +48,10 @@ const IndexPage = () => {
   const query = useStaticQuery(graphql`
     query GetPosts {
       allMdx(
-        filter: { fileAbsolutePath: { glob: "**/posts/**" } }
+        filter: {
+          fileAbsolutePath: { glob: "**/posts/**" }
+          frontmatter: { published: { ne: false } }
+        }
         sort: { order: DESC, fields: frontmatter___date }
       ) {
         nodes {
