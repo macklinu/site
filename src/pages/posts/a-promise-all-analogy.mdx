@@ -1,0 +1,47 @@
+import { PostLayout } from '@/components/PostLayout'
+
+export const meta = {
+  author: 'Mackie Underdown',
+  date: '2017-08-15',
+  title: 'A Promise.all Analogy',
+  description: 'A tip for understanding Promise.all',
+  published: false,
+}
+
+export default (props) => <PostLayout meta={meta} {...props} />
+
+I've been splitting time this year in-between MI and MA, and as a result, I've
+spent a lot of time driving on
+[I-90](https://en.wikipedia.org/wiki/Interstate_90). Yesterday, my wife and I
+stopped at a service plaza in the NY stretch of I-90, and this analogy for
+`Promise.all` came to mind.
+
+The car stops, and we decide to split up tasks to get back on the road as soon
+as possible. One of us will pump gas, while the other one will run inside to
+order Roy Rogers' (at least if you stop in
+[Indian Castle](http://www.thruway.ny.gov/travelers/travelplazas/tp-indiancastle.html)).
+Here's what that Promise looks like:
+
+```js
+Promise.all([pumpGas(), orderFood()])
+```
+
+This Promise is pending until both tasks are completed. Since each action takes
+an indefinite amount of time, we must wait for both to be completed before
+moving on. If both tasks are completed successfully, both Promises are
+**resolved**, and `.then()` is called:
+
+```js
+Promise.all([pumpGas(), orderFood()]).then(([gas, food]) => {
+  /* Now we can drive and eat */
+})
+```
+
+If either or both of us fail to complete our tasks, the Promise is **rejected**,
+and `.catch()` is called:
+
+```js
+Promise.all([pumpGas(), orderFood()]).catch((error) => {
+  /* I forgot my wallet in the car */
+})
+```

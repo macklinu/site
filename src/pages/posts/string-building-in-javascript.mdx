@@ -1,0 +1,115 @@
+import { PostLayout } from '@/components/PostLayout'
+
+export const meta = {
+  author: 'Mackie Underdown',
+  date: '2020-10-25',
+  title: 'String Building in JavaScript',
+  description: 'Here are some tips for building strings in JavaScript',
+  published: false,
+}
+
+export default (props) => <PostLayout meta={meta} {...props} />
+
+If you come from Java, you may be used to the [StringBuilder][] or [StringJoiner] classes for building dynamic strings. There aren't equivalent data structures in the JavaScript standard library, so when building strings in JavaScript, there are a couple options I usually reach for.
+
+### Template Literal
+
+When building a string with known, defined variables, I tend to use a [template literal][], which is a specific type of string that allows for creating strings that contain variables or expressions.
+
+For example, if the Detroit Pistons are playing at home against the Cleveland Cavaliers, you might represent that in the box score as "CLE @ DET". To build that with a template literal looks like this:
+
+```js
+const away = 'CLE'
+const home = 'DET'
+const boxScoreTeams = `${away} @ ${home}`
+```
+
+This makes sense when you are dealing with variables, or even expressions like function calls or object property access, to build a string with a known structure.
+
+```js
+const awayTeam = {
+  name: 'Cleveland Cavaliers',
+  abbreviation: 'CLE',
+}
+const homeTeam = {
+  name: 'Detroit Pistons',
+  abbreviation: 'DET',
+}
+const boxScoreTeams = `${awayTeam.abbreviation} @ ${homeTeam.abbreviation}`
+```
+
+### Array
+
+Another way to build strings is to use the [Array][] data structure and join them together with a string separator.
+
+```js
+const boxScoreTeams = [awayTeam.abbreviation, homeTeam.abbreviation].join(' @ ')
+```
+
+Sometimes this approach can be overkill for simply joining two strings with a separator, but it is still a viable option, especially if you and your team find it readable and maintainable.
+
+I usually reach for the Array-based string building approach when I am dealing with multiple pieces of dynamic data, where some of the pieces are optional, and I can safely remove undefined data from the final output string.
+
+For example, let's build a title string that you might display in a browser tab for a specific game. Here are the requirements:
+
+- Always display "NBA" at the start of the string.
+- When you are on the game box score page, show "Away Team Abbreviation @ Home Team Abbreviation".
+- When the game is in progress or complete, show the score and game status; otherwise, don't include that information.
+- Separate strings with " | ".
+
+```js
+function createDocumentTitle(game) {
+  return [
+    'NBA',
+    isBoxScorePage() ? buildTeamAbbreviations(game.teams) : undefined,
+    hasGameStartedOrFinished(game) ? buildGameLineScore(game) : undefined,
+  ]
+    .filter(Boolean)
+    .join(' | ')
+}
+
+// Possible results
+// 'NBA'
+// 'NBA | CLE @ DET'
+// 'NBA | CLE @ DET | 44-51 6:21 2Q'
+```
+
+### Custom StringBuilder Class
+
+Another option is to build your own Java-esque `StringBuilder` class to suit whatever needs you may have! Even if you don't find it that practical to use in your work codebases, it's fun to learn and try something new. 😄
+
+```js
+class StringBuilder {
+  constructor() {
+    this.#parts = []
+  }
+
+  append(string) {
+    this.#parts.push(string)
+    return this
+  }
+
+  join(separator = '') {
+    return this.#parts.join(separator)
+  }
+}
+
+// Using the StringBuilder class
+// to achieve the same results in the previous example
+function createDocumentTitle(game) {
+  const stringBuilder = new StringBuilder()
+  stringBuilder.append('NBA')
+  if (isBoxScorePage()) {
+    stringBuilder.append(buildTeamAbbreviations(game.teams))
+  }
+  if (hasGameStartedOrFinished(game)) {
+    stringBuilder.append(buildGameLineScore(game))
+  }
+  return stringBuilder.join(' | ')
+}
+```
+
+[stringbuilder]: https://docs.oracle.com/javase/7/docs/api/java/lang/StringBuilder.html
+[stringjoiner]: https://docs.oracle.com/javase/8/docs/api/java/util/StringJoiner.html
+[template literal]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals
+[array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array
