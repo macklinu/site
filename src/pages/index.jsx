@@ -7,7 +7,7 @@ import { Button } from '@/components/Button'
 import { Card } from '@/components/Card'
 import { Container } from '@/components/Container'
 import { TwitterIcon, GitHubIcon, LinkedInIcon } from '@/components/SocialIcons'
-import alexBrisbey from '@/images/photos/alex-brisbey-unsplash.jpeg'
+import lizWeddon from '@/images/photos/liz-weddon-unsplash.jpeg'
 import joshGarcia from '@/images/photos/josh-garcia-unsplash.jpeg'
 import jasonHutchinson from '@/images/photos/jason-hutchison-unsplash.jpeg'
 import kahariKing from '@/images/photos/kahari-king-unsplash.jpeg'
@@ -143,8 +143,8 @@ function Resume() {
 function Photos() {
   let rotations = ['rotate-2', '-rotate-2', 'rotate-2', 'rotate-2', '-rotate-2']
   let images = [
+    { src: lizWeddon, title: 'Photo by Liz Weddon on Unsplash' },
     { src: joshGarcia, title: 'Photo by Josh Garcia on Unsplash' },
-    { src: alexBrisbey, title: 'Photo by Alex Brisbey on Unsplash' },
     { src: jasonHutchinson, title: 'Photo by Jason Hutchison on Unsplash' },
     { src: kahariKing, title: 'Photo by Kahari King on Unsplash' },
     { src: robertYandura, title: 'Photo by Robert Yandura on Unsplash' },
