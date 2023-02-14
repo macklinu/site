@@ -1,0 +1,44 @@
+---
+import { Icon } from 'astro-icon'
+import { CollectionEntry, getCollection } from 'astro:content'
+import { shortDate } from '~/date'
+import Layout from '~/Layout.astro'
+
+interface Props {
+  post: CollectionEntry<'posts'>
+}
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts')
+  return posts.map((post) => ({
+    params: { slug: post.slug },
+    props: { post },
+  }))
+}
+
+const { post } = Astro.props
+const { Content } = await post.render()
+
+const { title, description } = post.data
+const date = shortDate(post.data.date)
+---
+
+<Layout title={title} description={description}>
+  <main class='mb-16'>
+    <a href='/' class='inline-flex flex-row gap-1 items-center underline'>
+      <Icon name='mdi:arrow-left' class='h-4 w-4' />
+      Back
+    </a>
+
+    <div class='flex flex-col py-4'>
+      <h2 class='lg:text-4xl text-3xl leading-relaxed font-black'>{title}</h2>
+      <time class='text-md my-2'>
+        {date}
+      </time>
+    </div>
+
+    <article class='prose lg:prose-lg dark:prose-invert'>
+      <Content />
+    </article>
+  </main>
+</Layout>

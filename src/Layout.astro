@@ -1,0 +1,54 @@
+---
+import { Icon } from 'astro-icon'
+
+interface Props {
+  title?: string
+  description?: string
+}
+
+const {
+  title = 'Mackie Underdown',
+  description = 'The personal site of Mackie Underdown',
+} = Astro.props
+---
+
+<html lang='en'>
+  <head>
+    <meta charset='UTF-8' />
+    <meta name='description' property='og:description' content={description} />
+    <meta name='viewport' content='width=device-width' />
+    <meta name='generator' content={Astro.generator} />
+    <title>{title}</title>
+
+    <link rel='icon' type='image/png' href='/favicon.png' />
+
+    <link rel='preconnect' href='https://fonts.googleapis.com' />
+    <link rel='preconnect' href='https://fonts.gstatic.com' crossorigin />
+    <link
+      href='https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&display=swap'
+      rel='stylesheet'
+    />
+
+    <link rel='preconnect' href='https://rsms.me/' />
+    <link rel='stylesheet' href='https://rsms.me/inter/inter.css' />
+  </head>
+  <body
+    class='dark:bg-black/95 bg-white/95 dark:text-white/95 text-black/95 font-sans container mx-auto px-4 tabular-nums min-h-screen'
+  >
+    <nav class='py-16'>
+      <div class='flex flex-row items-center'>
+        <a
+          href='/'
+          class='dark:text-white text-black flex flex-row items-center gap-2 text-xl font-bold'
+        >
+          <Icon
+            name='ri:ghost-smile-fill'
+            class='rounded-lg p-1 bg-gray-700 text-white h-8 w-8'
+          />
+          Mackie Underdown
+        </a>
+      </div>
+    </nav>
+    <slot />
+  </body>
+</html>
