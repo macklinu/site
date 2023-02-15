@@ -3,8 +3,10 @@ lockfileVersion: 5.4
 specifiers:
   '@astrojs/tailwind': ^3.0.1
   '@tailwindcss/typography': ^0.5.9
+  '@types/luxon': ^3.2.0
   astro: ^2.0.10
   astro-icon: ^0.8.0
+  luxon: ^3.2.1
   prettier: ^2.8.4
   prettier-plugin-astro: ^0.8.0
   tailwindcss: ^3.0.24
@@ -14,9 +16,11 @@ dependencies:
   '@tailwindcss/typography': 0.5.9_tailwindcss@3.2.6
   astro: 2.0.10
   astro-icon: 0.8.0
+  luxon: 3.2.1
   tailwindcss: 3.2.6
 
 devDependencies:
+  '@types/luxon': 3.2.0
   prettier: 2.8.4
   prettier-plugin-astro: 0.8.0
 
@@ -713,6 +717,10 @@ packages:
   /@types/json5/0.0.30:
     resolution: {integrity: sha512-sqm9g7mHlPY/43fcSNrCYfOeX9zkTTK+euO5E6+CVijSMm5tTjkVdwdqRkY3ljjIAf8679vps5jKUoJBCLsMDA==}
     dev: false
+
+  /@types/luxon/3.2.0:
+    resolution: {integrity: sha512-lGmaGFoaXHuOLXFvuju2bfvZRqxAqkHPx9Y9IQdQABrinJJshJwfNCKV+u7rR3kJbiqfTF/NhOkcxxAFrObyaA==}
+    dev: true
 
   /@types/mdast/3.0.10:
     resolution: {integrity: sha512-W864tg/Osz1+9f4lrGTZpCSO5/z4608eUp19tbozkq2HJK6i3z1kT0H9tlADXuYIb1YYOBByU4Jsqkk75q48qA==}
@@ -1867,6 +1875,11 @@ packages:
     engines: {node: '>=10'}
     dependencies:
       yallist: 4.0.0
+    dev: false
+
+  /luxon/3.2.1:
+    resolution: {integrity: sha512-QrwPArQCNLAKGO/C+ZIilgIuDnEnKx5QYODdDtbFaxzsbZcc/a7WFq7MhsVYgRlwawLtvOUESTlfJ+hc/USqPg==}
+    engines: {node: '>=12'}
     dev: false
 
   /magic-string/0.27.0:
