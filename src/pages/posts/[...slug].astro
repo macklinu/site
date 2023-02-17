@@ -1,15 +1,16 @@
 ---
 import { Icon } from 'astro-icon'
-import { CollectionEntry, getCollection } from 'astro:content'
-import { shortDate } from '~/date'
+
+import { longDate } from '~/date'
 import Layout from '~/Layout.astro'
+import { getPosts, Post } from '~/posts'
 
 interface Props {
-  post: CollectionEntry<'posts'>
+  post: Post
 }
 
 export async function getStaticPaths() {
-  const posts = await getCollection('posts')
+  const posts = await getPosts()
   return posts.map((post) => ({
     params: { slug: post.slug },
     props: { post },
@@ -20,7 +21,7 @@ const { post } = Astro.props
 const { Content } = await post.render()
 
 const { title, description } = post.data
-const date = shortDate(post.data.date)
+const date = longDate(post.data.date)
 ---
 
 <Layout title={title} description={description}>
@@ -32,9 +33,12 @@ const date = shortDate(post.data.date)
 
     <div class='flex flex-col py-4'>
       <h2 class='lg:text-4xl text-3xl leading-relaxed font-black'>{title}</h2>
-      <time class='text-md my-2'>
-        {date}
-      </time>
+      <div class='my-2 inline-flex flex-row items-center gap-1.5'>
+        <Icon name='mdi:calendar-month' class='h-4 w-4' />
+        <time class='text-md dark:text-slate-300 text-slate-600'>
+          {date}
+        </time>
+      </div>
     </div>
 
     <article class='prose lg:prose-lg dark:prose-invert'>

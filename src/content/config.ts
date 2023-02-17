@@ -7,7 +7,6 @@ export const collections = {
       title: z.string(),
       description: z.string(),
       date: z.string().transform((s) => DateTime.fromISO(s).toJSDate()),
-      published: z.coerce.boolean().optional().default(true),
     }),
   }),
 }

@@ -1,12 +1,10 @@
 ---
 import { Icon } from 'astro-icon'
-import { getCollection } from 'astro:content'
-import { shortDate } from '~/date'
+import { isoDate } from '~/date'
 import Layout from '~/Layout.astro'
+import { getPosts } from '~/posts'
 
-const posts = (await getCollection('posts'))
-  .filter(({ data }) => data.published)
-  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+const posts = await getPosts()
 
 const projects = [
   {
@@ -69,10 +67,10 @@ const social = [
           posts.map(({ data, slug }) => (
             <li class='space-x-1'>
               <time
-                datetime={shortDate(data.date)}
-                class='dark:text-gray-300 text-gray-600 text-sm'
+                datetime={isoDate(data.date)}
+                class='dark:text-slate-300 text-slate-600 text-sm tabular-nums'
               >
-                {shortDate(data.date)}
+                {isoDate(data.date)}
               </time>
 
               <a class='underline' href={`/posts/${slug}`}>
@@ -98,7 +96,7 @@ const social = [
                 {name}
               </a>
 
-              <p class='dark:text-gray-300 text-gray-600'>{description}</p>
+              <p class='dark:text-slate-300 text-slate-600'>{description}</p>
             </li>
           ))
         }
