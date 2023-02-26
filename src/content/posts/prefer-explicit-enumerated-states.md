@@ -88,7 +88,7 @@ function MyComponent() {
 }
 ```
 
-Or even better with a reducer, since the **success** and **error** statuses have data associated with them.
+Or even better, we can use a reducer, since the **success** and **error** statuses have data associated with them.
 
 ```ts
 function MyComponent() {
