@@ -9,16 +9,20 @@
     "preview": "astro preview"
   },
   "dependencies": {
-    "@astrojs/tailwind": "^3.0.1",
+    "@astrojs/tailwind": "^3.1.2",
     "@tailwindcss/typography": "^0.5.9",
-    "astro": "^2.0.10",
+    "astro": "^2.3.4",
     "astro-icon": "^0.8.0",
-    "luxon": "^3.2.1",
-    "tailwindcss": "^3.0.24"
+    "luxon": "^3.3.0",
+    "tailwindcss": "^3.3.2"
   },
   "devDependencies": {
-    "@types/luxon": "^3.2.0",
-    "prettier": "^2.8.4",
+    "@types/luxon": "^3.3.0",
+    "prettier": "^2.8.8",
     "prettier-plugin-astro": "^0.8.0"
-  }
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "packageManager": "pnpm@8.4.0"
 }
