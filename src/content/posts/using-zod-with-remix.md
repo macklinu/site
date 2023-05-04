@@ -4,7 +4,7 @@ title: Using Zod with Remix
 description: Here are some of my suggestions for using Zod with Remix
 ---
 
-I've recently been using [Zod][] to validate my data in [Remix][] projects.
+I've recently been using [Zod][] to validate data in [Remix][] projects.
 
 My main rule of thumb: **keep Zod on the server**.
 
@@ -30,7 +30,7 @@ export const loader = async ({ params }: LoaderArgs) => {
 }
 ```
 
-I do something similar in my `action()` functions, but I'm usually interested in the `FormData` that gets submitted in a form submission or other action on the client.
+I do something similar in my `action()` functions, but I'm usually interested in the `FormData` that gets submitted in a form submission or other action from the client.
 
 ```ts
 const CreateProjectSchema = z.object({
