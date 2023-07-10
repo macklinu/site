@@ -1,11 +1,7 @@
 ---
-
-  date: '2022-10-13'
-  title: 'Month calendar view helpers in Ruby on Rails'
-  description:
-    'Rails makes it very easy to build a month calendar with date helpers like beginning_of_week and end_of_week.'
-
-
+date: '2022-10-13'
+title: 'Month calendar view helpers in Ruby on Rails'
+description: 'Rails makes it very easy to build a month calendar with date helpers like beginning_of_week and end_of_week.'
 ---
 
 I'm learning how to build an interactive calendar UI with [Rails](https://rubyonrails.org/) and [Hotwire](https://hotwired.dev/). Take a look at this nicely designed calendar from [Tailwind UI](https://tailwindui.com/components/application-ui/data-display/calendars#component-c29139529079ea762f118812bbeaeb9e).
