@@ -3,7 +3,7 @@ import { Icon } from 'astro-icon'
 
 import { longDate } from '~/date'
 import Layout from '~/Layout.astro'
-import { getPosts, Post } from '~/posts'
+import { getPosts, type Post } from '~/posts'
 
 interface Props {
   post: Post
@@ -28,11 +28,13 @@ const date = longDate(post.data.date)
   <main class='mb-16'>
     <a href='/' class='inline-flex flex-row gap-1 items-center underline'>
       <Icon name='mdi:arrow-left' class='h-4 w-4' />
-      Back
+       Back
     </a>
 
     <div class='flex flex-col py-4'>
-      <h2 class='lg:text-4xl text-3xl leading-relaxed font-black'>{title}</h2>
+      <h2 class='lg:text-4xl text-3xl leading-relaxed font-black'>
+        {title}
+      </h2>
       <div class='my-2 inline-flex flex-row items-center gap-1.5'>
         <Icon name='mdi:calendar-month' class='h-4 w-4' />
         <time class='text-md dark:text-slate-300 text-slate-600'>
