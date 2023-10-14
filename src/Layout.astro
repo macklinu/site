@@ -4,17 +4,21 @@ import { Icon } from 'astro-icon'
 interface Props {
   title?: string
   description?: string
+  ogImage?: string
 }
 
 const {
   title = 'Mackie Underdown',
   description = 'The personal site of Mackie Underdown',
+  ogImage,
 } = Astro.props
 ---
 
 <html lang='en'>
   <head>
     <meta charset='UTF-8' />
+    <meta property='og:title' content={title} />
+    {ogImage && <meta property='og:image' content={ogImage} />}
     <meta name='description' property='og:description' content={description} />
     <meta name='viewport' content='width=device-width' />
     <meta name='generator' content={Astro.generator} />
@@ -32,6 +36,7 @@ const {
     <link rel='preconnect' href='https://rsms.me/' />
     <link rel='stylesheet' href='https://rsms.me/inter/inter.css' />
   </head>
+
   <body
     class='dark:bg-slate-950 bg-slate-50 dark:text-slate-50 text-slate-950 font-sans container mx-auto px-4 min-h-screen'
   >
