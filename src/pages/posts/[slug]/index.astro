@@ -22,9 +22,11 @@ const { Content } = await post.render()
 
 const { title, description } = post.data
 const date = longDate(post.data.date)
+
+const ogImage = new URL(`/posts/${post.slug}.png`, Astro.url.origin).href
 ---
 
-<Layout title={title} description={description}>
+<Layout title={title} description={description} ogImage={ogImage}>
   <main class='mb-16'>
     <a href='/' class='inline-flex flex-row gap-1 items-center underline'>
       <Icon name='mdi:arrow-left' class='h-4 w-4' />
