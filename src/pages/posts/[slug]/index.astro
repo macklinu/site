@@ -23,7 +23,10 @@ const { Content } = await post.render()
 const { title, description } = post.data
 const date = longDate(post.data.date)
 
-const ogImage = new URL(`/posts/${post.slug}.png`, Astro.url.origin).href
+const ogImage = new URL(
+  `/posts/${post.slug}.png`,
+  import.meta.env.SITE
+).toString()
 ---
 
 <Layout title={title} description={description} ogImage={ogImage}>
