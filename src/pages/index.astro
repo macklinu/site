@@ -1,5 +1,6 @@
 ---
 import { Icon } from 'astro-icon'
+import { DESCRIPTION } from '~/config'
 import { isoDate } from '~/date'
 import Layout from '~/Layout.astro'
 import { getPosts } from '~/posts'
@@ -42,7 +43,7 @@ const social = [
 <Layout>
   <main class='space-y-8'>
     <section class='space-y-4'>
-      <p class='text-md'>Software Engineer and Musician based in Detroit</p>
+      <p class='text-md'>{DESCRIPTION}</p>
       <ul class='list-none inline-flex flex-row items-center space-x-4'>
         {
           social.map(({ name, href, iconName }) => (

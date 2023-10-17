@@ -1,5 +1,6 @@
 ---
 import { Icon } from 'astro-icon'
+import { DESCRIPTION } from '~/config'
 
 interface Props {
   title?: string
@@ -9,7 +10,7 @@ interface Props {
 
 const {
   title = 'Mackie Underdown',
-  description = 'The personal site of Mackie Underdown',
+  description = DESCRIPTION,
   ogImage,
 } = Astro.props
 ---
