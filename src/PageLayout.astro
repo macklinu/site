@@ -1,0 +1,15 @@
+---
+import Layout from './Layout.astro'
+
+interface Props {
+  title?: string
+  description?: string
+  ogImage?: string
+}
+---
+
+<Layout {...Astro.props}>
+  <article class='prose lg:prose-lg dark:prose-invert'>
+    <slot />
+  </article>
+</Layout>
