@@ -18,7 +18,7 @@ Luckily there is a tool called [AST Explorer][], which allows you to type in Jav
 
 We can see that the `type` of this `export default function() {}` node is called `ExportDefaultDeclaration`, so telling the `no-restricted-syntax` rule to select that node type will disallow usage of that syntax.
 
-```yaml
+```yaml title=".eslintrc.yml"
 rules:
   no-restricted-syntax:
     - error
@@ -40,7 +40,7 @@ Looking at the highlighted AST result, there are three key pieces of information
 
 Based on this information, we can build a selector with attributes like the one below to report when `instanceof Array` is used.
 
-```yaml
+```yaml title=".eslintrc.yml"
 rules:
   no-restricted-syntax:
     - error

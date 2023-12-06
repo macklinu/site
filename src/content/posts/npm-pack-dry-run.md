@@ -34,7 +34,7 @@ If you want to remove some of those unneeded files, add the ["files"][files]
 field to your `package.json` to control exactly what you'll ship. An example
 from danger-plugin-jira-issue's `package.json`:
 
-```json
+```json title="package.json"
 {
   "files": ["dist", "types/index.d.ts"]
 }

@@ -12,8 +12,7 @@ Since you have full control over what data is passed from Remix's `loader()` or 
 
 For example, this is a common pattern for validating URL parameters in a Remix `loader()`.
 
-```ts
-// app/routes/projects.$projectId.tsx
+```ts title="app/routes/projects.$projectId.tsx"
 import { z } from 'zod'
 
 const ProjectUrlSchema = z.object({
@@ -32,7 +31,7 @@ export const loader = async ({ params }: LoaderArgs) => {
 
 I do something similar in my `action()` functions, but I'm usually interested in the `FormData` that gets submitted in a form submission or other action from the client.
 
-```ts
+```ts title="app/routes/projects.$projectId.tsx"
 const CreateProjectSchema = z.object({
   name: z.string().min(3).max(255),
   startDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
