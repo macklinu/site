@@ -6,7 +6,7 @@ import icon from 'astro-icon'
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://mackie.world',
+  site: 'https://mackie.underdown.wiki',
   integrations: [
     tailwind(),
     react(),
