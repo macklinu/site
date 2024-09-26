@@ -1,5 +1,6 @@
 ---
 import { Icon } from 'astro-icon/components'
+import { render } from 'astro:content'
 
 import { longDate } from '~/date'
 import Layout from '~/Layout.astro'
@@ -12,13 +13,13 @@ interface Props {
 export async function getStaticPaths() {
   const posts = await getPosts()
   return posts.map((post) => ({
-    params: { slug: post.slug },
+    params: { slug: post.id },
     props: { post },
   }))
 }
 
 const { post } = Astro.props
-const { Content } = await post.render()
+const { Content } = await render(post)
 
 const { title, description } = post.data
 const date = longDate(post.data.date)

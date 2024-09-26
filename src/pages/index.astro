@@ -65,7 +65,7 @@ const social = [
       <h2 class='font-bold'>Posts</h2>
       <ul class='list-none mt-4 space-y-2'>
         {
-          posts.map(({ data, slug }) => (
+          posts.map(({ data, id }) => (
             <li class='space-x-1'>
               <time
                 datetime={isoDate(data.date)}
@@ -74,7 +74,7 @@ const social = [
                 {isoDate(data.date)}
               </time>
 
-              <a class='underline' href={`/posts/${slug}`}>
+              <a class='underline' href={`/posts/${id}`}>
                 {data.title}
               </a>
             </li>

@@ -17,7 +17,6 @@ export default defineConfig({
     }),
     icon(),
   ],
-
   vite: {
     optimizeDeps: {
       exclude: ['@resvg/resvg-js'],
