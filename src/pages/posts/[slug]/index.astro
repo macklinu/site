@@ -25,7 +25,7 @@ const { title, description } = post.data
 const date = longDate(post.data.date)
 
 const ogImage = new URL(
-  `/posts/${post.slug}.png`,
+  `/posts/${post.id}.png`,
   import.meta.env.SITE
 ).toString()
 ---
