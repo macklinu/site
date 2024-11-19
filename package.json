@@ -17,7 +17,7 @@
     "@tailwindcss/typography": "^0.5.12",
     "@types/react": "^18.2.74",
     "@types/react-dom": "^18.2.24",
-    "astro": "5.0.0-beta.2",
+    "astro": "5.0.0-beta.8",
     "astro-expressive-code": "^0.37.0",
     "astro-icon": "^1.1.1",
     "luxon": "^3.4.4",
