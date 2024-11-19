@@ -5,10 +5,15 @@ interface Props {
   title?: string
   description?: string
   ogImage?: string
+  frontmatter?: {
+    title: string
+  }
 }
+
+const { title, description, ogImage, frontmatter } = Astro.props
 ---
 
-<Layout {...Astro.props}>
+<Layout title={frontmatter?.title ?? title} {description} {ogImage}>
   <article class='prose lg:prose-lg dark:prose-invert'>
     <slot />
   </article>
