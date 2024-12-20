@@ -1,31 +1,36 @@
 ---
+import type { GetStaticPaths } from 'astro'
 import { Icon } from 'astro-icon/components'
-import { render } from 'astro:content'
-
+import { getEntry, render } from 'astro:content'
 import { longDate } from '~/date'
 import Layout from '~/Layout.astro'
-import { getPosts, type Post } from '~/posts'
+import { z } from 'zod'
+import { getPosts } from '~/posts'
 
-interface Props {
-  post: Post
-}
-
-export async function getStaticPaths() {
+export const getStaticPaths: GetStaticPaths = async () => {
   const posts = await getPosts()
   return posts.map((post) => ({
-    params: { slug: post.id },
-    props: { post },
+    params: {
+      slug: post.id,
+    },
   }))
 }
 
-const { post } = Astro.props
-const { Content } = await render(post)
+const paramsSchema = z.object({ slug: z.string() })
 
-const { title, description } = post.data
-const date = longDate(post.data.date)
+const { slug } = paramsSchema.parse(Astro.params)
+
+const entry = await getEntry('posts', slug)
+
+if (!entry) {
+  throw new Error(`Unable to load post for slug ${JSON.stringify}`)
+}
+
+const { Content } = await render(entry)
+const { title, description, date } = entry.data
 
 const ogImage = new URL(
-  `/posts/${post.id}.png`,
+  `/posts/${entry.id}.png`,
   import.meta.env.SITE
 ).toString()
 ---
@@ -44,7 +49,7 @@ const ogImage = new URL(
       <div class='my-2 inline-flex flex-row items-center gap-1.5'>
         <Icon name='mdi:calendar-month' class='h-4 w-4' />
         <time class='text-md dark:text-slate-300 text-slate-600'>
-          {date}
+          {longDate(date)}
         </time>
       </div>
     </div>

@@ -1,8 +1,11 @@
-import type { APIRoute, InferGetStaticPropsType } from 'astro'
-import { getPosts } from '~/posts'
+import type { APIRoute } from 'astro'
 import satori from 'satori'
-import { Resvg } from '@resvg/resvg-js'
+import { Resvg, initWasm } from '@resvg/resvg-wasm'
 import { postImage } from '~/og'
+import { getEntry } from 'astro:content'
+import { z } from 'zod'
+
+export const prerender = false
 
 function fetchInter() {
   return fetch(
@@ -16,20 +19,31 @@ function fetchInterBold() {
   )
 }
 
-export async function getStaticPaths() {
-  const posts = await getPosts()
-  return posts.map((post) => ({
-    params: { slug: post.id },
-    props: { post },
-  }))
+function fetchResvgWasm() {
+  return fetch('https://unpkg.com/@resvg/resvg-wasm@2.6.2/index_bg.wasm').then(
+    (res) => res.arrayBuffer()
+  )
 }
 
-type Props = InferGetStaticPropsType<typeof getStaticPaths>
+let isWasmInitialized = false
 
-export const GET: APIRoute<Props> = async ({ props, params }) => {
+export const GET: APIRoute = async (context) => {
+  if (!isWasmInitialized) {
+    await initWasm(await fetchResvgWasm())
+    isWasmInitialized = true
+  }
+
+  const { slug } = z.object({ slug: z.string() }).parse(context.params)
+
+  const entry = await getEntry('posts', slug)
+
+  if (!entry) {
+    return new Response(null, { status: 404 })
+  }
+
   const [inter, interBold] = await Promise.all([fetchInter(), fetchInterBold()])
 
-  const svg = await satori(postImage(props.post), {
+  const svg = await satori(postImage(entry.data), {
     width: 1200,
     height: 630,
     embedFont: true,

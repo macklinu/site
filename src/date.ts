@@ -1,7 +1,7 @@
-import { DateTime } from 'luxon'
+import { formatISO } from 'date-fns'
 
 export function isoDate(date: Date) {
-  return DateTime.fromJSDate(date, { zone: 'utc' }).toISODate()
+  return formatISO(date, { representation: 'date' })
 }
 
 export function longDate(date: Date) {
