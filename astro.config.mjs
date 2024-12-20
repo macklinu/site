@@ -8,9 +8,7 @@ import cloudflare from '@astrojs/cloudflare'
 // https://astro.build/config
 export default defineConfig({
   site: 'https://mackie.underdown.wiki',
-  adapter: cloudflare({
-    imageService: 'compile',
-  }),
+  adapter: cloudflare(),
   output: 'server',
   integrations: [
     tailwind(),
@@ -22,9 +20,4 @@ export default defineConfig({
     }),
     icon(),
   ],
-  vite: {
-    optimizeDeps: {
-      exclude: ['@resvg/resvg-js'],
-    },
-  },
 })

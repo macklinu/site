@@ -1,6 +1,6 @@
 import type { APIRoute } from 'astro'
 import satori from 'satori'
-import { Resvg } from '@resvg/resvg-js'
+import { Resvg, initWasm } from '@resvg/resvg-wasm'
 import { postImage } from '~/og'
 import { getEntry } from 'astro:content'
 import { z } from 'zod'
@@ -17,7 +17,20 @@ function fetchInterBold() {
   )
 }
 
+function fetchResvgWasm() {
+  return fetch('https://unpkg.com/@resvg/resvg-wasm@2.6.2/index_bg.wasm').then(
+    (res) => res.arrayBuffer()
+  )
+}
+
+let isWasmInitialized = false
+
 export const GET: APIRoute = async (context) => {
+  if (!isWasmInitialized) {
+    await initWasm(await fetchResvgWasm())
+    isWasmInitialized = true
+  }
+
   const { slug } = z.object({ slug: z.string() }).parse(context.params)
 
   const entry = await getEntry('posts', slug)
