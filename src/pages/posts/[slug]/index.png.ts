@@ -1,6 +1,7 @@
 import type { APIRoute } from 'astro'
 import satori from 'satori'
 import { Resvg, initWasm } from '@resvg/resvg-wasm'
+import resvgWasmModule from '@resvg/resvg-wasm/index_bg.wasm'
 import { postImage } from '~/og'
 import { getEntry } from 'astro:content'
 import { z } from 'zod'
@@ -19,17 +20,11 @@ function fetchInterBold() {
   )
 }
 
-function fetchResvgWasm() {
-  return fetch('https://unpkg.com/@resvg/resvg-wasm@2.6.2/index_bg.wasm').then(
-    (res) => res.arrayBuffer()
-  )
-}
-
 let isWasmInitialized = false
 
 export const GET: APIRoute = async (context) => {
   if (!isWasmInitialized) {
-    await initWasm(await fetchResvgWasm())
+    await initWasm(resvgWasmModule)
     isWasmInitialized = true
   }
 
@@ -66,7 +61,6 @@ export const GET: APIRoute = async (context) => {
   return new Response(svgBufferToPngBuffer(svg), {
     headers: {
       'Content-Type': 'image/png',
-      'Content-Security-Policy': "script-src 'wasm-unsafe-eval'",
     },
   })
 }

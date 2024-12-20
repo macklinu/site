@@ -1,2 +1,0 @@
-/posts/*.png
-  Content-Security-Policy: script-src 'wasm-unsafe-eval';
