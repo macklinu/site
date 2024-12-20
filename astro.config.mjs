@@ -9,7 +9,7 @@ import cloudflare from '@astrojs/cloudflare'
 export default defineConfig({
   site: 'https://mackie.underdown.wiki',
   adapter: cloudflare(),
-  output: 'server',
+  output: 'static',
   integrations: [
     tailwind(),
     react(),

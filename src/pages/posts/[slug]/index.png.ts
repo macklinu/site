@@ -5,6 +5,8 @@ import { postImage } from '~/og'
 import { getEntry } from 'astro:content'
 import { z } from 'zod'
 
+export const prerender = false
+
 function fetchInter() {
   return fetch(
     'https://unpkg.com/inter-font@3.19.0/ttf/Inter-Regular.ttf'
