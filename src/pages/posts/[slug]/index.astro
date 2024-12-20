@@ -1,31 +1,25 @@
 ---
 import { Icon } from 'astro-icon/components'
-import { render } from 'astro:content'
-
+import { getEntry, render } from 'astro:content'
 import { longDate } from '~/date'
 import Layout from '~/Layout.astro'
-import { getPosts, type Post } from '~/posts'
+import { z } from 'zod'
 
-interface Props {
-  post: Post
+const paramsSchema = z.object({ slug: z.string() })
+
+const { slug } = paramsSchema.parse(Astro.params)
+
+const entry = await getEntry('posts', slug)
+
+if (!entry) {
+  return Astro.rewrite('/404')
 }
 
-export async function getStaticPaths() {
-  const posts = await getPosts()
-  return posts.map((post) => ({
-    params: { slug: post.id },
-    props: { post },
-  }))
-}
-
-const { post } = Astro.props
-const { Content } = await render(post)
-
-const { title, description } = post.data
-const date = longDate(post.data.date)
+const { Content } = await render(entry)
+const { title, description, date } = entry.data
 
 const ogImage = new URL(
-  `/posts/${post.id}.png`,
+  `/posts/${entry.id}.png`,
   import.meta.env.SITE
 ).toString()
 ---
@@ -44,7 +38,7 @@ const ogImage = new URL(
       <div class='my-2 inline-flex flex-row items-center gap-1.5'>
         <Icon name='mdi:calendar-month' class='h-4 w-4' />
         <time class='text-md dark:text-slate-300 text-slate-600'>
-          {date}
+          {longDate(date)}
         </time>
       </div>
     </div>

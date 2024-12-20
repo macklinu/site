@@ -1,8 +1,9 @@
-import type { APIRoute, InferGetStaticPropsType } from 'astro'
-import { getPosts } from '~/posts'
+import type { APIRoute } from 'astro'
 import satori from 'satori'
 import { Resvg } from '@resvg/resvg-js'
 import { postImage } from '~/og'
+import { getEntry } from 'astro:content'
+import { z } from 'zod'
 
 function fetchInter() {
   return fetch(
@@ -16,20 +17,18 @@ function fetchInterBold() {
   )
 }
 
-export async function getStaticPaths() {
-  const posts = await getPosts()
-  return posts.map((post) => ({
-    params: { slug: post.id },
-    props: { post },
-  }))
-}
+export const GET: APIRoute = async (context) => {
+  const { slug } = z.object({ slug: z.string() }).parse(context.params)
 
-type Props = InferGetStaticPropsType<typeof getStaticPaths>
+  const entry = await getEntry('posts', slug)
 
-export const GET: APIRoute<Props> = async ({ props, params }) => {
+  if (!entry) {
+    return new Response(null, { status: 404 })
+  }
+
   const [inter, interBold] = await Promise.all([fetchInter(), fetchInterBold()])
 
-  const svg = await satori(postImage(props.post), {
+  const svg = await satori(postImage(entry.data), {
     width: 1200,
     height: 630,
     embedFont: true,
