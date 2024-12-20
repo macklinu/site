@@ -64,7 +64,10 @@ export const GET: APIRoute = async (context) => {
   })
 
   return new Response(svgBufferToPngBuffer(svg), {
-    headers: { 'Content-Type': 'image/png' },
+    headers: {
+      'Content-Type': 'image/png',
+      'Content-Security-Policy': "script-src 'wasm-unsafe-eval'",
+    },
   })
 }
 
