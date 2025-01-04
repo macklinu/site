@@ -21,7 +21,7 @@ const {
     <meta property='og:title' content={title} />
     {ogImage && <meta property='og:image' content={ogImage} />}
     <meta name='description' property='og:description' content={description} />
-    <meta name='viewport' content='width=device-width' />
+    <meta name='viewport' content='width=device-width,initial-scale=1' />
     <meta name='generator' content={Astro.generator} />
     <title>{title}</title>
 
@@ -33,24 +33,24 @@ const {
       href='https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap'
       rel='stylesheet'
     />
-
+    <link
+      href='https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap'
+      rel='stylesheet'
+    />
     <link rel='preconnect' href='https://rsms.me/' />
     <link rel='stylesheet' href='https://rsms.me/inter/inter.css' />
   </head>
 
   <body
-    class='dark:bg-slate-950 bg-slate-50 dark:text-slate-50 text-slate-950 font-sans container mx-auto px-4 min-h-screen'
+    class='dark:bg-zinc-950 bg-zinc-50 dark:text-zinc-50 text-zinc-950 font-sans container mx-auto min-h-screen'
   >
-    <nav class='py-16'>
+    <nav class='py-8'>
       <div class='flex flex-row items-center'>
         <a
           href='/'
-          class='dark:text-white text-black flex flex-row items-center gap-2 text-xl font-bold'
+          class='dark:text-white text-black flex flex-row items-center gap-2 text-lg font-bold'
         >
-          <Icon
-            name='ri:ghost-smile-fill'
-            class='rounded-lg p-1 bg-slate-800 text-white h-8 w-8'
-          />
+          <Icon name='lucide:book-open' class='rounded size-6' />
           Mackie Underdown
         </a>
       </div>

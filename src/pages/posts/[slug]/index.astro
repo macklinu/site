@@ -2,7 +2,7 @@
 import type { GetStaticPaths } from 'astro'
 import { Icon } from 'astro-icon/components'
 import { getEntry, render } from 'astro:content'
-import { longDate } from '~/date'
+import { isoDate } from '~/date'
 import Layout from '~/Layout.astro'
 import { z } from 'zod'
 import { getPosts } from '~/posts'
@@ -36,26 +36,25 @@ const ogImage = new URL(
 ---
 
 <Layout title={title} description={description} ogImage={ogImage}>
-  <main class='mb-16'>
-    <a href='/' class='inline-flex flex-row gap-1 items-center underline'>
-      <Icon name='mdi:arrow-left' class='h-4 w-4' />
-      Back
-    </a>
+  <a href='/' class='inline-flex flex-row gap-1 items-center underline'>
+    <Icon name='lucide:arrow-left' class='h-4 w-4' />
+    Back
+  </a>
 
-    <div class='flex flex-col py-4'>
-      <h2 class='lg:text-4xl text-3xl leading-relaxed font-black'>
+  <article
+    class='prose lg:prose-lg dark:prose-invert sm:justify-self-center pb-8'
+  >
+    <div class='flex flex-col'>
+      <h2 class='lg:text-4xl text-3xl leading-tight font-black'>
         {title}
       </h2>
-      <div class='my-2 inline-flex flex-row items-center gap-1.5'>
-        <Icon name='mdi:calendar-month' class='h-4 w-4' />
+      <div class='inline-flex flex-row items-center gap-1.5'>
+        <Icon name='lucide:calendar' class='h-4 w-4' />
         <time class='text-md dark:text-slate-300 text-slate-600'>
-          {longDate(date)}
+          {isoDate(date)}
         </time>
       </div>
     </div>
-
-    <article class='prose lg:prose-lg dark:prose-invert'>
-      <Content />
-    </article>
-  </main>
+    <Content />
+  </article>
 </Layout>
