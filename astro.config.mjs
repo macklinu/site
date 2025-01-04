@@ -7,7 +7,9 @@ import cloudflare from '@astrojs/cloudflare'
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://mackie.underdown.wiki',
+  site: import.meta.env.PROD
+    ? 'https://mackie.underdown.wiki'
+    : 'http://localhost:4321',
   adapter: cloudflare(),
   output: 'static',
   integrations: [

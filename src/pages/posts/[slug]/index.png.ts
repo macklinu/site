@@ -20,12 +20,12 @@ function fetchInterBold() {
   )
 }
 
-let isWasmInitialized = false
+global.__isWasmInitialized__ ??= false
 
 export const GET: APIRoute = async (context) => {
-  if (!isWasmInitialized) {
+  if (!global.__isWasmInitialized__) {
     await initWasm(resvgWasmModule)
-    isWasmInitialized = true
+    global.__isWasmInitialized__ = true
   }
 
   const { slug } = z.object({ slug: z.string() }).parse(context.params)
