@@ -45,12 +45,18 @@ const ogImage = new URL(
     class='prose lg:prose-lg dark:prose-invert sm:justify-self-center pb-8'
   >
     <div class='flex flex-col'>
-      <h2 class='lg:text-4xl text-3xl leading-tight font-black'>
+      <h2
+        class='lg:text-4xl text-3xl leading-tight font-black'
+        transition:name={`post-${entry.id}--title`}
+      >
         {title}
       </h2>
       <div class='inline-flex flex-row items-center gap-1.5'>
         <Icon name='lucide:calendar' class='h-4 w-4' />
-        <time class='text-md dark:text-slate-300 text-slate-600'>
+        <time
+          class='text-md dark:text-slate-300 text-slate-600'
+          transition:name={`post-${entry.id}--date`}
+        >
           {isoDate(date)}
         </time>
       </div>
