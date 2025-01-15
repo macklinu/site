@@ -80,7 +80,7 @@ const ogImage = new URL(
 </Layout>
 
 <script>
-  document.addEventListener('DOMContentLoaded', () => {
+  document.addEventListener('astro:page-load', () => {
     const { matches } = window.matchMedia('(prefers-reduced-motion: reduce)')
 
     if (matches) {
@@ -92,7 +92,7 @@ const ogImage = new URL(
     const $rightEye = document.getElementById('right-eye')
 
     if (!$leftEye || !$rightEye) {
-      throw new Error('Unable to find eye elements')
+      return
     }
 
     window.addEventListener('mousemove', (e) => {
