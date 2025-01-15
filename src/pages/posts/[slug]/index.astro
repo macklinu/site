@@ -8,6 +8,7 @@ import { z } from 'zod'
 import { getPosts } from '~/posts'
 import silly from '~/content/silly.png'
 import { Image } from 'astro:assets'
+import Eye from '~/Eye.astro'
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const posts = await getPosts()
@@ -64,12 +65,46 @@ const ogImage = new URL(
       </div>
     </div>
     <Content />
-    <Image
-      transition:name='mackie'
-      src={silly}
-      height={200}
-      alt='Mackie looking at the blog post'
-      class='h-[200px] bottom-0 left-0 fixed grayscale hover:grayscale-0 duration-500 lg:block hidden'
-    />
   </article>
+  <Image
+    transition:name='mackie'
+    src={silly}
+    height={200}
+    alt='Mackie looking at the blog post'
+    class='h-[200px] bottom-0 left-0 fixed grayscale hover:grayscale-0 duration-500 lg:block hidden'
+  />
+  <div class='motion-reduce:hidden'>
+    <Eye id='left-eye' class='bottom-[93px] left-[64px]' />
+    <Eye id='right-eye' class='bottom-[96px] left-[100px]' />
+  </div>
 </Layout>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const { matches } = window.matchMedia('(prefers-reduced-motion: reduce)')
+
+    if (matches) {
+      // Don't animate eyes because they are hidden!
+      return
+    }
+
+    const $leftEye = document.getElementById('left-eye')
+    const $rightEye = document.getElementById('right-eye')
+
+    if (!$leftEye || !$rightEye) {
+      throw new Error('Unable to find eye elements')
+    }
+
+    window.addEventListener('mousemove', (e) => {
+      const originX = $leftEye.offsetLeft + $leftEye.offsetWidth
+      const originY = $leftEye.offsetTop + $leftEye.offsetHeight
+      const mouseX = e.clientX
+      const mouseY = e.clientY
+
+      const radians = Math.atan2(originY - mouseY, originX - mouseX)
+
+      $leftEye.style.transform = `rotate(${radians}rad)`
+      $rightEye.style.transform = `rotate(${radians}rad)`
+    })
+  })
+</script>
