@@ -6,6 +6,8 @@ import { isoDate } from '~/date'
 import Layout from '~/Layout.astro'
 import { z } from 'zod'
 import { getPosts } from '~/posts'
+import silly from '~/content/silly.png'
+import { Image } from 'astro:assets'
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const posts = await getPosts()
@@ -62,5 +64,12 @@ const ogImage = new URL(
       </div>
     </div>
     <Content />
+    <Image
+      transition:name='mackie'
+      src={silly}
+      height={200}
+      alt='Mackie looking at the blog post'
+      class='h-[200px] bottom-0 left-0 fixed grayscale hover:grayscale-0 duration-500 lg:block hidden'
+    />
   </article>
 </Layout>
