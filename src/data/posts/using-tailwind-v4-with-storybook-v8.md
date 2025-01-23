@@ -1,10 +1,8 @@
 ---
 date: '2025-01-14'
 title: 'Using Tailwind v4 with Storybook v8'
-description: 'If you like to live on the bleeding edge and build a library with beta software, here is how you can get Tailwind v4 beta working with Storybook v8.4.'
+description: 'Here is how you can get Tailwind v4 working with Storybook v8.4.'
 ---
-
-💁‍♂️ _At the time of publishing this post, [Tailwind v4](https://tailwindcss.com/docs/v4-beta) is in beta._
 
 One of the main changes in Tailwind v4 is configuration through CSS instead of `tailwind.config.ts`, which Tailwind supports through their own Vite plugin. I wanted to play around with Tailwind v4 while building a component library, and with Storybook v8.4's React and Vite support, we can load and test Tailwind as part of our Storybook.
 
@@ -13,7 +11,7 @@ One of the main changes in Tailwind v4 is configuration through CSS instead of `
 First, let's install the v4 versions of Tailwind.
 
 ```shell
-pnpm add install tailwindcss@next @tailwindcss/vite@next -D
+pnpm add install tailwindcss @tailwindcss/vite -D
 ```
 
 And let's set up a basic Tailwind v4 CSS file.
@@ -39,6 +37,8 @@ export default {
 ```
 
 This Storybook config file supports custom Vite plugins, but instead of importing Tailwind's Vite plugin in a standard fashion, we will need to dynamically import it to work around an [open issue](https://github.com/tailwindlabs/tailwindcss/issues/13216) in the Tailwind GitHub repo.
+
+💁‍♂️ _I haven't tried it yet, but you could try replacing step 1 below with a normal import of the vite plugin, like `import tailwindcss from '@tailwindcss/vite'` now that Tailwind v4 is stable._
 
 ```ts title=".storybook/main.ts" {'1':6} {'2':8} {'3':9} {'4':11}
 import type { StorybookConfig } from '@storybook/react-vite'
