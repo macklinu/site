@@ -26,7 +26,7 @@ const { slug } = paramsSchema.parse(Astro.params)
 const entry = await getEntry('posts', slug)
 
 if (!entry) {
-  throw new Error(`Unable to load post for slug ${JSON.stringify}`)
+  throw new Error(`Unable to load post for slug ${JSON.stringify(slug)}`)
 }
 
 const { Content } = await render(entry)
