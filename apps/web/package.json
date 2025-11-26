@@ -7,7 +7,8 @@
     "astro": "astro",
     "dev": "astro dev",
     "build": "astro build",
-    "preview": "astro preview"
+    "preview": "astro preview",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@astrojs/node": "^9.5.1",
