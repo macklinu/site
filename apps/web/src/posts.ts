@@ -1,4 +1,4 @@
-import { type CollectionEntry, getCollection } from 'astro:content'
+import { getCollection, type CollectionEntry } from 'astro:content'
 
 export type Post = CollectionEntry<'posts'>
 

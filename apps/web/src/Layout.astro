@@ -1,6 +1,7 @@
 ---
 import { Icon } from 'astro-icon/components'
 import { ClientRouter } from 'astro:transitions'
+
 import { DESCRIPTION } from '~/config'
 
 interface Props {
@@ -55,15 +56,15 @@ const includeAnalytics = import.meta.env.PROD
   </head>
 
   <body
-    class='dark:bg-zinc-950 bg-zinc-50 dark:text-zinc-50 text-zinc-950 font-sans container mx-auto min-h-screen'
+    class='container mx-auto min-h-screen bg-slate-50 font-sans text-slate-950 dark:bg-slate-950 dark:text-slate-50'
   >
     <nav class='py-8'>
       <div class='flex flex-row items-center'>
         <a
           href='/'
-          class='dark:text-white text-black flex flex-row items-center gap-2 text-lg font-bold'
+          class='flex flex-row items-center gap-2 text-lg font-bold text-black dark:text-white'
         >
-          <Icon name='lucide:book-open' class='rounded size-6' />
+          <Icon name='lucide:book-open' class='size-6 rounded' />
           Mackie Underdown
         </a>
       </div>

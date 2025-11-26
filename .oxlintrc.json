@@ -1,0 +1,11 @@
+{
+  "plugins": ["eslint", "jsx-a11y", "node", "oxc", "react", "typescript"],
+  "overrides": [
+    {
+      "files": ["apps/web/src/env.d.ts"],
+      "rules": {
+        "typescript/triple-slash-reference": "off"
+      }
+    }
+  ]
+}

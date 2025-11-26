@@ -1,0 +1,7 @@
+---
+import { Image as AstroImage } from 'astro:assets'
+
+import { urlFor } from '~/lib/sanityImageUrl'
+---
+
+<AstroImage src={urlFor(Astro.props.node.asset).url()} alt='' inferSize />

@@ -14,7 +14,7 @@ const { title, description, ogImage, frontmatter } = Astro.props
 ---
 
 <Layout title={frontmatter?.title ?? title} {description} {ogImage}>
-  <article class='prose lg:prose-lg dark:prose-invert pb-16'>
+  <article class='prose pb-16 lg:prose-lg dark:prose-invert'>
     <slot />
   </article>
 </Layout>

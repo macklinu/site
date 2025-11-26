@@ -9,7 +9,7 @@ const { class: className, ...props } = Astro.props
 <div
   {...props}
   class:list={[
-    'bg-white border-2 border-black rounded-full size-6 fixed lg:flex hidden after:content-[""] after:size-2 after:rounded-full after:bg-black after:absolute after:top-1 after:left-0 after:m-0.5',
+    'fixed hidden size-6 rounded-full border-2 border-black bg-white after:absolute after:left-0 after:top-1 after:m-0.5 after:size-2 after:rounded-full after:bg-black after:content-[""] lg:flex',
     className,
   ]}
 >

@@ -1,11 +1,20 @@
 ---
-import { isoDate } from '~/date'
-import Layout from '~/Layout.astro'
-import { getPosts } from '~/posts'
 import { Image } from 'astro:assets'
-import silly from '~/content/silly.png'
+import { Array, DateTime, Effect, Exit, Match } from 'effect'
 
-const posts = await getPosts()
+import silly from '~/content/silly.png'
+import Layout from '~/Layout.astro'
+import * as Post from '~/lib/Post'
+import { Runtime } from '~/lib/Runtime'
+
+const getPosts = Effect.gen(function* () {
+  const postService = yield* Post.Service
+  return yield* postService.list()
+})
+
+const result = await Runtime.runPromiseExit(getPosts)
+
+const posts = Exit.isFailure(result) ? [] : result.value
 
 const projects = [
   {
@@ -29,7 +38,6 @@ const social = [
     name: 'Twitter',
     href: 'https://twitter.com/macklinu',
   },
-
   {
     name: 'LinkedIn',
     href: 'https://www.linkedin.com/in/macklinu/',
@@ -40,20 +48,16 @@ const social = [
 <Layout>
   <div class='space-y-8 pb-8'>
     <div class='flex flex-row items-center'>
-      <Image
-        transition:name='mackie'
-        src={silly}
-        alt='Mackie being silly'
-        class='grayscale'
-        height={256}
-      />
-      <p class='sm:text-sm text-xs md:-ml-4 -ml-8 mt-8'>
+      <div class='bg-slate-950 bg-blend-overlay'>
+        <Image transition:name='mackie' src={silly} alt='' height={256} />
+      </div>
+      <p class='-ml-8 mt-8 text-xs sm:text-sm md:-ml-4'>
         Detroit-based software engineer<br />and musician
       </p>
     </div>
     <section class='space-y-4'>
       <p>Find me on:</p>
-      <ul class='list-disc list-inside'>
+      <ul class='list-inside list-disc'>
         {
           social.map(({ name, href }) => (
             <li>
@@ -73,24 +77,24 @@ const social = [
     </section>
     <section>
       <h2 class='font-bold'>Posts</h2>
-      <ul class='list-none mt-4 space-y-4'>
+      <ul class='mt-4 list-none space-y-4'>
         {
-          posts.map(({ data, id }) => (
-            <li class='flex md:flex-row flex-col gap-2 md:items-center'>
+          posts.map((post) => (
+            <li class='flex flex-col gap-2 md:flex-row md:items-center'>
               <time
-                datetime={isoDate(data.date)}
-                class='dark:text-slate-300 text-slate-600 text-sm tabular-nums'
-                transition:name={`post-${id}--date`}
+                datetime={DateTime.formatIsoDate(post.publicationDate)}
+                class='text-sm tabular-nums text-slate-600 dark:text-slate-300'
+                transition:name={`post-${post.id}--date`}
               >
-                {isoDate(data.date)}
+                {DateTime.formatIsoDate(post.publicationDate)}
               </time>
 
               <a
                 class='underline'
-                href={`/posts/${id}`}
-                transition:name={`post-${id}--title`}
+                href={`/posts/${post.slug}`}
+                transition:name={`post-${post.id}--title`}
               >
-                {data.title}
+                {post.title}
               </a>
             </li>
           ))
@@ -99,7 +103,7 @@ const social = [
     </section>
     <section>
       <h2 class='font-bold'>Projects</h2>
-      <ul class='list-none mt-4 space-y-2'>
+      <ul class='mt-4 list-none space-y-2'>
         {
           projects.map(({ name, description, href }) => (
             <li>
@@ -112,7 +116,7 @@ const social = [
                 {name}
               </a>
 
-              <p class='dark:text-slate-300 text-slate-600'>{description}</p>
+              <p class='text-slate-600 dark:text-slate-300'>{description}</p>
             </li>
           ))
         }

@@ -1,75 +1,87 @@
 ---
-import type { GetStaticPaths } from 'astro'
 import { Icon } from 'astro-icon/components'
-import { getEntry, render } from 'astro:content'
-import { isoDate } from '~/date'
-import Layout from '~/Layout.astro'
-import { z } from 'zod'
-import { getPosts } from '~/posts'
-import silly from '~/content/silly.png'
+import { PortableText } from 'astro-portabletext'
+import type { SomePortableTextComponents } from 'astro-portabletext/types'
 import { Image } from 'astro:assets'
+import { DateTime, Effect, Exit, Schema } from 'effect'
+
+import * as Components from '~/components'
+import silly from '~/content/silly.png'
 import Eye from '~/Eye.astro'
+import Layout from '~/Layout.astro'
+import * as AstroContext from '~/lib/AstroContext'
+import * as Post from '~/lib/Post'
+import { Runtime } from '~/lib/Runtime'
+import { UrlSlug } from '~/lib/Slug'
 
-export const getStaticPaths: GetStaticPaths = async () => {
-  const posts = await getPosts()
-  return posts.map((post) => ({
-    params: {
-      slug: post.id,
-    },
-  }))
+const getPost = Effect.gen(function* () {
+  const postService = yield* Post.Service
+  const params = yield* AstroContext.Params
+
+  const { slug } = yield* Schema.decodeUnknown(
+    Schema.Struct({ slug: UrlSlug })
+  )(params)
+
+  return yield* postService.getBySlug(slug)
+})
+
+const result = await Runtime.runPromiseExit(
+  getPost.pipe(Effect.provide(AstroContext.layerRequest(Astro)))
+)
+
+if (Exit.isFailure(result)) {
+  console.error(result.cause)
+  throw new Error('Unable to load post from Sanity')
 }
 
-const paramsSchema = z.object({ slug: z.string() })
+const components = {
+  type: {
+    code: Components.Code,
+    image: Components.Image,
+  },
+} as const satisfies SomePortableTextComponents
 
-const { slug } = paramsSchema.parse(Astro.params)
-
-const entry = await getEntry('posts', slug)
-
-if (!entry) {
-  throw new Error(`Unable to load post for slug ${JSON.stringify(slug)}`)
-}
-
-const { Content } = await render(entry)
-const { title, description, date } = entry.data
+const post = result.value
+const date = DateTime.formatIsoDate(post.publicationDate)
 
 const ogImage = new URL(
-  `/posts/${entry.id}.png`,
+  `/posts/${post.slug}/og.png`,
   import.meta.env.SITE
 ).toString()
 ---
 
-<Layout title={title} description={description} ogImage={ogImage}>
-  <a href='/' class='inline-flex flex-row gap-1 items-center underline'>
+<Layout title={post.title} description={post.description} ogImage={ogImage}>
+  <a href='/' class='inline-flex flex-row items-center gap-1 underline'>
     <Icon name='lucide:arrow-left' class='h-4 w-4' />
     Back
   </a>
 
-  <article class='prose lg:prose-lg dark:prose-invert mx-auto pb-8'>
+  <article class='prose mx-auto pb-8 lg:prose-lg dark:prose-invert'>
     <div class='flex flex-col'>
       <h2
-        class='lg:text-4xl text-3xl leading-tight font-black'
-        transition:name={`post-${entry.id}--title`}
+        class='text-3xl font-black leading-tight lg:text-4xl'
+        transition:name={`post-${post.id}--title`}
       >
-        {title}
+        {post.title}
       </h2>
       <div class='inline-flex flex-row items-center gap-1.5'>
         <Icon name='lucide:calendar' class='h-4 w-4' />
         <time
-          class='text-md dark:text-slate-300 text-slate-600'
-          transition:name={`post-${entry.id}--date`}
+          class='text-md text-slate-600 dark:text-slate-300'
+          transition:name={`post-${post.id}--date`}
         >
-          {isoDate(date)}
+          {date}
         </time>
       </div>
     </div>
-    <Content />
+    <PortableText value={post.body} components={components} />
   </article>
   <Image
     transition:name='mackie'
     src={silly}
     height={200}
     alt='Mackie looking at the blog post'
-    class='h-[200px] -z-10 bottom-0 left-0 fixed grayscale hover:grayscale-0 duration-500 lg:block hidden'
+    class='fixed bottom-0 left-0 -z-10 hidden h-[200px] duration-500 lg:block'
   />
   <div class='motion-reduce:hidden'>
     <Eye id='left-eye' class='bottom-[93px] left-[64px]' />
