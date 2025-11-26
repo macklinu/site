@@ -3,7 +3,7 @@ import { Icon } from 'astro-icon/components'
 import { PortableText } from 'astro-portabletext'
 import type { SomePortableTextComponents } from 'astro-portabletext/types'
 import { Image } from 'astro:assets'
-import { DateTime, Effect, Exit, Schema } from 'effect'
+import { DateTime, Duration, Effect, Exit, Schema } from 'effect'
 
 import * as Components from '~/components'
 import silly from '~/content/silly.png'
@@ -48,6 +48,14 @@ const ogImage = new URL(
   `/posts/${post.slug}/og.png`,
   import.meta.env.SITE
 ).toString()
+
+const cloudflareCacheLength = Duration.toSeconds(Duration.days(1))
+const browserCacheLength = Duration.toSeconds(Duration.hours(1))
+
+Astro.response.headers.set(
+  'Cache-Control',
+  `public, s-maxage=${cloudflareCacheLength}, max-age=${browserCacheLength}, stale-while-revalidate=${cloudflareCacheLength}`
+)
 ---
 
 <Layout title={post.title} description={post.description} ogImage={ogImage}>
@@ -56,10 +64,10 @@ const ogImage = new URL(
     Back
   </a>
 
-  <article class='prose mx-auto pb-8 lg:prose-lg dark:prose-invert'>
+  <article class='prose lg:prose-lg dark:prose-invert mx-auto pb-8'>
     <div class='flex flex-col'>
       <h2
-        class='text-3xl font-black leading-tight lg:text-4xl'
+        class='text-3xl leading-tight font-black lg:text-4xl'
         transition:name={`post-${post.id}--title`}
       >
         {post.title}

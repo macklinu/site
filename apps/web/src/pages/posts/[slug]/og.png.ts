@@ -1,6 +1,6 @@
 import { Resvg } from '@resvg/resvg-js'
 import type { APIRoute } from 'astro'
-import { Effect, Exit, Schema } from 'effect'
+import { Duration, Effect, Exit, Schema } from 'effect'
 import satori from 'satori'
 
 import * as AstroContext from '~/lib/AstroContext'
@@ -67,10 +67,12 @@ export const GET: APIRoute = async (context) => {
 
   const resvg = new Resvg(svg)
 
+  const cacheDuration = Duration.toSeconds(Duration.days(365))
+
   return new Response(new Uint8Array(resvg.render().asPng()), {
     headers: {
       'Content-Type': 'image/png',
-      // TODO: add cache control headers
+      'Cache-Control': `public, s-maxage=${cacheDuration}, max-age=${cacheDuration}`,
     },
   })
 }

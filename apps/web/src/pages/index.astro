@@ -1,6 +1,6 @@
 ---
 import { Image } from 'astro:assets'
-import { Array, DateTime, Effect, Exit, Match } from 'effect'
+import { DateTime, Duration, Effect, Exit } from 'effect'
 
 import silly from '~/content/silly.png'
 import Layout from '~/Layout.astro'
@@ -43,6 +43,14 @@ const social = [
     href: 'https://www.linkedin.com/in/macklinu/',
   },
 ] as const
+
+const cloudflareCacheLength = Duration.toSeconds(Duration.days(1))
+const browserCacheLength = Duration.toSeconds(Duration.hours(1))
+
+Astro.response.headers.set(
+  'Cache-Control',
+  `public, s-maxage=${cloudflareCacheLength}, max-age=${browserCacheLength}, stale-while-revalidate=${cloudflareCacheLength}`
+)
 ---
 
 <Layout>
@@ -51,7 +59,7 @@ const social = [
       <div class='bg-slate-950 bg-blend-overlay'>
         <Image transition:name='mackie' src={silly} alt='' height={256} />
       </div>
-      <p class='-ml-8 mt-8 text-xs sm:text-sm md:-ml-4'>
+      <p class='mt-8 -ml-8 text-xs sm:text-sm md:-ml-4'>
         Detroit-based software engineer<br />and musician
       </p>
     </div>
@@ -83,7 +91,7 @@ const social = [
             <li class='flex flex-col gap-2 md:flex-row md:items-center'>
               <time
                 datetime={DateTime.formatIsoDate(post.publicationDate)}
-                class='text-sm tabular-nums text-slate-600 dark:text-slate-300'
+                class='text-sm text-slate-600 tabular-nums dark:text-slate-300'
                 transition:name={`post-${post.id}--date`}
               >
                 {DateTime.formatIsoDate(post.publicationDate)}
