@@ -1,8 +1,8 @@
 // @ts-check
 import node from '@astrojs/node'
 import react from '@astrojs/react'
-import tailwind from '@astrojs/tailwind'
 import sanity from '@sanity/astro'
+import tailwind from '@tailwindcss/vite'
 import expressiveCode from 'astro-expressive-code'
 import icon from 'astro-icon'
 import { defineConfig } from 'astro/config'
@@ -15,7 +15,6 @@ export default defineConfig({
   adapter: node({ mode: 'standalone' }),
   output: 'server',
   integrations: [
-    tailwind(),
     react(),
     expressiveCode({
       themes: ['catppuccin-mocha', 'catppuccin-latte'],
@@ -27,4 +26,7 @@ export default defineConfig({
       perspective: import.meta.env.PROD ? 'published' : 'drafts',
     }),
   ],
+  vite: {
+    plugins: [tailwind()],
+  },
 })
