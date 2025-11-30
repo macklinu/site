@@ -30,4 +30,7 @@ export default defineConfig({
     // @ts-expect-error
     plugins: [tailwind()],
   },
+  server: {
+    host: true,
+  },
 })
