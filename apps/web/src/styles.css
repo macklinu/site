@@ -1,0 +1,11 @@
+@import 'tailwindcss';
+@plugin '@tailwindcss/typography';
+
+@utility container {
+  padding: 1rem;
+}
+
+@theme {
+  --font-display: 'Inter var', 'Inter';
+  --font-mono: 'JetBrains Mono';
+}

@@ -1,0 +1,22 @@
+---
+import type { SanityImageSource } from '@sanity/image-url'
+import { Image as AstroImage } from 'astro:assets'
+import { Option } from 'effect'
+
+import { urlFor } from '~/lib/sanityImageUrl'
+
+interface Props {
+  node: {
+    alt: Option.Option<string>
+    asset: SanityImageSource
+  }
+}
+
+const { node } = Astro.props
+---
+
+<AstroImage
+  src={urlFor(node.asset).url()}
+  alt={Option.getOrElse(node.alt, () => '')}
+  inferSize
+/>
