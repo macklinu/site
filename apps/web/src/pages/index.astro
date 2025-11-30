@@ -4,45 +4,50 @@ import { DateTime, Duration, Effect, Exit } from 'effect'
 
 import silly from '~/content/silly.png'
 import Layout from '~/Layout.astro'
+import * as Author from '~/lib/Author'
 import * as Post from '~/lib/Post'
+import * as Project from '~/lib/Project'
 import { Runtime } from '~/lib/Runtime'
 
-const getPosts = Effect.gen(function* () {
+const handleRequest = Effect.gen(function* () {
   const postService = yield* Post.Service
-  return yield* postService.list()
+  const projectService = yield* Project.Service
+  const authorService = yield* Author.Service
+
+  const [posts, projects, author] = yield* Effect.all(
+    [
+      postService.list().pipe(Effect.catchAll(() => Effect.succeed([]))),
+      projectService.list(),
+      authorService.me(),
+    ],
+    { concurrency: 'unbounded' }
+  )
+
+  return {
+    posts,
+    projects,
+    social: [
+      {
+        name: 'GitHub',
+        href: `https://github.com/${author.githubHandle.replace(/^@/, '')}`,
+      },
+      {
+        name: 'Twitter',
+        href: `https://x.com/${author.twitterHandle.replace(/^@/, '')}`,
+      },
+    ],
+  }
 })
 
-const result = await Runtime.runPromiseExit(getPosts)
+const result = await Runtime.runPromiseExit(
+  handleRequest.pipe(Effect.tapError(Effect.logError))
+)
 
-const posts = Exit.isFailure(result) ? [] : result.value
+if (Exit.isFailure(result)) {
+  return new Response(null, { status: 500 })
+}
 
-const projects = [
-  {
-    name: 'repo.vercel.app',
-    href: 'https://repo.vercel.app',
-    description: 'Find the repo for any npm package',
-  },
-  {
-    name: 'fthrsn',
-    href: 'https://fthrsn.bandcamp.com',
-    description: 'Music project from 2011-2013',
-  },
-] as const
-
-const social = [
-  {
-    name: 'GitHub',
-    href: 'https://github.com/macklinu',
-  },
-  {
-    name: 'Twitter',
-    href: 'https://twitter.com/macklinu',
-  },
-  {
-    name: 'LinkedIn',
-    href: 'https://www.linkedin.com/in/macklinu/',
-  },
-] as const
+const { posts, projects, social } = result.value
 
 const cloudflareCacheLength = Duration.toSeconds(Duration.days(1))
 const browserCacheLength = Duration.toSeconds(Duration.hours(1))

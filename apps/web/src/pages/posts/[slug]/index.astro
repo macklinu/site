@@ -26,11 +26,13 @@ const getPost = Effect.gen(function* () {
 })
 
 const result = await Runtime.runPromiseExit(
-  getPost.pipe(Effect.provide(AstroContext.layerRequest(Astro)))
+  getPost.pipe(
+    Effect.tapError(Effect.logError),
+    Effect.provide(AstroContext.layerRequest(Astro))
+  )
 )
 
 if (Exit.isFailure(result)) {
-  console.error(result.cause)
   throw new Error('Unable to load post from Sanity')
 }
 

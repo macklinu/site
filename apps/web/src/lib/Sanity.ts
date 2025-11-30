@@ -20,7 +20,7 @@ export class Service extends Context.Tag('@mackie/web/lib/Sanity/Service')<
           try: (signal) =>
             sanityClient.fetch(query, params, { ...options, signal }),
           catch: (error) => new UnknownException(error),
-        }),
+        }).pipe(Effect.withSpan('Sanity.fetch')),
     })
   )
 }

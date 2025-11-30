@@ -1,7 +1,8 @@
 import { Resvg } from '@resvg/resvg-js'
 import type { APIRoute } from 'astro'
 import { Duration, Effect, Exit, Schema } from 'effect'
-import satori from 'satori'
+import type { ReactNode } from 'react'
+import satori, { type SatoriOptions } from 'satori'
 
 import * as AstroContext from '~/lib/AstroContext'
 import * as Post from '~/lib/Post'
@@ -9,19 +10,32 @@ import { Runtime } from '~/lib/Runtime'
 import { UrlSlug } from '~/lib/Slug'
 import { postImage } from '~/og'
 
-function fetchInter() {
-  return fetch(
-    'https://unpkg.com/inter-font@3.19.0/ttf/Inter-Regular.ttf'
-  ).then((res) => res.arrayBuffer())
-}
-
-function fetchInterBold() {
-  return fetch('https://unpkg.com/inter-font@3.19.0/ttf/Inter-Bold.ttf').then(
+const fetchInter = Effect.tryPromise(() =>
+  fetch('https://unpkg.com/inter-font@3.19.0/ttf/Inter-Regular.ttf').then(
     (res) => res.arrayBuffer()
   )
-}
+).pipe(Effect.withSpan('fetchInter'))
 
-const getPost = Effect.gen(function* () {
+const fetchInterBold = Effect.tryPromise(() =>
+  fetch('https://unpkg.com/inter-font@3.19.0/ttf/Inter-Bold.ttf').then((res) =>
+    res.arrayBuffer()
+  )
+).pipe(Effect.withSpan('fetchInterBold'))
+
+const renderSvg = Effect.fn('renderSvg')(function* (
+  element: ReactNode,
+  options: SatoriOptions
+) {
+  return yield* Effect.tryPromise(() => satori(element, options))
+})
+
+const convertSvgToPng = (svg: Buffer | string) =>
+  Effect.sync(() => {
+    const resvg = new Resvg(svg)
+    return resvg.render().asPng()
+  }).pipe(Effect.withSpan('convertSvgToPng'))
+
+const generateOgImageResponse = Effect.gen(function* () {
   const postService = yield* Post.Service
   const params = yield* AstroContext.Params
 
@@ -29,23 +43,12 @@ const getPost = Effect.gen(function* () {
     Schema.Struct({ slug: UrlSlug })
   )(params)
 
-  return yield* postService.getBySlug(slug)
-})
-
-export const GET: APIRoute = async (context) => {
-  const result = await Runtime.runPromiseExit(
-    getPost.pipe(Effect.provide(AstroContext.layerRequest(context)))
+  const [post, inter, interBold] = yield* Effect.all(
+    [postService.getBySlug(slug), fetchInter, fetchInterBold],
+    { concurrency: 'unbounded' }
   )
 
-  if (Exit.isFailure(result)) {
-    return new Response(null, { status: 404 })
-  }
-
-  const [inter, interBold] = await Promise.all([fetchInter(), fetchInterBold()])
-
-  const post = result.value
-
-  const svg = await satori(postImage(post), {
+  const svg = yield* renderSvg(postImage(post), {
     width: 1200,
     height: 630,
     embedFont: true,
@@ -65,11 +68,25 @@ export const GET: APIRoute = async (context) => {
     ],
   })
 
-  const resvg = new Resvg(svg)
+  const png = yield* convertSvgToPng(svg)
+
+  return new Uint8Array(png)
+}).pipe(Effect.withSpan('generateOgImageResponse'))
+
+export const GET: APIRoute = async (context) => {
+  const result = await Runtime.runPromiseExit(
+    generateOgImageResponse.pipe(
+      Effect.provide(AstroContext.layerRequest(context))
+    )
+  )
+
+  if (Exit.isFailure(result)) {
+    return new Response(null, { status: 404 })
+  }
 
   const cacheDuration = Duration.toSeconds(Duration.days(365))
 
-  return new Response(new Uint8Array(resvg.render().asPng()), {
+  return new Response(result.value, {
     headers: {
       'Content-Type': 'image/png',
       'Cache-Control': `public, s-maxage=${cacheDuration}, max-age=${cacheDuration}`,

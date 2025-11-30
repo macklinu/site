@@ -26,6 +26,7 @@ export const Image = Schema.Struct({
   _key: Schema.String,
   _type: Schema.Literal('image'),
   asset: Schema.Unknown,
+  alt: Schema.String.pipe(Schema.OptionFromUndefinedOr),
 })
 
 export const PostId = Schema.UUID.pipe(Schema.brand('PostId'))
@@ -85,14 +86,14 @@ export class Service extends Context.Tag('@mackie/web/lib/Post/Service')<
 
       const list = Effect.fn('Post.Service.list')(function* () {
         const result = yield* sanity.fetch(
-          groq`*[_type == "post"] {
+          groq`*[_type == "post"] | order(publicationDate desc) {
             _id,
             _createdAt,
             title,
             slug,
             description,
             publicationDate
-          } | order(publicationDate desc)`
+          }`
         )
 
         return yield* Schema.decodeUnknown(Schema.Array(PostSummary))(result)
