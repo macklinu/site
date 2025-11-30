@@ -1,5 +1,0 @@
-:80
-
-root * /var/html/www
-encode gzip
-file_server

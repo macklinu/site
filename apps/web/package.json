@@ -7,9 +7,7 @@
     "astro": "astro",
     "dev": "astro dev",
     "build": "astro build",
-    "start": "node ./dist/server/entry.mjs",
-    "preview": "astro preview",
-    "typecheck": "tsc --noEmit"
+    "start": "node ./dist/server/entry.mjs"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.6",

@@ -1,9 +1,0 @@
-*
-!public
-!src
-!astro.config.mjs
-!Caddyfile
-!package.json
-!pnpm-lock.yaml
-!tailwind.config.ts
-!tsconfig.json
