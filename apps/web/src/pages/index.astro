@@ -2,12 +2,12 @@
 import { Image } from 'astro:assets'
 import { DateTime, Duration, Effect, Exit } from 'effect'
 
-import silly from '~/content/silly.png'
 import Layout from '~/Layout.astro'
 import * as Author from '~/lib/Author'
 import * as Post from '~/lib/Post'
 import * as Project from '~/lib/Project'
 import { Runtime } from '~/lib/Runtime'
+import { urlFor } from '~/lib/sanityImageUrl'
 
 const handleRequest = Effect.gen(function* () {
   const postService = yield* Post.Service
@@ -26,6 +26,7 @@ const handleRequest = Effect.gen(function* () {
   return {
     posts,
     projects,
+    author,
     social: [
       {
         name: 'GitHub',
@@ -47,7 +48,7 @@ if (Exit.isFailure(result)) {
   return new Response(null, { status: 500 })
 }
 
-const { posts, projects, social } = result.value
+const { posts, projects, social, author } = result.value
 
 const cloudflareCacheLength = Duration.toSeconds(Duration.days(1))
 const browserCacheLength = Duration.toSeconds(Duration.hours(1))
@@ -58,14 +59,20 @@ Astro.response.headers.set(
 )
 ---
 
-<Layout>
+<Layout description={author.bio}>
   <div class='space-y-8 pb-8'>
     <div class='flex flex-row items-center'>
       <div class='bg-slate-950 bg-blend-overlay'>
-        <Image transition:name='mackie' src={silly} alt='' height={256} />
+        <Image
+          transition:name='mackie'
+          src={urlFor(author.image).width(233).height(256).url()}
+          alt=''
+          width={233}
+          height={256}
+        />
       </div>
       <p class='mt-8 -ml-8 text-xs sm:text-sm md:-ml-4'>
-        Detroit-based software engineer<br />and musician
+        {author.bio}
       </p>
     </div>
     <section class='space-y-4'>

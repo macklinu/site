@@ -2,8 +2,6 @@
 import { Icon } from 'astro-icon/components'
 import { ClientRouter } from 'astro:transitions'
 
-import { DESCRIPTION } from '~/config'
-
 import '~/styles.css'
 
 interface Props {
@@ -12,11 +10,7 @@ interface Props {
   ogImage?: string
 }
 
-const {
-  title = 'Mackie Underdown',
-  description = DESCRIPTION,
-  ogImage,
-} = Astro.props
+const { title = 'Mackie Underdown', description, ogImage } = Astro.props
 
 const includeAnalytics = import.meta.env.PROD
 ---
@@ -26,7 +20,15 @@ const includeAnalytics = import.meta.env.PROD
     <meta charset='UTF-8' />
     <meta property='og:title' content={title} />
     {ogImage && <meta property='og:image' content={ogImage} />}
-    <meta name='description' property='og:description' content={description} />
+    {
+      description && (
+        <meta
+          name='description'
+          property='og:description'
+          content={description}
+        />
+      )
+    }
     <meta name='viewport' content='width=device-width,initial-scale=1' />
     <meta name='generator' content={Astro.generator} />
     <title>{title}</title>

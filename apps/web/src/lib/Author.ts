@@ -20,7 +20,10 @@ export class Author extends Schema.Class<Author>('@mackie/web/Author')({
   bio: Schema.String,
   twitterHandle: Schema.String,
   githubHandle: Schema.String,
-  image: Schema.URL,
+  image: Schema.Struct({
+    _type: Schema.Literal('image'),
+    asset: Schema.Unknown,
+  }),
 }) {}
 
 export class Service extends Context.Tag('@mackie/web/lib/Author/Service')<
@@ -35,9 +38,7 @@ export class Service extends Context.Tag('@mackie/web/lib/Author/Service')<
       const sanityService = yield* Sanity.Service
 
       const me = Effect.fn('Author.Service.me')(function* () {
-        const result = yield* sanityService.fetch(
-          groq`*[_type == "author"][0]{..., "image": image.asset->url}`
-        )
+        const result = yield* sanityService.fetch(groq`*[_type == "author"][0]`)
 
         return yield* Schema.decodeUnknown(Author)(result)
       })
