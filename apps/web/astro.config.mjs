@@ -24,6 +24,7 @@ export default defineConfig({
       projectId: '7ba2ardr',
       dataset: 'production',
       perspective: import.meta.env.PROD ? 'published' : 'drafts',
+      useCdn: true,
     }),
   ],
   vite: {
