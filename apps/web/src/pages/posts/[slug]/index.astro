@@ -33,7 +33,7 @@ const result = await Runtime.runPromiseExit(
 )
 
 if (Exit.isFailure(result)) {
-  throw new Error('Unable to load post from Sanity')
+  return new Response(null, { status: 404 })
 }
 
 const components = {
