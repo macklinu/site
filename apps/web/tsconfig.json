@@ -13,6 +13,6 @@
       }
     ]
   },
-  "include": ["src/**/*", "astro.config.mjs"],
+  "include": ["src/**/*", "astro.config.mjs", "sentry.*.config.js"],
   "exclude": ["dist"]
 }
