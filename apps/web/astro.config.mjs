@@ -2,6 +2,7 @@
 import node from '@astrojs/node'
 import react from '@astrojs/react'
 import sanity from '@sanity/astro'
+import sentry from '@sentry/astro'
 import tailwind from '@tailwindcss/vite'
 import expressiveCode from 'astro-expressive-code'
 import icon from 'astro-icon'
@@ -25,6 +26,12 @@ export default defineConfig({
       dataset: 'production',
       perspective: import.meta.env.PROD ? 'published' : 'drafts',
       useCdn: true,
+    }),
+    sentry({
+      project: 'mackie-underdown-wiki',
+      org: 'fairfield-consulting-llc',
+      authToken: import.meta.env.SENTRY_AUTH_TOKEN,
+      enabled: import.meta.env.PROD,
     }),
   ],
   vite: {
