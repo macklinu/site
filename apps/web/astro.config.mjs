@@ -13,6 +13,9 @@ export default defineConfig({
   site: import.meta.env.PROD ? 'https://mackie.underdown.wiki' : 'http://localhost:4321',
   adapter: node({ mode: 'standalone' }),
   output: 'server',
+  prefetch: {
+    defaultStrategy: 'load',
+  },
   integrations: [
     react(),
     expressiveCode({
