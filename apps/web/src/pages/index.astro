@@ -40,9 +40,7 @@ const handleRequest = Effect.gen(function* () {
   }
 })
 
-const result = await Runtime.runPromiseExit(
-  handleRequest.pipe(Effect.tapError(Effect.logError))
-)
+const result = await Runtime.runPromiseExit(handleRequest.pipe(Effect.tapError(Effect.logError)))
 
 if (Exit.isFailure(result)) {
   return new Response(null, { status: 500 })
@@ -127,12 +125,7 @@ Astro.response.headers.set(
         {
           projects.map(({ name, description, href }) => (
             <li>
-              <a
-                class='underline'
-                href={href}
-                target='_blank'
-                rel='noopener noreferrer'
-              >
+              <a class='underline' href={href} target='_blank' rel='noopener noreferrer'>
                 {name}
               </a>
 

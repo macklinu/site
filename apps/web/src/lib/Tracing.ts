@@ -22,6 +22,4 @@ const layerLive = Layer.unwrapEffect(
   })
 )
 
-export const layer = Layer.suspend(() =>
-  import.meta.env.PROD ? layerLive : Layer.empty
-)
+export const layer = Layer.suspend(() => (import.meta.env.PROD ? layerLive : Layer.empty))

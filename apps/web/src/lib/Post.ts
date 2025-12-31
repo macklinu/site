@@ -32,13 +32,9 @@ export const Image = Schema.Struct({
 export const PostId = Schema.UUID.pipe(Schema.brand('PostId'))
 export type PostId = typeof PostId.Type
 
-export class PostSummary extends Schema.Class<PostSummary>(
-  '@mackie/web/PostSummary'
-)({
+export class PostSummary extends Schema.Class<PostSummary>('@mackie/web/PostSummary')({
   id: Schema.propertySignature(PostId).pipe(Schema.fromKey('_id')),
-  createdAt: Schema.propertySignature(Schema.DateTimeUtc).pipe(
-    Schema.fromKey('_createdAt')
-  ),
+  createdAt: Schema.propertySignature(Schema.DateTimeUtc).pipe(Schema.fromKey('_createdAt')),
   title: Schema.String,
   slug: Slug.SanitySlug,
   description: Schema.String,
@@ -57,13 +53,8 @@ export class PostNotFound extends Schema.TaggedError<PostNotFound>(
 export class Service extends Context.Tag('@mackie/web/lib/Post/Service')<
   Service,
   {
-    readonly list: () => Effect.Effect<
-      readonly PostSummary[],
-      ParseError | UnknownException
-    >
-    readonly getBySlug: (
-      slug: Slug.UrlSlug
-    ) => Effect.Effect<Post, PostNotFound | ParseError>
+    readonly list: () => Effect.Effect<readonly PostSummary[], ParseError | UnknownException>
+    readonly getBySlug: (slug: Slug.UrlSlug) => Effect.Effect<Post, PostNotFound | ParseError>
   }
 >() {
   static readonly layerSanity = Layer.effect(
@@ -80,8 +71,7 @@ export class Service extends Context.Tag('@mackie/web/lib/Post/Service')<
 
           return yield* Schema.decodeUnknown(Post)(result)
         },
-        (effect, slug) =>
-          Effect.catchAll(effect, () => new PostNotFound({ slug }))
+        (effect, slug) => Effect.catchAll(effect, () => new PostNotFound({ slug }))
       )
 
       const list = Effect.fn('Post.Service.list')(function* () {

@@ -18,18 +18,13 @@ const getPost = Effect.gen(function* () {
   const postService = yield* Post.Service
   const params = yield* AstroContext.Params
 
-  const { slug } = yield* Schema.decodeUnknown(
-    Schema.Struct({ slug: UrlSlug })
-  )(params)
+  const { slug } = yield* Schema.decodeUnknown(Schema.Struct({ slug: UrlSlug }))(params)
 
   return yield* postService.getBySlug(slug)
 })
 
 const result = await Runtime.runPromiseExit(
-  getPost.pipe(
-    Effect.tapError(Effect.logError),
-    Effect.provide(AstroContext.layerRequest(Astro))
-  )
+  getPost.pipe(Effect.tapError(Effect.logError), Effect.provide(AstroContext.layerRequest(Astro)))
 )
 
 if (Exit.isFailure(result)) {
@@ -46,10 +41,7 @@ const components = {
 const post = result.value
 const date = DateTime.formatIsoDate(post.publicationDate)
 
-const ogImage = new URL(
-  `/posts/${post.slug}/og.png`,
-  import.meta.env.SITE
-).toString()
+const ogImage = new URL(`/posts/${post.slug}/og.png`, import.meta.env.SITE).toString()
 
 const cloudflareCacheLength = Duration.toSeconds(Duration.days(1))
 const browserCacheLength = Duration.toSeconds(Duration.hours(1))

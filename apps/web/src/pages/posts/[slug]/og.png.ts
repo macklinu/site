@@ -11,21 +11,16 @@ import { UrlSlug } from '~/lib/Slug'
 import { postImage } from '~/og'
 
 const fetchInter = Effect.tryPromise(() =>
-  fetch('https://unpkg.com/inter-font@3.19.0/ttf/Inter-Regular.ttf').then(
-    (res) => res.arrayBuffer()
+  fetch('https://unpkg.com/inter-font@3.19.0/ttf/Inter-Regular.ttf').then((res) =>
+    res.arrayBuffer()
   )
 ).pipe(Effect.withSpan('fetchInter'))
 
 const fetchInterBold = Effect.tryPromise(() =>
-  fetch('https://unpkg.com/inter-font@3.19.0/ttf/Inter-Bold.ttf').then((res) =>
-    res.arrayBuffer()
-  )
+  fetch('https://unpkg.com/inter-font@3.19.0/ttf/Inter-Bold.ttf').then((res) => res.arrayBuffer())
 ).pipe(Effect.withSpan('fetchInterBold'))
 
-const renderSvg = Effect.fn('renderSvg')(function* (
-  element: ReactNode,
-  options: SatoriOptions
-) {
+const renderSvg = Effect.fn('renderSvg')(function* (element: ReactNode, options: SatoriOptions) {
   return yield* Effect.tryPromise(() => satori(element, options))
 })
 
@@ -39,9 +34,7 @@ const generateOgImageResponse = Effect.gen(function* () {
   const postService = yield* Post.Service
   const params = yield* AstroContext.Params
 
-  const { slug } = yield* Schema.decodeUnknown(
-    Schema.Struct({ slug: UrlSlug })
-  )(params)
+  const { slug } = yield* Schema.decodeUnknown(Schema.Struct({ slug: UrlSlug }))(params)
 
   const [post, inter, interBold] = yield* Effect.all(
     [postService.getBySlug(slug), fetchInter, fetchInterBold],
@@ -75,9 +68,7 @@ const generateOgImageResponse = Effect.gen(function* () {
 
 export const GET: APIRoute = async (context) => {
   const result = await Runtime.runPromiseExit(
-    generateOgImageResponse.pipe(
-      Effect.provide(AstroContext.layerRequest(context))
-    )
+    generateOgImageResponse.pipe(Effect.provide(AstroContext.layerRequest(context)))
   )
 
   if (Exit.isFailure(result)) {

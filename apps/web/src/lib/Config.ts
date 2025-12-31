@@ -6,9 +6,10 @@ const EnvironmentConfigSchema = Schema.Struct({
   otlpProtocol: Schema.String,
 })
 
-export class EnvironmentConfig extends Context.Tag(
-  '@mackie/web/lib/Config/EnvironmentConfig'
-)<EnvironmentConfig, typeof EnvironmentConfigSchema.Type>() {
+export class EnvironmentConfig extends Context.Tag('@mackie/web/lib/Config/EnvironmentConfig')<
+  EnvironmentConfig,
+  typeof EnvironmentConfigSchema.Type
+>() {
   static readonly layer = Layer.effect(
     EnvironmentConfig,
     Effect.gen(function* () {

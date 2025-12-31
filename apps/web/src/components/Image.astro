@@ -15,8 +15,4 @@ interface Props {
 const { node } = Astro.props
 ---
 
-<AstroImage
-  src={urlFor(node.asset).url()}
-  alt={Option.getOrElse(node.alt, () => '')}
-  inferSize
-/>
+<AstroImage src={urlFor(node.asset).url()} alt={Option.getOrElse(node.alt, () => '')} inferSize />

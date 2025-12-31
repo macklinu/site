@@ -40,9 +40,7 @@ const CreateProjectSchema = z.object({
 
 export const action = async ({ request }: ActionArgs) => {
   try {
-    const projectParams = CreateProjectSchema.parse(
-      Object.fromEntries(await request.formData())
-    )
+    const projectParams = CreateProjectSchema.parse(Object.fromEntries(await request.formData()))
 
     const project = await api.createProject(projectParams)
 

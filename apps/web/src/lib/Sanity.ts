@@ -17,8 +17,7 @@ export class Service extends Context.Tag('@mackie/web/lib/Sanity/Service')<
     Service.of({
       fetch: (query, params, options) =>
         Effect.tryPromise({
-          try: (signal) =>
-            sanityClient.fetch(query, params, { ...options, signal }),
+          try: (signal) => sanityClient.fetch(query, params, { ...options, signal }),
           catch: (error) => new UnknownException(error),
         }).pipe(Effect.withSpan('Sanity.fetch')),
     })

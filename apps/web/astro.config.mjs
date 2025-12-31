@@ -10,9 +10,7 @@ import { defineConfig } from 'astro/config'
 
 // https://astro.build/config
 export default defineConfig({
-  site: import.meta.env.PROD
-    ? 'https://mackie.underdown.wiki'
-    : 'http://localhost:4321',
+  site: import.meta.env.PROD ? 'https://mackie.underdown.wiki' : 'http://localhost:4321',
   adapter: node({ mode: 'standalone' }),
   output: 'server',
   integrations: [

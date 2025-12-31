@@ -9,5 +9,4 @@ export class Params extends Context.Tag('@mackie/web/lib/AstroContext/Params')<
     Layer.sync(Params, () => Params.of(Astro.params))
 }
 
-export const layerRequest = (Astro: AstroGlobal | AstroSharedContext) =>
-  Params.layerRequest(Astro)
+export const layerRequest = (Astro: AstroGlobal | AstroSharedContext) => Params.layerRequest(Astro)
