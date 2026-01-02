@@ -5,12 +5,11 @@
   "private": true,
   "scripts": {
     "astro": "astro",
-    "dev": "astro dev",
-    "build": "astro build",
-    "start": "node ./dist/server/entry.mjs"
+    "dev": "bun --bun astro dev",
+    "build": "bun --bun astro build",
+    "start": "bun --bun run ./dist/server/entry.mjs"
   },
   "dependencies": {
-    "@astrojs/check": "^0.9.6",
     "@astrojs/node": "^9.5.1",
     "@astrojs/react": "^4.4.2",
     "@effect/opentelemetry": "^0.60.0",
