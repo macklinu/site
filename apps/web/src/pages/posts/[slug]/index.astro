@@ -24,7 +24,7 @@ const getPost = Effect.gen(function* () {
 })
 
 const result = await Runtime.runPromiseExit(
-  getPost.pipe(Effect.tapError(Effect.logError), Effect.provide(AstroContext.layerRequest(Astro)))
+  getPost.pipe(Effect.tapError(Effect.logError), AstroContext.Params.provide(Astro))
 )
 
 if (Exit.isFailure(result)) {

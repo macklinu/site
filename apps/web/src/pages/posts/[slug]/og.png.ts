@@ -68,7 +68,7 @@ const generateOgImageResponse = Effect.gen(function* () {
 
 export const GET: APIRoute = async (context) => {
   const result = await Runtime.runPromiseExit(
-    generateOgImageResponse.pipe(Effect.provide(AstroContext.layerRequest(context)))
+    generateOgImageResponse.pipe(AstroContext.Params.provide(context))
   )
 
   if (Exit.isFailure(result)) {

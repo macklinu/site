@@ -1,12 +1,10 @@
 import type { AstroGlobal, AstroSharedContext } from 'astro'
-import { Context, Layer } from 'effect'
+import { Context, Effect } from 'effect'
 
 export class Params extends Context.Tag('@mackie/web/lib/AstroContext/Params')<
   Params,
   Record<string, string | undefined>
 >() {
-  static readonly layerRequest = (Astro: AstroGlobal | AstroSharedContext) =>
-    Layer.sync(Params, () => Params.of(Astro.params))
+  static readonly provide = (Astro: AstroGlobal | AstroSharedContext) =>
+    Effect.provideService(Params, Astro.params)
 }
-
-export const layerRequest = (Astro: AstroGlobal | AstroSharedContext) => Params.layerRequest(Astro)
