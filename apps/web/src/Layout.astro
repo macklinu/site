@@ -6,7 +6,7 @@ import '~/styles.css'
 
 interface Props {
   title?: string
-  description?: string
+  description: string
   ogImage?: string
 }
 
@@ -20,7 +20,7 @@ const includeAnalytics = import.meta.env.PROD
     <meta charset='UTF-8' />
     <meta property='og:title' content={title} />
     {ogImage && <meta property='og:image' content={ogImage} />}
-    {description && <meta name='description' property='og:description' content={description} />}
+    <meta name='description' property='og:description' content={description} />
     <meta name='viewport' content='width=device-width,initial-scale=1' />
     <meta name='generator' content={Astro.generator} />
     <title>{title}</title>

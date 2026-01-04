@@ -1,6 +1,6 @@
 ---
 import { Image } from 'astro:assets'
-import { DateTime, Duration, Effect, Exit } from 'effect'
+import { DateTime, Effect, Exit } from 'effect'
 
 import Layout from '~/Layout.astro'
 import * as Author from '~/lib/Author'
@@ -43,18 +43,10 @@ const handleRequest = Effect.gen(function* () {
 const result = await Runtime.runPromiseExit(handleRequest.pipe(Effect.tapError(Effect.logError)))
 
 if (Exit.isFailure(result)) {
-  return new Response(null, { status: 500 })
+  throw new Error('Failed to generate page', { cause: result.cause })
 }
 
 const { posts, projects, social, author } = result.value
-
-const cloudflareCacheLength = Duration.toSeconds(Duration.days(1))
-const browserCacheLength = Duration.toSeconds(Duration.hours(1))
-
-Astro.response.headers.set(
-  'Cache-Control',
-  `public, s-maxage=${cloudflareCacheLength}, max-age=${browserCacheLength}, stale-while-revalidate=${cloudflareCacheLength}`
-)
 ---
 
 <Layout description={author.bio}>

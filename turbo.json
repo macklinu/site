@@ -7,6 +7,16 @@
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
       "outputs": [".astro", "dist"]
     },
+    "deploy": {
+      "inputs": ["$TURBO_DEFAULT$", ".env*"],
+      "outputs": [".astro", "dist"],
+      "passThroughEnv": [
+        "CLOUDFLARE_EMAIL",
+        "CLOUDFLARE_API_TOKEN",
+        "ALCHEMY_STATE_TOKEN",
+        "ALCHEMY_PASSWORD"
+      ]
+    },
     "dev": {
       "cache": false,
       "persistent": true

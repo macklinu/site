@@ -22,3 +22,7 @@ pnpm-debug.log*
 
 .wrangler
 .turbo
+
+# alchemy
+.alchemy
+.astro

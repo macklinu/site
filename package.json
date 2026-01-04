@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "turbo run dev",
     "build": "turbo run build",
+    "deploy": "turbo run deploy",
     "lint": "oxlint"
   },
   "devDependencies": {

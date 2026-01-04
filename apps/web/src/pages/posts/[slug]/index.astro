@@ -1,22 +1,24 @@
 ---
+import { RequestParams } from '@macklinu/effect-web'
+import { EffectWebAstro } from '@macklinu/effect-web-astro'
+import type { GetStaticPaths } from 'astro'
 import { Icon } from 'astro-icon/components'
 import { PortableText } from 'astro-portabletext'
 import type { SomePortableTextComponents } from 'astro-portabletext/types'
 import { Image } from 'astro:assets'
-import { DateTime, Duration, Effect, Exit, Schema } from 'effect'
+import { DateTime, Effect, Exit, Schema } from 'effect'
 
 import * as Components from '~/components'
 import silly from '~/content/silly.png'
 import Eye from '~/Eye.astro'
 import Layout from '~/Layout.astro'
-import * as AstroContext from '~/lib/AstroContext'
 import * as Post from '~/lib/Post'
 import { Runtime } from '~/lib/Runtime'
 import { UrlSlug } from '~/lib/Slug'
 
 const getPost = Effect.gen(function* () {
   const postService = yield* Post.Service
-  const params = yield* AstroContext.Params
+  const params = yield* RequestParams.RequestParams
 
   const { slug } = yield* Schema.decodeUnknown(Schema.Struct({ slug: UrlSlug }))(params)
 
@@ -24,11 +26,15 @@ const getPost = Effect.gen(function* () {
 })
 
 const result = await Runtime.runPromiseExit(
-  getPost.pipe(Effect.tapError(Effect.logError), AstroContext.Params.provide(Astro))
+  getPost.pipe(
+    Effect.tapError(Effect.logError),
+    // @ts-expect-error Not sure why the types are wrong here but I'll need to update `@macklinu/effect-web-astro`.
+    EffectWebAstro.provideService(Astro)
+  )
 )
 
 if (Exit.isFailure(result)) {
-  return new Response(null, { status: 404 })
+  throw new Error('Unable to generate post', { cause: result.cause })
 }
 
 const components = {
@@ -43,13 +49,20 @@ const date = DateTime.formatIsoDate(post.publicationDate)
 
 const ogImage = new URL(`/posts/${post.slug}/og.png`, import.meta.env.SITE).toString()
 
-const cloudflareCacheLength = Duration.toSeconds(Duration.days(1))
-const browserCacheLength = Duration.toSeconds(Duration.hours(1))
+export const getStaticPaths: GetStaticPaths = () =>
+  Runtime.runPromise(
+    Effect.gen(function* () {
+      const postService = yield* Post.Service
 
-Astro.response.headers.set(
-  'Cache-Control',
-  `public, s-maxage=${cloudflareCacheLength}, max-age=${browserCacheLength}, stale-while-revalidate=${cloudflareCacheLength}`
-)
+      const posts = yield* postService.list()
+
+      return posts.map((post) => ({
+        params: {
+          slug: post.slug,
+        },
+      }))
+    })
+  )
 ---
 
 <Layout title={post.title} description={post.description} ogImage={ogImage}>
