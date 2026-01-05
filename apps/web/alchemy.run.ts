@@ -11,6 +11,9 @@ export const worker = await Astro('website', {
   observability: {
     enabled: true,
   },
+  assets: {
+    html_handling: 'drop-trailing-slash',
+  },
 })
 
 console.log(worker.url)
