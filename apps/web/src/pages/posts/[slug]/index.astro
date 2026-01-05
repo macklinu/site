@@ -65,7 +65,13 @@ export const getStaticPaths: GetStaticPaths = () =>
   )
 ---
 
-<Layout title={post.title} description={post.description} ogImage={ogImage}>
+<Layout
+  title={post.title}
+  description={post.description}
+  ogImage={ogImage}
+  type='article'
+  publishedTime={DateTime.formatIso(post.publicationDate)}
+>
   <a href='/' class='inline-flex flex-row items-center gap-1 underline'>
     <Icon name='lucide:arrow-left' class='h-4 w-4' />
     Back
