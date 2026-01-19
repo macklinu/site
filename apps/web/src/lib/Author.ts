@@ -2,26 +2,28 @@ import { Context, Effect, Layer } from 'effect'
 import type { UnknownException } from 'effect/Cause'
 import type { ParseError } from 'effect/ParseResult'
 import * as Schema from 'effect/Schema'
-import groq from 'groq'
 
-import * as Sanity from '~/lib/Sanity'
+import silly from '~/content/silly.png'
 import * as Slug from '~/lib/Slug'
 
 export const AuthorId = Schema.UUID.pipe(Schema.brand('AuthorId'))
 export type AuthorId = typeof AuthorId.Type
 
+const ImageMetadata = Schema.declare(
+  (input: unknown): input is ImageMetadata =>
+    typeof input === 'object' && input !== null && 'src' in input,
+  {
+    description: 'Astro ImageMetadata',
+  }
+)
+
 export class Author extends Schema.Class<Author>('@mackie/web/Author')({
-  id: Schema.propertySignature(AuthorId).pipe(Schema.fromKey('_id')),
-  createdAt: Schema.propertySignature(Schema.DateTimeUtc).pipe(Schema.fromKey('_createdAt')),
   name: Schema.String,
-  slug: Slug.SanitySlug,
+  slug: Slug.UrlSlug,
   bio: Schema.String,
   twitterHandle: Schema.String,
   githubHandle: Schema.String,
-  image: Schema.Struct({
-    _type: Schema.Literal('image'),
-    asset: Schema.Unknown,
-  }),
+  image: ImageMetadata,
 }) {}
 
 export class Service extends Context.Tag('@mackie/web/lib/Author/Service')<
@@ -30,20 +32,20 @@ export class Service extends Context.Tag('@mackie/web/lib/Author/Service')<
     me: () => Effect.Effect<Author, UnknownException | ParseError>
   }
 >() {
-  static readonly layerSanity = Layer.effect(
+  static readonly layerStatic = Layer.succeed(
     Service,
-    Effect.gen(function* () {
-      const sanityService = yield* Sanity.Service
-
-      const me = Effect.fn('Author.Service.me')(function* () {
-        const result = yield* sanityService.fetch(groq`*[_type == "author"][0]`)
-
-        return yield* Schema.decodeUnknown(Author)(result)
-      })
-
-      return Service.of({
-        me,
-      })
+    Service.of({
+      me: () =>
+        Effect.succeed(
+          Author.make({
+            name: 'Mackie Underdown',
+            githubHandle: '@macklinu',
+            twitterHandle: '@macklinu',
+            slug: Slug.UrlSlug.make('mackie-underdown'),
+            bio: 'Detroit-based software engineer and musician',
+            image: silly,
+          })
+        ),
     })
   )
 }

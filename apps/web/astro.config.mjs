@@ -1,6 +1,5 @@
 // @ts-check
 import react from '@astrojs/react'
-import sanity from '@sanity/astro'
 import tailwind from '@tailwindcss/vite'
 import expressiveCode from 'astro-expressive-code'
 import icon from 'astro-icon'
@@ -17,14 +16,12 @@ export default defineConfig({
     react(),
     expressiveCode({
       themes: ['catppuccin-mocha', 'catppuccin-latte'],
+      styleOverrides: {
+        codeFontFamily:
+          "'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace",
+      },
     }),
     icon(),
-    sanity({
-      projectId: '7ba2ardr',
-      dataset: 'production',
-      perspective: import.meta.env.PROD ? 'published' : 'drafts',
-      useCdn: false,
-    }),
   ],
   vite: {
     // @ts-expect-error

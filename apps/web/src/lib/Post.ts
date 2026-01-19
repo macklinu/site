@@ -1,54 +1,34 @@
-import { Context, Effect, Layer, Schema } from 'effect'
+import { getCollection, getEntry, render, type RenderResult } from 'astro:content'
+import { Context, DateTime, Effect, Layer, Option, Schema } from 'effect'
 import type { UnknownException } from 'effect/Cause'
 import type { ParseError } from 'effect/ParseResult'
-import groq from 'groq'
 
-import * as Sanity from '~/lib/Sanity'
 import * as Slug from '~/lib/Slug'
-
-export const Block = Schema.Struct({
-  _key: Schema.String,
-  _type: Schema.Literal('block'),
-  children: Schema.Array(Schema.Unknown),
-  markDefs: Schema.Array(Schema.Unknown),
-  style: Schema.String,
-})
-
-export const Code = Schema.Struct({
-  _key: Schema.String,
-  _type: Schema.Literal('code'),
-  code: Schema.String,
-  language: Schema.String.pipe(Schema.optional),
-  filename: Schema.String.pipe(Schema.optional),
-})
-
-export const Image = Schema.Struct({
-  _key: Schema.String,
-  _type: Schema.Literal('image'),
-  asset: Schema.Unknown,
-  alt: Schema.String.pipe(Schema.OptionFromUndefinedOr),
-})
 
 export const PostId = Schema.UUID.pipe(Schema.brand('PostId'))
 export type PostId = typeof PostId.Type
 
 export class PostSummary extends Schema.Class<PostSummary>('@mackie/web/PostSummary')({
-  id: Schema.propertySignature(PostId).pipe(Schema.fromKey('_id')),
   createdAt: Schema.propertySignature(Schema.DateTimeUtc).pipe(Schema.fromKey('_createdAt')),
   title: Schema.String,
-  slug: Slug.SanitySlug,
+  slug: Slug.UrlSlug,
   description: Schema.String,
   publicationDate: Schema.DateTimeUtc,
 }) {}
 
+const ContentSchema = Schema.declare(
+  (input: unknown): input is RenderResult['Content'] => typeof input === 'function',
+  { description: 'Astro RenderResult Content' }
+)
+
 export class Post extends PostSummary.extend<Post>('@mackie/web/Post')({
   image: Schema.Unknown.pipe(Schema.OptionFromUndefinedOr),
-  body: Schema.Array(Schema.Union(Block, Code, Image)).pipe(Schema.mutable),
+  Content: ContentSchema,
 }) {}
 
 export class PostNotFound extends Schema.TaggedError<PostNotFound>(
   '@mackie/web/lib/Post/PostNotFound'
-)('@mackie/web/lib/Post/PostNotFound', { slug: Slug.SanitySlug }) {}
+)('@mackie/web/lib/Post/PostNotFound', { slug: Slug.UrlSlug }) {}
 
 export class Service extends Context.Tag('@mackie/web/lib/Post/Service')<
   Service,
@@ -57,42 +37,38 @@ export class Service extends Context.Tag('@mackie/web/lib/Post/Service')<
     readonly getBySlug: (slug: Slug.UrlSlug) => Effect.Effect<Post, PostNotFound | ParseError>
   }
 >() {
-  static readonly layerSanity = Layer.effect(
+  static readonly layerAstro = Layer.succeed(
     Service,
-    Effect.gen(function* () {
-      const sanity = yield* Sanity.Service
-
-      const getBySlug = Effect.fn('Post.Service.getBySlug')(
-        function* (slug: Slug.UrlSlug) {
-          const result = yield* sanity.fetch(
-            groq`*[_type == "post" && slug.current == $slug][0] { ..., author-> { ..., 'image': image.asset->url  } }`,
-            { slug }
-          )
-
-          return yield* Schema.decodeUnknown(Post)(result)
-        },
-        (effect, slug) => Effect.catchAll(effect, () => new PostNotFound({ slug }))
-      )
-
-      const list = Effect.fn('Post.Service.list')(function* () {
-        const result = yield* sanity.fetch(
-          groq`*[_type == "post"] | order(publicationDate desc) {
-            _id,
-            _createdAt,
-            title,
-            slug,
-            description,
-            publicationDate
-          }`
-        )
-
-        return yield* Schema.decodeUnknown(Schema.Array(PostSummary))(result)
-      })
-
-      return Service.of({
-        getBySlug,
-        list,
-      })
+    Service.of({
+      getBySlug: (slug) =>
+        Effect.gen(function* () {
+          const post = yield* Effect.tryPromise(() => getEntry('posts', slug)!)
+          const { Content } = yield* Effect.tryPromise(() => render(post))
+          return Post.make({
+            createdAt: DateTime.unsafeNow(),
+            description: post.data.description,
+            title: post.data.title,
+            slug: Slug.UrlSlug.make(post.id),
+            publicationDate: DateTime.unsafeMake(post.data.date),
+            image: Option.none(),
+            Content,
+          })
+        }).pipe(Effect.catchAll(() => new PostNotFound({ slug }))),
+      list: () =>
+        Effect.gen(function* () {
+          const posts = yield* Effect.tryPromise(() => getCollection('posts'))
+          return posts
+            .map((post) =>
+              PostSummary.make({
+                createdAt: DateTime.unsafeNow(),
+                description: post.data.description,
+                title: post.data.title,
+                slug: Slug.UrlSlug.make(post.id),
+                publicationDate: DateTime.unsafeMake(post.data.date),
+              })
+            )
+            .sort((a, b) => b.publicationDate.epochMillis - a.publicationDate.epochMillis)
+        }),
     })
   )
 }

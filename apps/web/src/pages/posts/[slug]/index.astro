@@ -3,12 +3,9 @@ import { RequestParams } from '@macklinu/effect-web'
 import { EffectWebAstro } from '@macklinu/effect-web-astro'
 import type { GetStaticPaths } from 'astro'
 import { Icon } from 'astro-icon/components'
-import { PortableText } from 'astro-portabletext'
-import type { SomePortableTextComponents } from 'astro-portabletext/types'
 import { Image } from 'astro:assets'
 import { DateTime, Effect, Exit, Schema } from 'effect'
 
-import * as Components from '~/components'
 import silly from '~/content/silly.png'
 import Eye from '~/Eye.astro'
 import Layout from '~/Layout.astro'
@@ -36,13 +33,6 @@ const result = await Runtime.runPromiseExit(
 if (Exit.isFailure(result)) {
   throw new Error('Unable to generate post', { cause: result.cause })
 }
-
-const components = {
-  type: {
-    code: Components.Code,
-    image: Components.Image,
-  },
-} as const satisfies SomePortableTextComponents
 
 const post = result.value
 const date = DateTime.formatIsoDate(post.publicationDate)
@@ -81,7 +71,7 @@ export const getStaticPaths: GetStaticPaths = () =>
     <div class='flex flex-col'>
       <h2
         class='text-3xl leading-tight font-black lg:text-4xl'
-        transition:name={`post-${post.id}--title`}
+        transition:name={`post-${post.slug}--title`}
       >
         {post.title}
       </h2>
@@ -89,13 +79,13 @@ export const getStaticPaths: GetStaticPaths = () =>
         <Icon name='lucide:calendar' class='h-4 w-4' />
         <time
           class='text-base text-slate-600 dark:text-slate-300'
-          transition:name={`post-${post.id}--date`}
+          transition:name={`post-${post.slug}--date`}
         >
           {date}
         </time>
       </div>
     </div>
-    <PortableText value={post.body} components={components} />
+    <post.Content />
   </article>
   <Image
     transition:name='mackie'
