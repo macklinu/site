@@ -15,10 +15,11 @@ export default defineConfig({
   integrations: [
     react(),
     expressiveCode({
-      themes: ['catppuccin-mocha', 'catppuccin-latte'],
+      themes: ['vesper'],
       styleOverrides: {
-        codeFontFamily:
-          "'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace",
+        uiFontFamily: 'var(--font-mono)',
+        codeFontFamily: 'var(--font-mono)',
+        borderRadius: '0',
       },
     }),
     icon(),

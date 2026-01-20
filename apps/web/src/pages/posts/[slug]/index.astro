@@ -62,25 +62,14 @@ export const getStaticPaths: GetStaticPaths = () =>
   type='article'
   publishedTime={DateTime.formatIso(post.publicationDate)}
 >
-  <a href='/' class='inline-flex flex-row items-center gap-1 underline'>
-    <Icon name='lucide:arrow-left' class='h-4 w-4' />
-    Back
-  </a>
-
   <article class='prose lg:prose-lg dark:prose-invert mx-auto pb-8'>
     <div class='flex flex-col'>
-      <h2
-        class='text-3xl leading-tight font-black lg:text-4xl'
-        transition:name={`post-${post.slug}--title`}
-      >
+      <h2 transition:name={`post-${post.slug}--title`}>
         {post.title}
       </h2>
       <div class='inline-flex flex-row items-center gap-1.5'>
-        <Icon name='lucide:calendar' class='h-4 w-4' />
-        <time
-          class='text-base text-slate-600 dark:text-slate-300'
-          transition:name={`post-${post.slug}--date`}
-        >
+        <Icon name='lucide:calendar' class='text-black/60 dark:text-white/60' />
+        <time class='text-black/60 dark:text-white/60' transition:name={`post-${post.slug}--date`}>
           {date}
         </time>
       </div>
@@ -92,7 +81,7 @@ export const getStaticPaths: GetStaticPaths = () =>
     src={silly}
     height={200}
     alt='Mackie looking at the blog post'
-    class='fixed bottom-0 left-0 -z-10 hidden h-[200px] duration-500 lg:block'
+    class='fixed bottom-0 left-0 -z-10 hidden h-[200px] grayscale-100 duration-500 lg:block'
   />
   <div class='motion-reduce:hidden'>
     <Eye id='left-eye' class='bottom-[93px] left-[64px]' />

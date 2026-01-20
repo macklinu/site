@@ -26,15 +26,17 @@ export const getStaticPaths: GetStaticPaths = () =>
     })
   )
 
-const fetchInter = Effect.tryPromise(() =>
-  fetch('https://unpkg.com/inter-font@3.19.0/ttf/Inter-Regular.ttf').then((res) =>
-    res.arrayBuffer()
-  )
-).pipe(Effect.withSpan('fetchInter'))
+const fetchInconsolata = Effect.tryPromise(() =>
+  fetch(
+    'https://github.com/googlefonts/Inconsolata/raw/refs/heads/main/fonts/ttf/Inconsolata-Regular.ttf'
+  ).then((res) => res.arrayBuffer())
+).pipe(Effect.withSpan('fetchInconsolata'))
 
-const fetchInterBold = Effect.tryPromise(() =>
-  fetch('https://unpkg.com/inter-font@3.19.0/ttf/Inter-Bold.ttf').then((res) => res.arrayBuffer())
-).pipe(Effect.withSpan('fetchInterBold'))
+const fetchInconsolataBold = Effect.tryPromise(() =>
+  fetch(
+    'https://github.com/googlefonts/Inconsolata/raw/refs/heads/main/fonts/ttf/Inconsolata-Bold.ttf'
+  ).then((res) => res.arrayBuffer())
+).pipe(Effect.withSpan('fetchInconsolataBold'))
 
 const renderSvg = Effect.fn('renderSvg')(function* (element: ReactNode, options: SatoriOptions) {
   return yield* Effect.tryPromise(() => satori(element, options))
@@ -52,8 +54,8 @@ const generateOgImageResponse = Effect.gen(function* () {
 
   const { slug } = yield* Schema.decodeUnknown(Schema.Struct({ slug: UrlSlug }))(params)
 
-  const [post, inter, interBold] = yield* Effect.all(
-    [postService.getBySlug(slug), fetchInter, fetchInterBold],
+  const [post, inconsolata, inconsolataBold] = yield* Effect.all(
+    [postService.getBySlug(slug), fetchInconsolata, fetchInconsolataBold],
     { concurrency: 'unbounded' }
   )
 
@@ -63,14 +65,14 @@ const generateOgImageResponse = Effect.gen(function* () {
     embedFont: true,
     fonts: [
       {
-        name: 'Inter',
-        data: inter,
+        name: 'Inconsolata',
+        data: inconsolata,
         weight: 400,
         style: 'normal',
       },
       {
-        name: 'Inter',
-        data: interBold,
+        name: 'Inconsolata',
+        data: inconsolataBold,
         weight: 700,
         style: 'normal',
       },

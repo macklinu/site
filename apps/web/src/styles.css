@@ -6,6 +6,7 @@
 }
 
 @theme {
-  --font-display: 'Inter var', 'Inter';
-  --font-mono: 'JetBrains Mono';
+  --font-mono:
+    'Inconsolata Variable', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    'Liberation Mono', 'Courier New', monospace;
 }
