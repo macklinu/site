@@ -27,8 +27,11 @@ export default defineConfig({
   vite: {
     // @ts-expect-error
     plugins: [tailwind()],
-  },
-  server: {
-    host: true,
+    server: {
+      host: true,
+      watch: {
+        ignored: ['**/.alchemy/**'],
+      },
+    },
   },
 })

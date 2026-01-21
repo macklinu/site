@@ -8,9 +8,6 @@ const app = await alchemy('mackie-underdown-wiki', {
 
 export const worker = await Astro('website', {
   routes: ['mackie.underdown.wiki/*'],
-  observability: {
-    enabled: true,
-  },
   assets: {
     html_handling: 'drop-trailing-slash',
   },
