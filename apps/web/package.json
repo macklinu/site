@@ -32,7 +32,6 @@
   },
   "devDependencies": {
     "@effect/language-service": "^0.70.0",
-    "@tailwindcss/typography": "^0.5.19",
     "@tailwindcss/vite": "^4.1.18",
     "alchemy": "^0.83.1",
     "tailwindcss": "^4.1.18",

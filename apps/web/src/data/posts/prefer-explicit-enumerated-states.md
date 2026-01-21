@@ -6,7 +6,7 @@ description: 'Using mulitple useState() hooks is simple, but you might run into 
 
 Often times when reviewing React code, I see something like this.
 
-```ts
+```tsx
 function MyComponent() {
   const [isLoading, setIsLoading] = useState(false)
   const [data, setData] = useState()
@@ -16,7 +16,7 @@ function MyComponent() {
 
 We have three `useState()` hooks to represent the possible status and associated data of an asynchronous operation - **loading**, **success**, and **error**. This may seem harmless, but this pattern can lead to some confusing code and bugs. Can you spot the bug in this code?
 
-```ts
+```tsx
 useEffect(() => {
   setIsLoading(true)
   get('/api/some-data')
@@ -65,7 +65,7 @@ function MyComponent() {
 
 Taking a step in the right direction, we can use an enumerated state to avoid this situation altogether.
 
-```ts
+```tsx
 type ApiStatus = 'idle' | 'loading' | 'success' | 'error'
 
 function MyComponent() {
@@ -90,7 +90,7 @@ function MyComponent() {
 
 Or even better, we can use a reducer, since the **success** and **error** statuses have data associated with them.
 
-```ts
+```tsx
 function MyComponent() {
   const [state, dispatch] = useReducer(
     (state, action) => {
@@ -124,12 +124,11 @@ function MyComponent() {
         })
       })
   }, [])
-
 ```
 
 Now we know we can only be in one of four possible states at any given time, and we are handling all of them more clearly. And with TypeScript, we can add a [discriminated union type](https://www.typescriptlang.org/docs/handbook/typescript-in-5-minutes-func.html#discriminated-unions) and declare that we can only access `state.data` when `state.status === 'success'` and `state.error` when `state.status === 'error'`.
 
-```ts
+```tsx
 type State =
   | { status: 'idle' }
   | { status: 'loading' }

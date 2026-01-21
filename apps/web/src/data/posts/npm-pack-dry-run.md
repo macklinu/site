@@ -8,7 +8,7 @@ Have you ever wondered, "Where do my files go when I publish a package to npm?"
 I have. I recently learned about [`npm pack`][npm-pack]. According to the
 [`npm publish`][npm-publish] documentation:
 
-For a "dry run" that does everything except actually publishing to the registry, see [`npm pack`][npm-pack], which figures out the files to beincluded and packs them into a tarball to be uploaded to the registry.
+> For a "dry run" that does everything except actually publishing to the registry, see [`npm pack`][npm-pack], which figures out the files to beincluded and packs them into a tarball to be uploaded to the registry.
 
 From the root of your repository, run `npm pack` to generate a tarball. You can
 run `tar -ztf <name>-<version>.tgz` on Unix systems to view the files in the

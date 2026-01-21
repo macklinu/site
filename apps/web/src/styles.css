@@ -1,5 +1,5 @@
 @import 'tailwindcss';
-@plugin '@tailwindcss/typography';
+@import './typography.css' layer(components);
 
 @utility container {
   padding: 1rem;
