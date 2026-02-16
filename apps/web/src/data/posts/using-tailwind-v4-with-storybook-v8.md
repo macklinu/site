@@ -6,12 +6,10 @@ description: 'Here is how you can get Tailwind v4 working with Storybook v8.4.'
 
 One of the main changes in Tailwind v4 is configuration through CSS instead of `tailwind.config.ts`, which Tailwind supports through their own Vite plugin. I wanted to play around with Tailwind v4 while building a component library, and with Storybook v8.4's React and Vite support, we can load and test Tailwind as part of our Storybook.
 
----
-
 First, let's install the v4 versions of Tailwind.
 
 ```shell
-pnpm add install tailwindcss @tailwindcss/vite -D
+pnpm add tailwindcss @tailwindcss/vite -D
 ```
 
 And let's set up a basic Tailwind v4 CSS file.
@@ -36,18 +34,14 @@ export default {
 } satisfies StorybookConfig
 ```
 
-This Storybook config file supports custom Vite plugins, but instead of importing Tailwind's Vite plugin in a standard fashion, we will need to dynamically import it to work around an [open issue](https://github.com/tailwindlabs/tailwindcss/issues/13216) in the Tailwind GitHub repo.
+This Storybook config file supports custom Vite plugins, ~~but instead of importing Tailwind's Vite plugin in a standard fashion, we will need to dynamically import it to work around an [open issue](https://github.com/tailwindlabs/tailwindcss/issues/13216) in the Tailwind GitHub repo.~~ so let's import the tailwindcss vite plugin.
 
-💁‍♂️ _I haven't tried it yet, but you could try replacing step 1 below with a normal import of the vite plugin, like `import tailwindcss from '@tailwindcss/vite'` now that Tailwind v4 is stable._
-
-```ts title=".storybook/main.ts" {'1':6} {'2':8} {'3':9} {'4':11}
+```ts title=".storybook/main.ts" {'1':6} {'2':7} {'3':9}
 import type { StorybookConfig } from '@storybook/react-vite'
+import tailwindcss from '@tailwindcss/vite'
 
 export default {
-  // ...
   viteFinal: async (config) => {
-    const { default: tailwindcss } = await import('@tailwindcss/vite')
-
     config.plugins ||= []
     config.plugins.push(tailwindcss())
 
@@ -56,10 +50,9 @@ export default {
 } satisfies StorybookConfig
 ```
 
-1. Dynamically import the `@tailwindcss/vite` plugin, which is the module's default export.
-2. Storybook's Vite config may have an undefined `plugins` property, and if so, we need to intialize it with an empty array.
-3. Add the Tailwind Vite plugin to Storybook's Vite config.
-4. And make sure to return the modified config for your changes to take effect!
+1. Storybook's Vite config may have an undefined `plugins` property, and if so, we need to intialize it with an empty array.
+2. Add the Tailwind Vite plugin to Storybook's Vite config.
+3. And make sure to return the modified config for your changes to take effect!
 
 The last thing we need to do now is actually import the Tailwind CSS file we created earlier.
 
