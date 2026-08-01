@@ -1,5 +1,6 @@
 {
   "plugins": ["eslint", "jsx-a11y", "node", "oxc", "react", "typescript"],
+  "ignorePatterns": ["repos/**"],
   "overrides": [
     {
       "files": ["apps/web/src/env.d.ts"],
