@@ -1,6 +1,6 @@
 ---
 title: I'm so tired
-date: '2025-12-31'
+date: "2025-12-31"
 description: I have a two-year-old son who gets up between 5-6am every day, but that’s not why I’m tired. It’s AI.
 ---
 

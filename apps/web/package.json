@@ -1,8 +1,8 @@
 {
   "name": "@mackie/web",
-  "type": "module",
   "version": "0.0.1",
   "private": true,
+  "type": "module",
   "scripts": {
     "astro": "astro",
     "build": "astro build",

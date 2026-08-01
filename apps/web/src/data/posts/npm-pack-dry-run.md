@@ -1,6 +1,6 @@
 ---
-date: '2017-05-20'
-title: 'npm pack --dry-run'
+date: "2017-05-20"
+title: "npm pack --dry-run"
 description: 'Have you ever wondered, "Where do my files go when I publish a package to npm?"'
 ---
 

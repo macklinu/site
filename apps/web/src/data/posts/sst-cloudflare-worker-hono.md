@@ -1,7 +1,7 @@
 ---
-date: '2024-10-09'
-title: 'Deploying a Hono API to Cloudflare Workers using SST'
-description: 'Here is a basic breakdown of what is needed to deploy a Hono API to Cloudflare Workers using SST.'
+date: "2024-10-09"
+title: "Deploying a Hono API to Cloudflare Workers using SST"
+description: "Here is a basic breakdown of what is needed to deploy a Hono API to Cloudflare Workers using SST."
 ---
 
 First, install SST.
@@ -24,15 +24,15 @@ At the root of your project, you should have an `sst.config.ts` that looks rough
 export default $config({
   app(input) {
     return {
-      name: 'my-hono-api',
-      removal: input?.stage === 'production' ? 'retain' : 'remove',
-      home: 'cloudflare',
-    }
+      name: "my-hono-api",
+      removal: input?.stage === "production" ? "retain" : "remove",
+      home: "cloudflare",
+    };
   },
   async run() {
     // ...
   },
-})
+});
 ```
 
 We will come back to this in a minute.
@@ -62,22 +62,22 @@ With our tokens created and environment set up, the final step is to update the 
 export default $config({
   app(input) {
     return {
-      name: 'my-hono-api',
-      removal: input?.stage === 'production' ? 'retain' : 'remove',
-      home: 'cloudflare',
-    }
+      name: "my-hono-api",
+      removal: input?.stage === "production" ? "retain" : "remove",
+      home: "cloudflare",
+    };
   },
   async run() {
-    const api = new sst.cloudflare.Worker('Api', {
-      handler: 'src/index.ts',
+    const api = new sst.cloudflare.Worker("Api", {
+      handler: "src/index.ts",
       url: true,
-    })
+    });
 
     return {
       api: api.url,
-    }
+    };
   },
-})
+});
 ```
 
 Now you can run `pnpm sst dev` or `pnpm sst deploy` to deploy your Hono API to Cloudflare Workers and get a URL back to test your API. 🎉

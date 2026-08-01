@@ -1,7 +1,7 @@
 ---
-date: '2019-03-18'
+date: "2019-03-18"
 title: "The power of ESLint's no-restricted-syntax"
-description: 'A deep dive into a powerful ESLint rule and how it can be used to enforce best practices.'
+description: "A deep dive into a powerful ESLint rule and how it can be used to enforce best practices."
 ---
 
 One of my favorite but lesser-documented features of ESLint is the usage of [selectors](https://eslint.org/docs/developer-guide/selectors). **In the same way you can query DOM elements on a web page with a CSS selector, you can query the nodes of an AST using [ESQuery](https://github.com/estools/esquery) selectors.**

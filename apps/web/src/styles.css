@@ -1,5 +1,5 @@
-@import 'tailwindcss';
-@import './typography.css' layer(components);
+@import "tailwindcss";
+@import "./typography.css" layer(components);
 
 @utility container {
   padding: 1rem;
@@ -7,6 +7,6 @@
 
 @theme {
   --font-mono:
-    'Inconsolata Variable', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
-    'Liberation Mono', 'Courier New', monospace;
+    "Inconsolata Variable", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
 }

@@ -1,6 +1,6 @@
 ---
-date: '2025-06-14'
-title: 'A quick start with Deno OpenTelemetry and Grafana'
+date: "2025-06-14"
+title: "A quick start with Deno OpenTelemetry and Grafana"
 description: "Here are the simple steps needed to get Deno's built-in OpenTelemetry logs and traces into a locally running Grafana stack."
 ---
 
@@ -17,9 +17,9 @@ services:
   lgtm:
     image: grafana/otel-lgtm:latest
     ports:
-      - '3000:3000' # Grafana UI
-      - '4317:4317' # OpenTelemetry gRPC port
-      - '4318:4318' # OpenTelemetry HTTP port
+      - "3000:3000" # Grafana UI
+      - "4317:4317" # OpenTelemetry gRPC port
+      - "4318:4318" # OpenTelemetry HTTP port
     networks:
       - lgtm-network
 
@@ -57,31 +57,31 @@ Although it's all listed throughout [their docs](https://docs.deno.com/runtime/f
 Looking at the `main.ts` file that Deno 2.3 generated for us:
 
 ```ts title="main.ts"
-import { serveDir } from '@std/http'
+import { serveDir } from "@std/http";
 
-const userPagePattern = new URLPattern({ pathname: '/users/:id' })
-const staticPathPattern = new URLPattern({ pathname: '/static/*' })
+const userPagePattern = new URLPattern({ pathname: "/users/:id" });
+const staticPathPattern = new URLPattern({ pathname: "/static/*" });
 
 export default {
   fetch(req) {
-    const url = new URL(req.url)
+    const url = new URL(req.url);
 
-    if (url.pathname === '/') {
-      return new Response('Home page')
+    if (url.pathname === "/") {
+      return new Response("Home page");
     }
 
-    const userPageMatch = userPagePattern.exec(url)
+    const userPageMatch = userPagePattern.exec(url);
     if (userPageMatch) {
-      return new Response(userPageMatch.pathname.groups.id)
+      return new Response(userPageMatch.pathname.groups.id);
     }
 
     if (staticPathPattern.test(url)) {
-      return serveDir(req)
+      return serveDir(req);
     }
 
-    return new Response('Not found', { status: 404 })
+    return new Response("Not found", { status: 404 });
   },
-} satisfies Deno.ServeDefaultExport
+} satisfies Deno.ServeDefaultExport;
 ```
 
 We can see we have a nice little HTTP server. Let's run the following command to start the server with OpenTelemetry enabled.

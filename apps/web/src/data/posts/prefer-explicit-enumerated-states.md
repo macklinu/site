@@ -1,16 +1,16 @@
 ---
-date: '2023-02-21'
-title: 'Prefer explicit, enumerated states'
-description: 'Using mulitple useState() hooks is simple, but you might run into some subtle bugs or confusing code as a result.'
+date: "2023-02-21"
+title: "Prefer explicit, enumerated states"
+description: "Using mulitple useState() hooks is simple, but you might run into some subtle bugs or confusing code as a result."
 ---
 
 Often times when reviewing React code, I see something like this.
 
 ```tsx
 function MyComponent() {
-  const [isLoading, setIsLoading] = useState(false)
-  const [data, setData] = useState()
-  const [error, setError] = useState()
+  const [isLoading, setIsLoading] = useState(false);
+  const [data, setData] = useState();
+  const [error, setError] = useState();
 }
 ```
 
@@ -18,15 +18,15 @@ We have three `useState()` hooks to represent the possible status and associated
 
 ```tsx
 useEffect(() => {
-  setIsLoading(true)
-  get('/api/some-data')
+  setIsLoading(true);
+  get("/api/some-data")
     .then((data) => {
-      setData(data)
+      setData(data);
     })
     .catch((error) => {
-      setError(error)
-    })
-}, [])
+      setError(error);
+    });
+}, []);
 ```
 
 Oops! We forgot to set `isLoading` to `false` when the request is complete – an easy mistake to make.
@@ -39,12 +39,12 @@ function MyComponent() {
 
   if (isLoading) {
     // 'loading' state
-    return <Loading />
+    return <Loading />;
   }
 
   if (error) {
     // 'error' state
-    return <Error error={error} />
+    return <Error error={error} />;
   }
 
   if (data) {
@@ -55,36 +55,36 @@ function MyComponent() {
           <ListItem key={item.id} {...item} />
         ))}
       </ul>
-    )
+    );
   }
 
   // What state are we in here?
-  return null
+  return null;
 }
 ```
 
 Taking a step in the right direction, we can use an enumerated state to avoid this situation altogether.
 
 ```tsx
-type ApiStatus = 'idle' | 'loading' | 'success' | 'error'
+type ApiStatus = "idle" | "loading" | "success" | "error";
 
 function MyComponent() {
-  const [status, setStatus] = useState<ApiStatus>('idle')
-  const [data, setData] = useState()
-  const [error, setError] = useState()
+  const [status, setStatus] = useState<ApiStatus>("idle");
+  const [data, setData] = useState();
+  const [error, setError] = useState();
 
   useEffect(() => {
-    setStatus('loading')
-    get('/api/some-data')
+    setStatus("loading");
+    get("/api/some-data")
       .then((data) => {
-        setStatus('success')
-        setData(data)
+        setStatus("success");
+        setData(data);
       })
       .catch((error) => {
-        setStatus('error')
-        setError(error)
-      })
-  }, [])
+        setStatus("error");
+        setError(error);
+      });
+  }, []);
 }
 ```
 
@@ -130,37 +130,37 @@ Now we know we can only be in one of four possible states at any given time, and
 
 ```tsx
 type State =
-  | { status: 'idle' }
-  | { status: 'loading' }
+  | { status: "idle" }
+  | { status: "loading" }
   | {
-      status: 'success'
+      status: "success";
       data: Array<{
-        id: string
+        id: string;
         // other properties...
-      }>
+      }>;
     }
-  | { status: 'error'; error: Error }
+  | { status: "error"; error: Error };
 
 function MyComponent() {
   // ...
 
   switch (state.status) {
-    case 'loading':
-      return <Loading />
-    case 'error':
-      return <Error error={state.error} />
-    case 'success':
+    case "loading":
+      return <Loading />;
+    case "error":
+      return <Error error={state.error} />;
+    case "success":
       return (
         <ul>
           {state.data.map((item) => (
             <ListItem key={item.id} {...item} />
           ))}
         </ul>
-      )
+      );
     // The 'idle' case is now more explicit
-    case 'idle':
+    case "idle":
     default:
-      return null
+      return null;
   }
 }
 ```

@@ -3,15 +3,13 @@
 
 namespace React {
   interface Attributes {
-    tw?: string
+    tw?: string;
   }
 }
 
-declare module '*.wasm' {
-  const wasm: any
-  export default wasm
+declare module "*.wasm" {
+  const wasm: any;
+  export default wasm;
 }
 
-declare namespace globalThis {
-  declare var __isWasmInitialized__: boolean
-}
+declare var __isWasmInitialized__: boolean;

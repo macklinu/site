@@ -1,25 +1,25 @@
 // @ts-check
-import react from '@astrojs/react'
-import tailwind from '@tailwindcss/vite'
-import expressiveCode from 'astro-expressive-code'
-import icon from 'astro-icon'
-import { defineConfig } from 'astro/config'
+import react from "@astrojs/react";
+import tailwind from "@tailwindcss/vite";
+import expressiveCode from "astro-expressive-code";
+import icon from "astro-icon";
+import { defineConfig } from "astro/config";
 
 // https://astro.build/config
 export default defineConfig({
-  site: import.meta.env.PROD ? 'https://mackie.underdown.wiki' : 'http://localhost:4321',
-  output: 'static',
+  site: import.meta.env.PROD ? "https://mackie.underdown.wiki" : "http://localhost:4321",
+  output: "static",
   prefetch: {
-    defaultStrategy: 'load',
+    defaultStrategy: "load",
   },
   integrations: [
     react(),
     expressiveCode({
-      themes: ['vesper'],
+      themes: ["vesper"],
       styleOverrides: {
-        uiFontFamily: 'var(--font-mono)',
-        codeFontFamily: 'var(--font-mono)',
-        borderRadius: '0',
+        uiFontFamily: "var(--font-mono)",
+        codeFontFamily: "var(--font-mono)",
+        borderRadius: "0",
       },
     }),
     icon(),
@@ -30,8 +30,8 @@ export default defineConfig({
     server: {
       host: true,
       watch: {
-        ignored: ['**/.alchemy/**'],
+        ignored: ["**/.alchemy/**"],
       },
     },
   },
-})
+});
