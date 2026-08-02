@@ -10,10 +10,11 @@
     "build": "turbo run build",
     "deploy": "turbo run deploy",
     "lint": "oxlint --disable-nested-config",
-    "format": "oxfmt --disable-nested-config .",
+    "format": "oxfmt --disable-nested-config",
     "format:check": "oxfmt --check --disable-nested-config ."
   },
   "devDependencies": {
+    "lefthook": "^2.1.10",
     "oxfmt": "^0.61.0",
     "oxlint": "^1.76.0",
     "turbo": "^2.7.5",
