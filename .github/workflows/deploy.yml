@@ -11,34 +11,7 @@ concurrency:
 env:
   STAGE: ${{ github.event_name == 'pull_request' && format('pr-{0}', github.event.number) || (github.ref == 'refs/heads/main' && 'prod' || github.ref_name) }}
 jobs:
-  astro-check:
-    if: github.event.action != 'closed'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
-      - name: Install dependencies
-        run: bun install
-      - name: Run Astro check
-        run: bun --cwd apps/web astro check
-
-  typecheck:
-    if: github.event.action != 'closed'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
-      - name: Install dependencies
-        run: bun install
-      - name: Generate Astro types
-        run: bun --cwd apps/web astro sync
-      - name: Typecheck
-        run: bun x tsc --project apps/web/tsconfig.json --noEmit
-
   deploy:
-    needs: [astro-check, typecheck]
     if: >-
       github.event.action != 'closed' &&
       (github.event_name != 'pull_request' ||
