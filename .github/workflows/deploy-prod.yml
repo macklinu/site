@@ -1,0 +1,33 @@
+name: Deploy production
+on:
+  push:
+    branches:
+      - main
+concurrency:
+  group: deploy-prod
+  cancel-in-progress: false
+permissions:
+  contents: read
+env:
+  STAGE: prod
+  ALCHEMY_PASSWORD: ${{ secrets.ALCHEMY_PASSWORD }}
+  ALCHEMY_STATE_TOKEN: ${{ secrets.ALCHEMY_STATE_TOKEN }}
+  CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+  CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+  CLOUDFLARE_EMAIL: ${{ secrets.CLOUDFLARE_EMAIL }}
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+jobs:
+  verify:
+    uses: ./.github/workflows/verify.yml
+
+  deploy-prod:
+    needs: verify
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+      - name: Deploy
+        run: bun run deploy -- -- --yes --stage ${{ env.STAGE }}
