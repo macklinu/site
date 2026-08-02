@@ -15,7 +15,23 @@
         "CLOUDFLARE_EMAIL",
         "CLOUDFLARE_API_TOKEN",
         "ALCHEMY_STATE_TOKEN",
-        "ALCHEMY_PASSWORD"
+        "ALCHEMY_PASSWORD",
+        "PULL_REQUEST",
+        "BUILD_SHA",
+        "GITHUB_TOKEN"
+      ]
+    },
+    "destroy": {
+      "inputs": ["$TURBO_DEFAULT$", ".env*"],
+      "cache": false,
+      "passThroughEnv": [
+        "CLOUDFLARE_ACCOUNT_ID",
+        "CLOUDFLARE_EMAIL",
+        "CLOUDFLARE_API_TOKEN",
+        "ALCHEMY_STATE_TOKEN",
+        "ALCHEMY_PASSWORD",
+        "PULL_REQUEST",
+        "GITHUB_TOKEN"
       ]
     },
     "dev": {
