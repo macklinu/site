@@ -18,7 +18,7 @@ jobs:
       - name: Install dependencies
         run: bun install
       - name: Deploy
-        run: bun run deploy -- -- --stage ${{ env.STAGE }}
+        run: bun run deploy -- -- --yes --stage ${{ env.STAGE }}
         env:
           ALCHEMY_PASSWORD: ${{ secrets.ALCHEMY_PASSWORD }}
           ALCHEMY_STATE_TOKEN: ${{ secrets.ALCHEMY_STATE_TOKEN }}
