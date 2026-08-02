@@ -11,6 +11,7 @@
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
       "outputs": [".astro", "dist"],
       "passThroughEnv": [
+        "CLOUDFLARE_ACCOUNT_ID",
         "CLOUDFLARE_EMAIL",
         "CLOUDFLARE_API_TOKEN",
         "ALCHEMY_STATE_TOKEN",
@@ -19,7 +20,14 @@
     },
     "dev": {
       "cache": false,
-      "persistent": true
+      "persistent": true,
+      "passThroughEnv": [
+        "CLOUDFLARE_ACCOUNT_ID",
+        "CLOUDFLARE_EMAIL",
+        "CLOUDFLARE_API_TOKEN",
+        "ALCHEMY_STATE_TOKEN",
+        "ALCHEMY_PASSWORD"
+      ]
     }
   }
 }

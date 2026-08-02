@@ -1,5 +1,3 @@
-import { RequestParams } from "@macklinu/effect-web";
-import { EffectWebAstro } from "@macklinu/effect-web-astro";
 import { Resvg } from "@resvg/resvg-js";
 import type { APIRoute, GetStaticPaths } from "astro";
 import { Effect, Exit, Schema } from "effect";
@@ -48,46 +46,43 @@ const convertSvgToPng = (svg: Buffer | string) =>
     return resvg.render().asPng();
   }).pipe(Effect.withSpan("convertSvgToPng"));
 
-const generateOgImageResponse = Effect.gen(function* () {
-  const postService = yield* Post.Service;
-  const params = yield* RequestParams.RequestParams;
+const generateOgImageResponse = (params: Record<string, string | undefined>) =>
+  Effect.gen(function* () {
+    const postService = yield* Post.Service;
+    const { slug } = yield* Schema.decodeUnknownEffect(Schema.Struct({ slug: UrlSlug }))(params);
 
-  const { slug } = yield* Schema.decodeUnknown(Schema.Struct({ slug: UrlSlug }))(params);
+    const [post, inconsolata, inconsolataBold] = yield* Effect.all(
+      [postService.getBySlug(slug), fetchInconsolata, fetchInconsolataBold],
+      { concurrency: "unbounded" },
+    );
 
-  const [post, inconsolata, inconsolataBold] = yield* Effect.all(
-    [postService.getBySlug(slug), fetchInconsolata, fetchInconsolataBold],
-    { concurrency: "unbounded" },
-  );
+    const svg = yield* renderSvg(postImage(post), {
+      width: 1200,
+      height: 630,
+      embedFont: true,
+      fonts: [
+        {
+          name: "Inconsolata",
+          data: inconsolata,
+          weight: 400,
+          style: "normal",
+        },
+        {
+          name: "Inconsolata",
+          data: inconsolataBold,
+          weight: 700,
+          style: "normal",
+        },
+      ],
+    });
 
-  const svg = yield* renderSvg(postImage(post), {
-    width: 1200,
-    height: 630,
-    embedFont: true,
-    fonts: [
-      {
-        name: "Inconsolata",
-        data: inconsolata,
-        weight: 400,
-        style: "normal",
-      },
-      {
-        name: "Inconsolata",
-        data: inconsolataBold,
-        weight: 700,
-        style: "normal",
-      },
-    ],
-  });
+    const png = yield* convertSvgToPng(svg);
 
-  const png = yield* convertSvgToPng(svg);
-
-  return new Uint8Array(png);
-}).pipe(Effect.withSpan("generateOgImageResponse"));
+    return new Uint8Array(png);
+  }).pipe(Effect.withSpan("generateOgImageResponse"));
 
 export const GET: APIRoute = async (context) => {
-  const result = await Runtime.runPromiseExit(
-    generateOgImageResponse.pipe(EffectWebAstro.provideServiceApiRoute(context)),
-  );
+  const result = await Runtime.runPromiseExit(generateOgImageResponse(context.params));
 
   if (Exit.isFailure(result)) {
     throw new Error("Unable to generate OG image", { cause: result.cause });

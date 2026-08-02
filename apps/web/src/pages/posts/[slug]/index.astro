@@ -1,6 +1,4 @@
 ---
-import { RequestParams } from '@macklinu/effect-web'
-import { EffectWebAstro } from '@macklinu/effect-web-astro'
 import type { GetStaticPaths } from 'astro'
 import { Icon } from 'astro-icon/components'
 import { Image } from 'astro:assets'
@@ -15,9 +13,11 @@ import { UrlSlug } from '~/lib/Slug'
 
 const getPost = Effect.gen(function* () {
   const postService = yield* Post.Service
-  const params = yield* RequestParams.RequestParams
+  const params = yield* Schema.decodeUnknownEffect(
+    Schema.Struct({ slug: UrlSlug }),
+  )(Astro.params)
 
-  const { slug } = yield* Schema.decodeUnknown(Schema.Struct({ slug: UrlSlug }))(params)
+  const { slug } = params
 
   return yield* postService.getBySlug(slug)
 })
@@ -25,8 +25,6 @@ const getPost = Effect.gen(function* () {
 const result = await Runtime.runPromiseExit(
   getPost.pipe(
     Effect.tapError(Effect.logError),
-    // @ts-expect-error Not sure why the types are wrong here but I'll need to update `@macklinu/effect-web-astro`.
-    EffectWebAstro.provideService(Astro)
   )
 )
 

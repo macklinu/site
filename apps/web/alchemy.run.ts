@@ -1,18 +1,23 @@
-import alchemy from "alchemy";
-import { Astro } from "alchemy/cloudflare";
-import { CloudflareStateStore } from "alchemy/state";
+import * as Alchemy from "alchemy";
+import * as Cloudflare from "alchemy/Cloudflare";
+import * as Effect from "effect/Effect";
 
-const app = await alchemy("mackie-underdown-wiki", {
-  stateStore: (scope) => new CloudflareStateStore(scope),
-});
+export default Alchemy.Stack(
+  "mackie-underdown-wiki",
+  { providers: Cloudflare.providers(), state: Cloudflare.state() },
+  Effect.gen(function* () {
+    const stage = yield* Alchemy.Stage;
+    const website = yield* Cloudflare.Website.StaticSite("website", {
+      name: `mackie-underdown-wiki-website-${stage}`,
+      command: "bun run build",
+      outdir: "dist",
+      dev: { command: "bun run astro dev" },
+      routes: [{ pattern: "mackie.underdown.wiki/*" }],
+      assets: {
+        htmlHandling: "drop-trailing-slash",
+      },
+    });
 
-export const worker = await Astro("website", {
-  routes: ["mackie.underdown.wiki/*"],
-  assets: {
-    html_handling: "drop-trailing-slash",
-  },
-});
-
-console.log(worker.url);
-
-await app.finalize();
+    return { url: website.url };
+  }),
+);

@@ -15,7 +15,7 @@ const handleRequest = Effect.gen(function* () {
 
   const [posts, projects, author] = yield* Effect.all(
     [
-      postService.list().pipe(Effect.catchAll(() => Effect.succeed([]))),
+      postService.list().pipe(Effect.catch(() => Effect.succeed([]))),
       projectService.list(),
       authorService.me(),
     ],

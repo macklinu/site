@@ -1,12 +1,12 @@
 import { Context, Effect, Layer } from "effect";
-import type { UnknownException } from "effect/Cause";
-import type { ParseError } from "effect/ParseResult";
+import type { UnknownError } from "effect/Cause";
+import type { SchemaError } from "effect/SchemaError";
 import * as Schema from "effect/Schema";
 
 import silly from "~/content/silly.png";
 import * as Slug from "~/lib/Slug";
 
-export const AuthorId = Schema.UUID.pipe(Schema.brand("AuthorId"));
+export const AuthorId = Schema.String.check(Schema.isUUID()).pipe(Schema.brand("AuthorId"));
 export type AuthorId = typeof AuthorId.Type;
 
 const ImageMetadata = Schema.declare(
@@ -26,12 +26,12 @@ export class Author extends Schema.Class<Author>("@mackie/web/Author")({
   image: ImageMetadata,
 }) {}
 
-export class Service extends Context.Tag("@mackie/web/lib/Author/Service")<
+export class Service extends Context.Service<
   Service,
   {
-    me: () => Effect.Effect<Author, UnknownException | ParseError>;
+    me: () => Effect.Effect<Author, UnknownError | SchemaError>;
   }
->() {
+>()("@mackie/web/lib/Author/Service") {
   static readonly layerStatic = Layer.succeed(
     Service,
     Service.of({
