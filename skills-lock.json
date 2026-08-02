@@ -1,6 +1,12 @@
 {
   "version": 1,
   "skills": {
+    "aube-bump": {
+      "source": "nubjs/nub",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/aube-bump/SKILL.md",
+      "computedHash": "bafaa63ae32fb45ff727150fcf27d316f5b5b1be2e37c09d60e4c4c0a74c7d20"
+    },
     "conventional-commit": {
       "source": "github/awesome-copilot",
       "sourceType": "github",
@@ -12,6 +18,24 @@
       "sourceType": "github",
       "skillPath": "skills/gh/SKILL.md",
       "computedHash": "d6812a8155e8db4aae6dffcfbc3a340ede4da0ea123bb98c16ba32d79f239906"
+    },
+    "nub": {
+      "source": "nubjs/nub",
+      "sourceType": "github",
+      "skillPath": "skills/nub/SKILL.md",
+      "computedHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "probe-platforms": {
+      "source": "nubjs/nub",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/probe-platforms/SKILL.md",
+      "computedHash": "2a53b430536cbc9817d19e3f8ac6296dbf5dac17d17a93156ae7db6a4c4bfd00"
+    },
+    "soak": {
+      "source": "nubjs/nub",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/soak/SKILL.md",
+      "computedHash": "a4ab3543a14aea44f96236ee9cbbf5c6f7bb3c5d7a75fc85ca249ee263741650"
     }
   }
 }
