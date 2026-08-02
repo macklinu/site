@@ -12,19 +12,19 @@
     "destroy": "alchemy destroy"
   },
   "dependencies": {
-    "@astrojs/check": "^0.9.6",
-    "@astrojs/react": "^4.4.2",
+    "@astrojs/check": "^0.9.10",
+    "@astrojs/react": "^6.0.2",
     "@fontsource-variable/inconsolata": "^5.2.8",
     "@iconify-json/lucide": "^1.2.86",
     "@resvg/resvg-js": "^2.6.2",
-    "@types/react": "^19.2.8",
-    "@types/react-dom": "^19.2.3",
-    "astro": "5.16.11",
-    "astro-expressive-code": "^0.41.6",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.4",
+    "astro": "^7.1.6",
+    "astro-expressive-code": "^0.44.1",
     "astro-icon": "^1.1.5",
     "effect": "4.0.0-beta.102",
-    "react": "^19.2.3",
-    "react-dom": "^19.2.3",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
     "satori": "^0.19.1",
     "sharp": "^0.34.5"
   },
@@ -32,9 +32,9 @@
     "@effect/language-service": "^0.87.1",
     "@effect/platform-bun": "4.0.0-beta.102",
     "@effect/platform-node": "4.0.0-beta.102",
-    "@tailwindcss/vite": "^4.1.18",
+    "@tailwindcss/vite": "^4.3.3",
     "alchemy": "2.0.0-beta.67",
-    "tailwindcss": "^4.1.18",
+    "tailwindcss": "^4.3.3",
     "typescript": "^5.9.3"
   }
 }

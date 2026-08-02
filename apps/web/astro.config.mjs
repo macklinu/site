@@ -25,7 +25,6 @@ export default defineConfig({
     icon(),
   ],
   vite: {
-    // @ts-expect-error
     plugins: [tailwind()],
     server: {
       host: true,
