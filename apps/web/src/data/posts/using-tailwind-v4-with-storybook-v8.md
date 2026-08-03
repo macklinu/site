@@ -1,7 +1,7 @@
 ---
 date: "2025-01-14"
 title: "Using Tailwind v4 with Storybook v8"
-description: "Here is how you can get Tailwind v4 working with Storybook v8.4."
+description: "Tailwind v4 and Storybook 8.4, wired up with Vite."
 ---
 
 One of the main changes in Tailwind v4 is configuration through CSS instead of `tailwind.config.ts`, which Tailwind supports through their own Vite plugin. I wanted to play around with Tailwind v4 while building a component library, and with Storybook v8.4's React and Vite support, we can load and test Tailwind as part of our Storybook.

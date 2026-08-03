@@ -1,12 +1,10 @@
 ---
 import type { GetStaticPaths } from 'astro'
-import { Icon } from 'astro-icon/components'
-import { Image } from 'astro:assets'
 import { DateTime, Effect, Exit, Schema } from 'effect'
+import EntryArticle from '~/components/EntryArticle.astro'
 
-import silly from '~/content/silly.png'
-import Eye from '~/Eye.astro'
 import Layout from '~/Layout.astro'
+import { formatFullDate } from '~/lib/DateFormat'
 import * as Post from '~/lib/Post'
 import { Runtime } from '~/lib/Runtime'
 import { UrlSlug } from '~/lib/Slug'
@@ -33,7 +31,8 @@ if (Exit.isFailure(result)) {
 }
 
 const post = result.value
-const date = DateTime.formatIsoDate(post.publicationDate)
+const date = formatFullDate(post.publicationDate.epochMilliseconds)
+
 
 const ogImage = new URL(`/posts/${post.slug}/og.png`, import.meta.env.SITE).toString()
 
@@ -60,59 +59,12 @@ export const getStaticPaths: GetStaticPaths = () =>
   type='article'
   publishedTime={DateTime.formatIso(post.publicationDate)}
 >
-  <article class='prose mx-auto max-w-3xl pb-8'>
-    <div class='flex flex-col'>
-      <h2 transition:name={`post-${post.slug}--title`}>
-        {post.title}
-      </h2>
-      <div class='not-prose inline-flex flex-row items-center gap-1.5'>
-        <Icon name='lucide:calendar' class='text-black/60 dark:text-white/60' />
-        <time class='text-black/60 dark:text-white/60' transition:name={`post-${post.slug}--date`}>
-          {date}
-        </time>
-      </div>
-    </div>
+  <EntryArticle
+    title={post.title}
+    kind={post.kind}
+    date={date}
+    dateTime={DateTime.formatIsoDate(post.publicationDate)}
+  >
     <post.Content />
-  </article>
-  <Image
-    transition:name='mackie'
-    src={silly}
-    height={200}
-    alt='Mackie looking at the blog post'
-    class='fixed bottom-0 left-0 -z-10 hidden h-[200px] grayscale-100 duration-500 lg:block'
-  />
-  <div class='motion-reduce:hidden'>
-    <Eye id='left-eye' class='bottom-[93px] left-[64px]' />
-    <Eye id='right-eye' class='bottom-[96px] left-[100px]' />
-  </div>
+  </EntryArticle>
 </Layout>
-
-<script>
-  document.addEventListener('astro:page-load', () => {
-    const { matches } = window.matchMedia('(prefers-reduced-motion: reduce)')
-
-    if (matches) {
-      // Don't animate eyes because they are hidden!
-      return
-    }
-
-    const $leftEye = document.getElementById('left-eye')
-    const $rightEye = document.getElementById('right-eye')
-
-    if (!$leftEye || !$rightEye) {
-      return
-    }
-
-    window.addEventListener('mousemove', (e) => {
-      const originX = $leftEye.offsetLeft + $leftEye.offsetWidth
-      const originY = $leftEye.offsetTop + $leftEye.offsetHeight
-      const mouseX = e.clientX
-      const mouseY = e.clientY
-
-      const radians = Math.atan2(originY - mouseY, originX - mouseX)
-
-      $leftEye.style.transform = `rotate(${radians}rad)`
-      $rightEye.style.transform = `rotate(${radians}rad)`
-    })
-  })
-</script>

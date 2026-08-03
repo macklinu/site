@@ -9,17 +9,21 @@ import { defineConfig } from "astro/config";
 export default defineConfig({
   site: import.meta.env.PROD ? "https://mackie.underdown.wiki" : "http://localhost:4321",
   output: "static",
-  prefetch: {
-    defaultStrategy: "load",
-  },
   integrations: [
     react(),
     expressiveCode({
-      themes: ["vesper"],
+      themes: ["night-owl-light", "night-owl"],
+      themeCssSelector: (theme) => `[data-theme="${theme.type}"]`,
+      useDarkModeMediaQuery: false,
       styleOverrides: {
         uiFontFamily: "var(--font-mono)",
         codeFontFamily: "var(--font-mono)",
         borderRadius: "0",
+        borderColor: "var(--line)",
+        focusBorder: "var(--focus)",
+        frames: {
+          frameBoxShadowCssValue: "none",
+        },
       },
     }),
     icon(),

@@ -1,7 +1,7 @@
 ---
 date: "2023-02-21"
 title: "Prefer explicit, enumerated states"
-description: "Using mulitple useState() hooks is simple, but you might run into some subtle bugs or confusing code as a result."
+description: "A few useState hooks are fine until they make invalid UI states easy to represent."
 ---
 
 Often times when reviewing React code, I see something like this.

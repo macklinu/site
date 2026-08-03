@@ -1,0 +1,35 @@
+---
+import type { EntryKind } from '~/lib/Entry'
+
+interface Props {
+  kind: EntryKind
+  class?: string
+}
+
+const { kind, class: className } = Astro.props
+
+const labels: Record<EntryKind, string> = {
+  article: 'post',
+  note: 'note',
+  interactive: 'demo',
+  guide: 'guide',
+}
+
+const variants: Record<EntryKind, string> = {
+  article: 'bg-site-blue text-site-paper',
+  note: 'bg-site-green text-site-green-ink',
+  interactive: 'bg-site-coral text-site-paper',
+  guide: 'border border-site-ink bg-site-paper text-site-ink',
+}
+---
+
+<span
+  class:list={[
+    'inline-flex w-fit items-center px-1 py-1 font-mono text-xs leading-[1.35] tracking-[0.04em]',
+    variants[kind],
+    className,
+  ]}
+  data-kind={kind}
+>
+  {labels[kind]}
+</span>

@@ -1,7 +1,7 @@
 ---
 date: "2024-10-09"
 title: "Deploying a Hono API to Cloudflare Workers using SST"
-description: "Here is a basic breakdown of what is needed to deploy a Hono API to Cloudflare Workers using SST."
+description: "Deploy a Hono API to Cloudflare Workers with SST."
 ---
 
 First, install SST.

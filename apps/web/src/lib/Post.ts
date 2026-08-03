@@ -1,30 +1,31 @@
 import { getCollection, getEntry, render, type RenderResult } from "astro:content";
-import { Context, DateTime, Effect, Layer, Option, Schema } from "effect";
+import { Context, DateTime, Effect, Layer, Schema } from "effect";
 import type { UnknownError } from "effect/Cause";
 import type { SchemaError } from "effect/SchemaError";
 
 import * as Slug from "~/lib/Slug";
 
-export const PostId = Schema.String.check(Schema.isUUID()).pipe(Schema.brand("PostId"));
-export type PostId = typeof PostId.Type;
-
-export class PostSummary extends Schema.Class<PostSummary>("@mackie/web/PostSummary")({
-  createdAt: Schema.DateTimeUtc,
+const postFields = {
   title: Schema.String,
   slug: Slug.UrlSlug,
   description: Schema.String,
   publicationDate: Schema.DateTimeUtc,
-}) {}
+  kind: Schema.Literal("article"),
+};
+
+export const PostSummary = Schema.Struct(postFields);
+export type PostSummary = typeof PostSummary.Type;
 
 const ContentSchema = Schema.declare(
   (input: unknown): input is RenderResult["Content"] => typeof input === "function",
   { description: "Astro RenderResult Content" },
 );
 
-export class Post extends PostSummary.extend<Post>("@mackie/web/Post")({
-  image: Schema.Unknown.pipe(Schema.OptionFromUndefinedOr),
+export const Post = Schema.Struct({
+  ...postFields,
   Content: ContentSchema,
-}) {}
+});
+export type Post = typeof Post.Type;
 
 export class PostNotFound extends Schema.TaggedErrorClass<PostNotFound>()(
   "@mackie/web/lib/Post/PostNotFound",
@@ -43,26 +44,27 @@ export class Service extends Context.Service<
     Service.of({
       getBySlug: (slug) =>
         Effect.gen(function* () {
-          const post = yield* Effect.tryPromise(() => getEntry("posts", slug)!);
+          const post = yield* Effect.tryPromise(() => getEntry("articles", slug)!);
           const { Content } = yield* Effect.tryPromise(() => render(post));
-          return Post.make({
-            createdAt: DateTime.nowUnsafe(),
+
+          return {
             description: post.data.description,
+            kind: post.data.kind,
             title: post.data.title,
             slug: Slug.UrlSlug.make(post.id),
             publicationDate: DateTime.makeUnsafe(post.data.date),
-            image: Option.none(),
             Content,
-          });
+          } satisfies Post;
         }).pipe(Effect.catch(() => Effect.fail(new PostNotFound({ slug })))),
       list: () =>
         Effect.gen(function* () {
-          const posts = yield* Effect.tryPromise(() => getCollection("posts"));
+          const posts = yield* Effect.tryPromise(() => getCollection("articles"));
+
           return posts
-            .map((post) =>
-              PostSummary.make({
-                createdAt: DateTime.nowUnsafe(),
+            .map(
+              (post): PostSummary => ({
                 description: post.data.description,
+                kind: post.data.kind,
                 title: post.data.title,
                 slug: Slug.UrlSlug.make(post.id),
                 publicationDate: DateTime.makeUnsafe(post.data.date),

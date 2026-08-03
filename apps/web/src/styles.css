@@ -1,12 +1,107 @@
+@import "@fontsource-variable/archivo/standard.css";
+@import "@fontsource-variable/bricolage-grotesque/standard.css";
+@import "@fontsource/ibm-plex-mono/400.css";
+@import "@fontsource/ibm-plex-mono/500.css";
+@import "@fontsource/ibm-plex-mono/600.css";
 @import "tailwindcss";
 @import "./typography.css" layer(components);
 
-@utility container {
-  padding: 1rem;
+@theme {
+  --font-display: "Bricolage Grotesque Variable", "Arial Narrow", sans-serif;
+  --font-body: "Archivo Variable", "Helvetica Neue", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+  --breakpoint-catalogue: 53.75rem;
+  --breakpoint-handset: 38.75rem;
 }
 
-@theme {
-  --font-mono:
-    "Inconsolata Variable", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
-    "Liberation Mono", "Courier New", monospace;
+@theme inline {
+  --color-site-paper: var(--paper);
+  --color-site-surface: var(--surface);
+  --color-site-ink: var(--ink);
+  --color-site-muted: var(--muted);
+  --color-site-line: var(--line);
+  --color-site-blue: var(--blue);
+  --color-site-green: var(--green);
+  --color-site-green-ink: var(--green-ink);
+  --color-site-coral: var(--coral);
+}
+
+@custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
+
+:root {
+  color-scheme: light;
+  --font-display: "Bricolage Grotesque Variable", "Arial Narrow", sans-serif;
+  --font-body: "Archivo Variable", "Helvetica Neue", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+  --paper: oklch(0.98 0.008 225);
+  --surface: oklch(0.92 0.025 225);
+  --ink: oklch(0.22 0.035 245);
+  --muted: oklch(0.43 0.035 245);
+  --line: oklch(0.76 0.03 225);
+  --blue: oklch(0.5 0.16 240);
+  --green: oklch(0.76 0.2 145);
+  --green-ink: oklch(0.26 0.06 145);
+  --coral: oklch(0.57 0.2 27);
+  --focus: oklch(0.43 0.16 240);
+  --success: oklch(0.58 0.14 150);
+  --warning: oklch(0.73 0.15 82);
+  --error: oklch(0.57 0.2 27);
+  --ease-out: cubic-bezier(0.2, 0.7, 0, 1);
+  --motion-fast: 120ms;
+  --motion-normal: 180ms;
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --paper: oklch(0.17 0.025 245);
+  --surface: oklch(0.23 0.03 245);
+  --ink: oklch(0.91 0.015 225);
+  --muted: oklch(0.72 0.025 225);
+  --line: oklch(0.38 0.035 245);
+  --blue: oklch(0.72 0.1 235);
+  --green: oklch(0.74 0.13 150);
+  --green-ink: oklch(0.18 0.045 150);
+  --coral: oklch(0.7 0.13 30);
+  --focus: oklch(0.78 0.1 235);
+  --success: oklch(0.72 0.1 150);
+  --warning: oklch(0.78 0.12 82);
+  --error: oklch(0.7 0.14 27);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    color-scheme: dark;
+    --paper: oklch(0.17 0.025 245);
+    --surface: oklch(0.23 0.03 245);
+    --ink: oklch(0.91 0.015 225);
+    --muted: oklch(0.72 0.025 225);
+    --line: oklch(0.38 0.035 245);
+    --blue: oklch(0.72 0.1 235);
+    --green: oklch(0.74 0.13 150);
+    --green-ink: oklch(0.18 0.045 150);
+    --coral: oklch(0.7 0.13 30);
+    --focus: oklch(0.78 0.1 235);
+    --success: oklch(0.72 0.1 150);
+    --warning: oklch(0.78 0.12 82);
+    --error: oklch(0.7 0.14 27);
+  }
+}
+
+:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+}
+
+.theme-switching *,
+.theme-switching *::before,
+.theme-switching *::after {
+  transition: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
 }

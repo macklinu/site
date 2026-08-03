@@ -1,0 +1,38 @@
+---
+import { Effect } from 'effect'
+
+import Layout from '~/Layout.astro'
+import * as Author from '~/lib/Author'
+import { Runtime } from '~/lib/Runtime'
+
+const author = await Runtime.runPromise(
+  Effect.gen(function* () {
+    const authorService = yield* Author.Service
+
+    return yield* authorService.me()
+  }),
+)
+---
+
+<Layout title='About' description={author.bio}>
+  <article class='m-0 w-full max-w-[38rem] pt-[clamp(2.5rem,5vw,4.5rem)] pb-16'>
+  <header class='mb-[clamp(2rem,4vw,3rem)] max-w-[38rem] border-b-2 border-site-ink pb-7'>
+    <p class='inline-flex bg-site-green px-1 py-1 font-mono text-xs leading-[1.35] tracking-[0.04em] text-site-green-ink'>About</p>
+    <h1 class='mt-4 mb-6 max-w-[13ch] font-display text-[clamp(2.6rem,5vw,4.5rem)] font-bold leading-[0.88] tracking-[-0.07em] [font-variation-settings:"opsz"_48,_"wdth"_88]'>{author.name}</h1>
+    <p class='-mt-2 max-w-[34rem] text-lg leading-[1.5] text-site-muted'>{author.bio}.</p>
+    </header>
+    <div class='prose max-w-[38rem] font-body text-[1.0625rem] leading-7 text-site-ink'>
+      <p>
+        This is a public reference for the things I make, the things I write down, and the subjects I keep returning to.
+      </p>
+      <p>
+        Some ideas belong in a post. Smaller observations become notes. Experiments get their own page. When a subject needs a path through all of that, it becomes a guide.
+      </p>
+      <h2>Elsewhere</h2>
+      <ul>
+        <li><a href={`https://github.com/${author.githubHandle.slice(1)}`}>GitHub {author.githubHandle}</a></li>
+        <li><a href={`https://x.com/${author.twitterHandle.slice(1)}`}>X {author.twitterHandle}</a></li>
+      </ul>
+    </div>
+  </article>
+</Layout>

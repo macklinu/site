@@ -1,7 +1,7 @@
 ---
 date: "2023-07-10"
 title: "Month calendar view helpers with Luxon"
-description: "This is how to use Luxon to build a month calendar with date helpers like startOf and endOf."
+description: "Build a month calendar with Luxon's startOf and endOf helpers."
 ---
 
 [Last year, I explored building a month view calendar with Rails]. I thought Rails date helpers made building this UI much simpler than using JavaScript. And while I still think that's true, I realized it's not too much harder to build this same UI with JavaScript using the [Luxon] library.
