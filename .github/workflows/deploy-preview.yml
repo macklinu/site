@@ -29,6 +29,10 @@ jobs:
       - uses: nubjs/setup-nub@v0
         with:
           nub-version: 0.5.0
+      - name: Set up pnpm shim
+        run: |
+          nub pm shim
+          echo "$HOME/.nub/shims" >> "$GITHUB_PATH"
       - name: Install dependencies
         run: nub install --frozen-lockfile
       - name: Deploy
@@ -44,6 +48,10 @@ jobs:
       - uses: nubjs/setup-nub@v0
         with:
           nub-version: 0.5.0
+      - name: Set up pnpm shim
+        run: |
+          nub pm shim
+          echo "$HOME/.nub/shims" >> "$GITHUB_PATH"
       - name: Install dependencies
         run: nub install --frozen-lockfile
       - name: Destroy Preview Environment
