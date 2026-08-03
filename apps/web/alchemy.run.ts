@@ -15,9 +15,9 @@ export default Alchemy.Stack(
     const stage = yield* Alchemy.Stage;
     const website = yield* Cloudflare.Website.StaticSite("website", {
       name: `mackie-underdown-wiki-website-${stage}`,
-      command: "bun run build",
+      command: "nub run build",
       outdir: "dist",
-      dev: { command: "bun run astro dev" },
+      dev: { command: "nub run astro dev" },
       routes: stage === "prod" ? [{ pattern: "mackie.underdown.wiki/*" }] : undefined,
       assets: {
         htmlHandling: "drop-trailing-slash",

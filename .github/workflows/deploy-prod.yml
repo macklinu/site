@@ -24,10 +24,15 @@ jobs:
     needs: verify
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
+      - uses: actions/checkout@v7
+      - uses: nubjs/setup-nub@v0
+        with:
+          nub-version: 0.5.0
+      - name: Set up pnpm shim
+        run: |
+          nub pm shim
+          echo "$HOME/.nub/shims" >> "$GITHUB_PATH"
       - name: Install dependencies
-        run: bun install --frozen-lockfile
+        run: nub install --frozen-lockfile
       - name: Deploy
-        run: bun run deploy -- -- --yes --stage ${{ env.STAGE }}
+        run: nub run deploy -- --yes --stage ${{ env.STAGE }}
