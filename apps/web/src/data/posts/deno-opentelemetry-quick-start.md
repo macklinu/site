@@ -94,6 +94,6 @@ Now make a GET request to http://localhost:8000 and another to http://localhost:
 
 Without any console.log statements or any other code to set up HTTP tracing, Deno captures key information and exports it for viewing in Grafana!
 
-![Grafana trace view](/public/assets/grafana-trace.png)
+![Grafana trace view](/assets/grafana-trace.png)
 
 Play around with adding `console.log` statements and [custom trace spans](https://docs.deno.com/runtime/fundamentals/open_telemetry/#traces-1) to see what else you can report. 🪵
