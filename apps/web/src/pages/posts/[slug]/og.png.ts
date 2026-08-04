@@ -1,5 +1,5 @@
 import type { APIRoute, GetStaticPaths } from "astro";
-import { Effect, Exit, Schema } from "effect";
+import { Effect, Schema } from "effect";
 
 import { renderOpenGraphImage } from "~/lib/OpenGraph";
 import * as Post from "~/lib/Post";
@@ -26,20 +26,14 @@ const generateOgImageResponse = (params: Record<string, string | undefined>) =>
     const postService = yield* Post.Service;
     const { slug } = yield* Schema.decodeUnknownEffect(Schema.Struct({ slug: UrlSlug }))(params);
     const post = yield* postService.getBySlug(slug);
+    const image = yield* renderOpenGraphImage(entryImage(post));
 
-    return yield* renderOpenGraphImage(entryImage(post));
+    return new Response(image, {
+      headers: {
+        "Content-Type": "image/png",
+      },
+    });
   }).pipe(Effect.withSpan("generatePostOgImage"));
 
-export const GET: APIRoute = async (context) => {
-  const result = await Runtime.runPromiseExit(generateOgImageResponse(context.params));
-
-  if (Exit.isFailure(result)) {
-    throw new Error("Unable to generate post Open Graph image", { cause: result.cause });
-  }
-
-  return new Response(result.value, {
-    headers: {
-      "Content-Type": "image/png",
-    },
-  });
-};
+export const GET: APIRoute = (context) =>
+  Runtime.runPromise(generateOgImageResponse(context.params));

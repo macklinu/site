@@ -3,15 +3,16 @@ import { Context, DateTime, Effect, Layer, Schema } from "effect";
 
 import * as Slug from "~/lib/Slug";
 
-export type EntryKind = "article" | "note" | "interactive" | "guide";
+export const EntryKind = Schema.Union([
+  Schema.Literal("article"),
+  Schema.Literal("note"),
+  Schema.Literal("demo"),
+  Schema.Literal("guide"),
+]);
+export type EntryKind = typeof EntryKind.Type;
 
 export const Entry = Schema.Struct({
-  kind: Schema.Union([
-    Schema.Literal("article"),
-    Schema.Literal("note"),
-    Schema.Literal("interactive"),
-    Schema.Literal("guide"),
-  ]),
+  kind: EntryKind,
   title: Schema.String,
   slug: Slug.UrlSlug,
   description: Schema.String,
@@ -21,15 +22,16 @@ export const Entry = Schema.Struct({
 });
 export type Entry = typeof Entry.Type;
 
-type EntrySource = {
-  readonly id: string;
-  readonly data: {
-    readonly title: string;
-    readonly description: string;
-    readonly date: string;
-    readonly topics: readonly string[];
-  };
-};
+const EntrySource = Schema.Struct({
+  id: Schema.String,
+  data: Schema.Struct({
+    title: Schema.String,
+    description: Schema.String,
+    date: Schema.String,
+    topics: Schema.Array(Schema.String),
+  }),
+});
+type EntrySource = typeof EntrySource.Type;
 
 const toEntry = (
   entry: EntrySource,
@@ -46,37 +48,63 @@ const toEntry = (
   href,
 });
 
+export const RssItem = Schema.Struct({
+  title: Schema.String,
+  description: Schema.String,
+  href: Schema.String,
+  publicationDate: Schema.DateTimeUtc,
+});
+export type RssItem = typeof RssItem.Type;
+
+const list = () =>
+  Effect.tryPromise(() =>
+    Promise.all([
+      getCollection("articles"),
+      getCollection("notes"),
+      getCollection("demos"),
+      getCollection("guides"),
+    ]),
+  ).pipe(
+    Effect.map(([articles, notes, demos, guides]) =>
+      [
+        ...articles.map((entry) => toEntry(entry, "article", `/posts/${entry.id}`)),
+        ...notes.map((entry) => toEntry(entry, "note", `/notes/${entry.id}`)),
+        ...demos.map((entry) => toEntry(entry, "demo", `/demos/${entry.id}`)),
+        ...guides.map((entry) =>
+          toEntry(entry, "guide", `/guides/${entry.id}`, entry.data.updated),
+        ),
+      ].sort((a, b) => b.publicationDate.epochMilliseconds - a.publicationDate.epochMilliseconds),
+    ),
+    Effect.orDie,
+    Effect.withSpan("Entry.Service.list"),
+  );
+
 export class Service extends Context.Service<
   Service,
   {
-    readonly list: () => Effect.Effect<readonly Entry[], unknown>;
+    readonly list: () => Effect.Effect<readonly Entry[]>;
+    readonly listRssItems: () => Effect.Effect<readonly RssItem[]>;
   }
 >()("@mackie/web/lib/Entry/Service") {
   static readonly layerAstro = Layer.succeed(
     Service,
     Service.of({
-      list: () =>
-        Effect.tryPromise(() =>
-          Promise.all([
-            getCollection("articles"),
-            getCollection("notes"),
-            getCollection("interactives"),
-            getCollection("guides"),
-          ]),
-        ).pipe(
-          Effect.map(([articles, notes, interactives, guides]) =>
-            [
-              ...articles.map((entry) => toEntry(entry, "article", `/posts/${entry.id}`)),
-              ...notes.map((entry) => toEntry(entry, "note", `/notes/${entry.id}`)),
-              ...interactives.map((entry) => toEntry(entry, "interactive", `/demos/${entry.id}`)),
-              ...guides.map((entry) =>
-                toEntry(entry, "guide", `/guides/${entry.id}`, entry.data.updated),
+      list,
+      listRssItems: () =>
+        list().pipe(
+          Effect.map((entries) =>
+            entries
+              .filter((entry) => entry.kind !== "demo")
+              .map(
+                (entry): RssItem => ({
+                  title: entry.title,
+                  description: entry.description,
+                  href: entry.href,
+                  publicationDate: entry.publicationDate,
+                }),
               ),
-            ].sort(
-              (a, b) => b.publicationDate.epochMilliseconds - a.publicationDate.epochMilliseconds,
-            ),
           ),
-          Effect.withSpan("Entry.Service.list"),
+          Effect.withSpan("Entry.Service.listRssItems"),
         ),
     }),
   );

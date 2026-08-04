@@ -24,10 +24,10 @@ const notes = defineCollection({
   }),
 });
 
-const interactives = defineCollection({
-  loader: glob({ base: "./src/data/interactives", pattern: "**/*.md" }),
+const demos = defineCollection({
+  loader: glob({ base: "./src/data/demos", pattern: "**/*.md" }),
   schema: documentFields.extend({
-    kind: z.literal("interactive").default("interactive"),
+    kind: z.literal("demo").default("demo"),
     status: z.enum(["prototype", "active", "archived"]).default("prototype"),
   }),
 });
@@ -41,12 +41,12 @@ const guides = defineCollection({
 });
 
 const projects = defineCollection({
-  loader: glob({ base: "./src/data/projects", pattern: "**/*.md" }),
-  schema: documentFields.extend({
-    kind: z.literal("project").default("project"),
+  loader: glob({ base: "./src/data/projects", pattern: "**/*.yaml" }),
+  schema: z.object({
+    title: z.string().trim().min(1),
+    description: z.string().trim().min(1),
     href: z.url(),
-    status: z.enum(["active", "paused", "archived"]).default("active"),
   }),
 });
 
-export const collections = { articles, notes, interactives, guides, projects };
+export const collections = { articles, notes, demos, guides, projects };

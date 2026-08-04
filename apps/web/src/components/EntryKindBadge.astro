@@ -11,14 +11,14 @@ const { kind, class: className } = Astro.props
 const labels: Record<EntryKind, string> = {
   article: 'post',
   note: 'note',
-  interactive: 'demo',
+  demo: 'demo',
   guide: 'guide',
 }
 
 const variants: Record<EntryKind, string> = {
   article: 'bg-site-blue text-site-paper',
   note: 'bg-site-green text-site-green-ink',
-  interactive: 'bg-site-coral text-site-paper',
+  demo: 'bg-site-coral text-site-paper',
   guide: 'border border-site-ink bg-site-paper text-site-ink',
 }
 ---

@@ -1,5 +1,4 @@
 import { getCollection } from "astro:content";
-import type { UnknownError } from "effect/Cause";
 import { Context, Effect, Layer, Schema } from "effect";
 
 export const Project = Schema.Struct({
@@ -12,7 +11,7 @@ export type Project = typeof Project.Type;
 export class Service extends Context.Service<
   Service,
   {
-    list: () => Effect.Effect<readonly Project[], UnknownError>;
+    list: () => Effect.Effect<readonly Project[]>;
   }
 >()("@mackie/web/lib/Project/Service") {
   static readonly layerAstro = Layer.succeed(
@@ -29,7 +28,7 @@ export class Service extends Context.Service<
               }),
             ),
           ),
-          Effect.withSpan("Project.Service.list"),
+          Effect.orDie,
         ),
     }),
   );

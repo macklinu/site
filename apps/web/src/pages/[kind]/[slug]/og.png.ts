@@ -1,8 +1,9 @@
 import { getCollection } from "astro:content";
 import type { APIRoute, GetStaticPaths } from "astro";
-import { Effect, Exit } from "effect";
+import { Effect } from "effect";
 
 import type { EntryKind } from "~/lib/Entry";
+import { Runtime } from "~/lib/Runtime";
 import { renderOpenGraphImage } from "~/lib/OpenGraph";
 import { entryImage } from "~/og";
 
@@ -12,40 +13,46 @@ type OpenGraphEntry = {
   readonly kind: EntryKind;
 };
 
-export const getStaticPaths: GetStaticPaths = async () => {
-  const [notes, interactives, guides] = await Promise.all([
-    getCollection("notes"),
-    getCollection("interactives"),
-    getCollection("guides"),
-  ]);
-
-  return [
-    ...notes.map((entry) => ({
-      params: { kind: "notes", slug: entry.id },
-      props: { entry: entry.data },
-    })),
-    ...interactives.map((entry) => ({
-      params: { kind: "demos", slug: entry.id },
-      props: { entry: entry.data },
-    })),
-    ...guides.map((entry) => ({
-      params: { kind: "guides", slug: entry.id },
-      props: { entry: entry.data },
-    })),
-  ];
+type OpenGraphProps = {
+  readonly entry: OpenGraphEntry;
 };
 
-export const GET: APIRoute = async (context) => {
-  const entry = context.props.entry as OpenGraphEntry;
-  const result = await Effect.runPromiseExit(renderOpenGraphImage(entryImage(entry)));
+const generateOpenGraphImageResponse = (entry: OpenGraphEntry) =>
+  renderOpenGraphImage(entryImage(entry)).pipe(
+    Effect.map(
+      (image) =>
+        new Response(image, {
+          headers: {
+            "Content-Type": "image/png",
+          },
+        }),
+    ),
+    Effect.withSpan("generateContentOpenGraphImage"),
+  );
 
-  if (Exit.isFailure(result)) {
-    throw new Error("Unable to generate content Open Graph image", { cause: result.cause });
-  }
+export const getStaticPaths: GetStaticPaths = () =>
+  Runtime.runPromise(
+    Effect.tryPromise(() =>
+      Promise.all([getCollection("notes"), getCollection("demos"), getCollection("guides")]),
+    ).pipe(
+      Effect.map(([notes, demos, guides]) => [
+        ...notes.map((entry) => ({
+          params: { kind: "notes", slug: entry.id },
+          props: { entry: entry.data },
+        })),
+        ...demos.map((entry) => ({
+          params: { kind: "demos", slug: entry.id },
+          props: { entry: entry.data },
+        })),
+        ...guides.map((entry) => ({
+          params: { kind: "guides", slug: entry.id },
+          props: { entry: entry.data },
+        })),
+      ]),
+      Effect.orDie,
+      Effect.withSpan("listContentOpenGraphStaticPaths"),
+    ),
+  );
 
-  return new Response(result.value, {
-    headers: {
-      "Content-Type": "image/png",
-    },
-  });
-};
+export const GET: APIRoute<OpenGraphProps, Record<string, string | undefined>> = ({ props }) =>
+  Runtime.runPromise(generateOpenGraphImageResponse(props.entry));

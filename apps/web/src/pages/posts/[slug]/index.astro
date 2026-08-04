@@ -4,7 +4,6 @@ import { DateTime, Effect, Exit, Schema } from 'effect'
 import EntryArticle from '~/components/EntryArticle.astro'
 
 import Layout from '~/Layout.astro'
-import { formatFullDate } from '~/lib/DateFormat'
 import * as Post from '~/lib/Post'
 import { Runtime } from '~/lib/Runtime'
 import { UrlSlug } from '~/lib/Slug'
@@ -31,7 +30,6 @@ if (Exit.isFailure(result)) {
 }
 
 const post = result.value
-const date = formatFullDate(post.publicationDate.epochMilliseconds)
 
 
 const ogImage = new URL(`/posts/${post.slug}/og.png`, import.meta.env.SITE).toString()
@@ -62,8 +60,7 @@ export const getStaticPaths: GetStaticPaths = () =>
   <EntryArticle
     title={post.title}
     kind={post.kind}
-    date={date}
-    dateTime={DateTime.formatIsoDate(post.publicationDate)}
+    date={post.publicationDate}
   >
     <post.Content />
   </EntryArticle>

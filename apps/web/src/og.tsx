@@ -3,14 +3,14 @@ import type { EntryKind } from "~/lib/Entry";
 const labels: Record<EntryKind, string> = {
   article: "POST",
   note: "NOTE",
-  interactive: "DEMO",
+  demo: "DEMO",
   guide: "GUIDE",
 };
 
 const labelColors: Record<EntryKind, { backgroundColor: string; color: string }> = {
   article: { backgroundColor: "#266bb0", color: "#f4f8fa" },
   note: { backgroundColor: "#49d158", color: "#1b293b" },
-  interactive: { backgroundColor: "#c13c37", color: "#f4f8fa" },
+  demo: { backgroundColor: "#c13c37", color: "#f4f8fa" },
   guide: { backgroundColor: "#1b293b", color: "#f4f8fa" },
 };
 

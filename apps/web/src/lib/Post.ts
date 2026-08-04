@@ -1,6 +1,5 @@
 import { getCollection, getEntry, render, type RenderResult } from "astro:content";
 import { Context, DateTime, Effect, Layer, Schema } from "effect";
-import type { UnknownError } from "effect/Cause";
 import type { SchemaError } from "effect/SchemaError";
 
 import * as Slug from "~/lib/Slug";
@@ -35,7 +34,7 @@ export class PostNotFound extends Schema.TaggedErrorClass<PostNotFound>()(
 export class Service extends Context.Service<
   Service,
   {
-    readonly list: () => Effect.Effect<readonly PostSummary[], SchemaError | UnknownError>;
+    readonly list: () => Effect.Effect<readonly PostSummary[], SchemaError>;
     readonly getBySlug: (slug: Slug.UrlSlug) => Effect.Effect<Post, PostNotFound | SchemaError>;
   }
 >()("@mackie/web/lib/Post/Service") {
@@ -73,7 +72,7 @@ export class Service extends Context.Service<
             .sort(
               (a, b) => b.publicationDate.epochMilliseconds - a.publicationDate.epochMilliseconds,
             );
-        }),
+        }).pipe(Effect.orDie),
     }),
   );
 }
