@@ -11,12 +11,12 @@ export const getStaticPaths = () =>
   Effect.runPromise(
     listContentRoutes().pipe(
       Effect.map((routes) =>
-        routes.map(({ kind, entry }) => ({
-          params: { kind, slug: entry.id },
+        routes.map((route) => ({
+          params: { kind: route.kind, slug: route.entry.id },
           props: {
-            entry,
-            kind,
-            date: 'updated' in entry.data ? entry.data.updated : entry.data.date,
+            entry: route.entry,
+            kind: route.kind,
+            date: route.kind === 'guides' ? route.entry.data.updated : route.entry.data.date,
           },
         })),
       ),
