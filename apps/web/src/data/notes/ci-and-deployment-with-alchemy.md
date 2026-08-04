@@ -44,7 +44,7 @@ Effect.gen(function* () {
 });
 ```
 
-Use `pr-<number>` for previews and `prod` for production. For previews, comment `website.url` back to the pull request. See `apps/web/alchemy.run.ts` for the complete stack.
+Use `pr-<number>` for previews and `prod` for production. For previews, comment `website.url` back to the pull request.
 
 ## 2. Verify pull requests
 
