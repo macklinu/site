@@ -1,0 +1,163 @@
+---
+title: PR previews with Alchemy, Cloudflare, and GitHub Actions
+description: A small recipe for CI, disposable pull-request previews, and production deploys.
+date: "2026-08-04"
+topics:
+  - GitHub Actions
+  - Alchemy
+  - Cloudflare
+  - CI
+---
+
+Want pull-request previews without making production deployment a separate system? Define one Alchemy stack, give every PR a stage, and let GitHub Actions select the stage.
+
+<pre class="mermaid">
+flowchart TD
+  PR["PR opens / updates"] --> Checks["CI checks"]
+  PR --> Preview["Deploy pr-N"]
+  Preview --> URL["Preview URL"]
+  URL --> Comment["Update PR comment"]
+  Closed["PR closes"] --> Cleanup["Destroy pr-N"]
+  Main["Push to main"] --> Production["Verify, then deploy prod"]
+</pre>
+
+## Setup
+
+- Add the Alchemy and Cloudflare secrets to GitHub Actions.
+- Replace `example.com/*` with the production route.
+- Keep `nub run build` and `nub run astro dev` aligned with the app's normal build and dev commands.
+
+## 1. Stage the resource
+
+```ts title="apps/web/alchemy.run.ts"
+Effect.gen(function* () {
+  const stage = yield* Alchemy.Stage;
+  const website = yield* Cloudflare.Website.StaticSite("website", {
+    name: `website-${stage}`,
+    command: "nub run build",
+    outdir: "dist",
+    dev: { command: "nub run astro dev" },
+    routes: stage === "prod" ? [{ pattern: "example.com/*" }] : undefined,
+  });
+
+  return { url: website.url };
+});
+```
+
+Use `pr-<number>` for previews and `prod` for production. For previews, comment `website.url` back to the pull request. See `apps/web/alchemy.run.ts` for the complete stack.
+
+## 2. Verify pull requests
+
+`.github/workflows/verify.yml`:
+
+```yaml title=".github/workflows/verify.yml"
+name: Verify
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+  workflow_call:
+
+concurrency:
+  group: verify-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  astro-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: nubjs/setup-nub@v0
+        with:
+          nub-version: 0.5.0
+      - run: |
+          nub pm shim
+          echo "$HOME/.nub/shims" >> "$GITHUB_PATH"
+      - run: nub install --frozen-lockfile
+      - run: nub --cwd apps/web exec astro check
+
+  typecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: nubjs/setup-nub@v0
+        with:
+          nub-version: 0.5.0
+      - run: |
+          nub pm shim
+          echo "$HOME/.nub/shims" >> "$GITHUB_PATH"
+      - run: nub install --frozen-lockfile
+      - run: nub --cwd apps/web exec astro sync
+      - run: nub exec tsc --project apps/web/tsconfig.json --noEmit
+```
+
+`workflow_call` lets production reuse the same gate. The concurrency key drops outdated PR checks.
+
+## 3. Deploy and remove previews
+
+`.github/workflows/deploy-preview.yml`:
+
+```yaml title=".github/workflows/deploy-preview.yml"
+on:
+  pull_request:
+    types: [opened, reopened, synchronize, closed]
+
+concurrency:
+  group: deploy-preview-${{ github.event.pull_request.number }}
+  cancel-in-progress: false
+
+env:
+  STAGE: pr-${{ github.event.number }}
+  ALCHEMY_PASSWORD: ${{ secrets.ALCHEMY_PASSWORD }}
+  ALCHEMY_STATE_TOKEN: ${{ secrets.ALCHEMY_STATE_TOKEN }}
+  CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+  CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+  CLOUDFLARE_EMAIL: ${{ secrets.CLOUDFLARE_EMAIL }}
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+```
+
+```yaml title=".github/workflows/deploy-preview.yml"
+jobs:
+  deploy-preview:
+    if: >-
+      github.event.action != 'closed' &&
+      github.event.pull_request.head.repo.full_name == github.repository
+    steps:
+      # repeat the checkout, nub setup, shim, and install steps from verify.yml
+      - run: nub run deploy -- --yes --stage ${{ env.STAGE }}
+
+  cleanup-preview:
+    if: >-
+      github.event.action == 'closed' &&
+      github.event.pull_request.head.repo.full_name == github.repository
+    steps:
+      # repeat the checkout, nub setup, shim, and install steps from verify.yml
+      - run: nub run destroy -- --yes --stage ${{ env.STAGE }}
+```
+
+The repository guard keeps deployment secrets out of forked PRs. Leave preview runs uncancelled: a deploy and destroy for the same stage must not overlap.
+
+## 4. Promote `main`
+
+`.github/workflows/deploy-prod.yml`:
+
+```yaml title=".github/workflows/deploy-prod.yml"
+on:
+  push:
+    branches: [main]
+
+env:
+  STAGE: prod
+
+jobs:
+  verify:
+    uses: ./.github/workflows/verify.yml
+
+  deploy-prod:
+    needs: verify
+    steps:
+      # checkout, set up nub, install from the lockfile
+      - run: nub run deploy -- --yes --stage ${{ env.STAGE }}
+```
+
+That is the complete shape: one stack, named stages, disposable PR environments, and production gated by the same checks.

@@ -26,6 +26,7 @@
     "astro-expressive-code": "^0.44.1",
     "astro-icon": "^1.1.5",
     "effect": "4.0.0-beta.102",
+    "mermaid": "^11.16.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "satori": "^0.19.1",

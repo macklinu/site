@@ -31,3 +31,88 @@ const { title, kind, date } = Astro.props
     <slot />
   </div>
 </article>
+<script>
+
+  const diagrams = document.querySelectorAll<HTMLElement>('pre.mermaid')
+
+  if (diagrams.length > 0) {
+    const { default: mermaid } = await import('mermaid')
+    const palettes = {
+      light: {
+        background: '#f8f9fa',
+        primaryColor: '#e3e9ed',
+        primaryTextColor: '#152331',
+        secondaryTextColor: '#152331',
+        tertiaryTextColor: '#152331',
+        textColor: '#152331',
+        nodeTextColor: '#152331',
+        lineColor: '#607080',
+        secondaryColor: '#d8efc9',
+        tertiaryColor: '#d9e4ff',
+        edgeLabelBackground: '#f8f9fa',
+      },
+      dark: {
+        background: '#202730',
+        primaryColor: '#2f3b48',
+        primaryTextColor: '#e4e8eb',
+        secondaryTextColor: '#e4e8eb',
+        tertiaryTextColor: '#e4e8eb',
+        textColor: '#e4e8eb',
+        nodeTextColor: '#e4e8eb',
+        lineColor: '#aebbc7',
+        secondaryColor: '#355044',
+        tertiaryColor: '#30445d',
+        edgeLabelBackground: '#202730',
+      },
+    }
+
+    const render = async () => {
+      const theme = document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light'
+
+      mermaid.initialize({
+        startOnLoad: false,
+        securityLevel: 'strict',
+        theme: 'base',
+        themeVariables: {
+          ...palettes[theme],
+          darkMode: theme === 'dark',
+          fontFamily: '"IBM Plex Mono", ui-monospace, monospace',
+          fontSize: '18px',
+        },
+      })
+
+      diagrams.forEach((diagram) => {
+        const source = diagram.dataset.mermaidSource ?? diagram.textContent ?? ''
+
+        diagram.dataset.mermaidSource = source
+        diagram.textContent = source
+        diagram.removeAttribute('data-processed')
+      })
+
+      await mermaid.run({ nodes: diagrams })
+    }
+
+    await render()
+
+    new MutationObserver(() => {
+      void render()
+    }).observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['data-theme'],
+    })
+  }
+</script>
+
+<style>
+  :global(.prose pre.mermaid) {
+    overflow-x: auto;
+    border: 1px solid var(--line);
+    background: var(--surface);
+    padding: 1rem;
+  }
+
+  :global(.prose pre.mermaid svg) {
+    display: block;
+    min-width: 36rem;
+  }
+</style>
