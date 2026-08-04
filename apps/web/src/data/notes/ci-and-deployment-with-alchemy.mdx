@@ -9,17 +9,21 @@ topics:
   - CI
 ---
 
+import MermaidDiagram from "~/components/MermaidDiagram";
+
 Want pull-request previews without making production deployment a separate system? Define one Alchemy stack, give every PR a stage, and let GitHub Actions select the stage.
 
-<pre class="mermaid">
-flowchart TD
+<MermaidDiagram
+  client:load
+  label="CI and deployment flow"
+  definition={`flowchart TD
   PR["PR opens / updates"] --> Checks["CI checks"]
   PR --> Preview["Deploy pr-N"]
   Preview --> URL["Preview URL"]
   URL --> Comment["Update PR comment"]
   Closed["PR closes"] --> Cleanup["Destroy pr-N"]
-  Main["Push to main"] --> Production["Verify, then deploy prod"]
-</pre>
+  Main["Push to main"] --> Production["Verify, then deploy prod"]`}
+/>
 
 ## Setup
 
@@ -45,10 +49,6 @@ Effect.gen(function* () {
 ```
 
 Use `pr-<number>` for previews and `prod` for production. For previews, comment `website.url` back to the pull request.
-
-## 2. Verify pull requests
-
-`.github/workflows/verify.yml`:
 
 ```yaml title=".github/workflows/verify.yml"
 name: Verify
@@ -93,10 +93,6 @@ jobs:
 
 `workflow_call` lets production reuse the same gate. The concurrency key drops outdated PR checks.
 
-## 3. Deploy and remove previews
-
-`.github/workflows/deploy-preview.yml`:
-
 ```yaml title=".github/workflows/deploy-preview.yml"
 on:
   pull_request:
@@ -136,10 +132,6 @@ jobs:
 ```
 
 The repository guard keeps deployment secrets out of forked PRs. Leave preview runs uncancelled: a deploy and destroy for the same stage must not overlap.
-
-## 4. Promote `main`
-
-`.github/workflows/deploy-prod.yml`:
 
 ```yaml title=".github/workflows/deploy-prod.yml"
 on:

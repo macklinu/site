@@ -18,7 +18,7 @@ const articles = defineCollection({
 });
 
 const notes = defineCollection({
-  loader: glob({ base: "./src/data/notes", pattern: "**/*.md" }),
+  loader: glob({ base: "./src/data/notes", pattern: "**/*.{md,mdx}" }),
   schema: documentFields.extend({
     kind: z.literal("note").default("note"),
   }),
