@@ -7,10 +7,14 @@ import * as Entry from "~/lib/Entry";
 export const GET: APIRoute = async (context) => {
   const items = await Effect.runPromise(Entry.listRssItems());
 
+  if (context.site === undefined) {
+    throw new Error("The Astro site configuration is required to generate the RSS feed.");
+  }
+
   return rss({
     title: "Mackie Underdown",
     description: "A public reference for Mackie Underdown’s writing, notes, and guides.",
-    site: context.site!,
+    site: context.site,
     items: items.map((item) => ({
       title: item.title,
       description: item.description,

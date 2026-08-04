@@ -1,4 +1,5 @@
 ---
+import type { InferGetStaticPropsType } from 'astro'
 import { render } from 'astro:content'
 import { DateTime, Effect } from 'effect'
 
@@ -12,15 +13,20 @@ export const getStaticPaths = () =>
       Effect.map((routes) =>
         routes.map(({ kind, entry }) => ({
           params: { kind, slug: entry.id },
-          props: { entry, kind },
+          props: {
+            entry,
+            kind,
+            date: 'updated' in entry.data ? entry.data.updated : entry.data.date,
+          },
         })),
       ),
     ),
   );
+type Props = InferGetStaticPropsType<typeof getStaticPaths>
 
-const { entry, kind } = Astro.props
+
+const { entry, kind, date } = Astro.props
 const { Content } = await render(entry)
-const date = 'updated' in entry.data ? entry.data.updated : entry.data.date
 const publicationDate = DateTime.makeUnsafe(date)
 const ogImage = new URL(`/${kind}/${entry.id}/og.png`, import.meta.env.SITE).toString()
 ---
