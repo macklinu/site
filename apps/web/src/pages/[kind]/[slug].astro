@@ -1,0 +1,48 @@
+---
+import type { InferGetStaticPropsType } from 'astro'
+import { render } from 'astro:content'
+import { DateTime, Effect } from 'effect'
+
+import EntryArticle from '~/components/EntryArticle.astro'
+import Layout from '~/Layout.astro'
+import { listContentRoutes } from '~/lib/ContentRoute'
+
+export const getStaticPaths = () =>
+  Effect.runPromise(
+    listContentRoutes().pipe(
+      Effect.map((routes) =>
+        routes.map((route) => ({
+          params: { kind: route.kind, slug: route.entry.id },
+          props: {
+            entry: route.entry,
+            kind: route.kind,
+            date: route.kind === 'guides' ? route.entry.data.updated : route.entry.data.date,
+          },
+        })),
+      ),
+    ),
+  );
+type Props = InferGetStaticPropsType<typeof getStaticPaths>
+
+
+const { entry, kind, date } = Astro.props
+const { Content } = await render(entry)
+const publicationDate = DateTime.makeUnsafe(date)
+const ogImage = new URL(`/${kind}/${entry.id}/og.png`, import.meta.env.SITE).toString()
+---
+
+<Layout
+  title={entry.data.title}
+  description={entry.data.description}
+  ogImage={ogImage}
+  type='article'
+  publishedTime={DateTime.formatIso(publicationDate)}
+>
+  <EntryArticle
+    title={entry.data.title}
+    kind={entry.data.kind}
+    date={publicationDate}
+  >
+    <Content />
+  </EntryArticle>
+</Layout>

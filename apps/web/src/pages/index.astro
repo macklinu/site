@@ -1,94 +1,89 @@
 ---
-import { Image } from 'astro:assets'
-import { DateTime, Effect, Exit } from 'effect'
+import { getCollection } from 'astro:content'
+import { DateTime, Effect } from 'effect'
+import { Icon } from 'astro-icon/components'
 
+import EntryKindBadge from '~/components/EntryKindBadge.astro'
 import Layout from '~/Layout.astro'
-import * as Author from '~/lib/Author'
-import * as Post from '~/lib/Post'
-import * as Project from '~/lib/Project'
-import { Runtime } from '~/lib/Runtime'
+import { formatFullDate } from '~/lib/DateFormat'
+import { author } from '~/lib/Author'
+import * as Entry from '~/lib/Entry'
 
-const handleRequest = Effect.gen(function* () {
-  const postService = yield* Post.Service
-  const projectService = yield* Project.Service
-  const authorService = yield* Author.Service
+const [entries, projects] = await Promise.all([
+  Effect.runPromise(Entry.list()),
+  getCollection('projects'),
+])
 
-  const [posts, projects, author] = yield* Effect.all(
-    [
-      postService.list().pipe(Effect.catch(() => Effect.succeed([]))),
-      projectService.list(),
-      authorService.me(),
-    ],
-    { concurrency: 'unbounded' }
-  )
-
-  return {
-    posts,
-    projects,
-    author,
-  }
-})
-
-const result = await Runtime.runPromiseExit(handleRequest.pipe(Effect.tapError(Effect.logError)))
-
-if (Exit.isFailure(result)) {
-  throw new Error('Failed to generate page', { cause: result.cause })
-}
-
-const { posts, projects, author } = result.value
 ---
 
 <Layout description={author.bio}>
-  <section class='space-y-8'>
-    <section>
-      <h2 class='font-bold'>Posts</h2>
-      <ul class='mt-4 list-none space-y-4'>
-        {
-          posts.map((post) => (
-            <li class='flex flex-col-reverse gap-2 md:flex-row md:items-center'>
-              <time
-                datetime={DateTime.formatIsoDate(post.publicationDate)}
-                class='text-sm text-black/60 tabular-nums dark:text-white/60'
-                transition:name={`post-${post.slug}--date`}
-              >
-                {DateTime.formatIsoDate(post.publicationDate)}
-              </time>
+  <div class='flex flex-col gap-y-[clamp(2rem,4vw,3.5rem)] py-[clamp(2rem,5vw,4rem)] pb-20 max-catalogue:pt-6'>
+    <header class='border-b border-site-ink py-3 pb-4'>
+      <div>
+        <p class='inline-flex w-fit items-center gap-1 bg-site-ink px-1 py-1 font-mono text-xs leading-[1.35] tracking-[0.04em] text-site-paper'>
+          <Icon name='lucide:map-pin' size='0.85em' aria-hidden='true' />
+          Detroit
+        </p>
+        <h1 class='mt-2 font-display text-[clamp(2.75rem,4vw,4.25rem)] font-bold leading-[0.84] tracking-[-0.035em] [font-variation-settings:"opsz"_48,_"wdth"_100]'>Index</h1>
+      </div>
+    </header>
 
+    <section class='max-catalogue:mt-9 max-catalogue:mb-8' id='projects' aria-labelledby='projects-title'>
+      <header class='mb-3 flex items-end justify-between gap-4 max-handset:block'>
+        <h2 id='projects-title' class='mt-0 font-display text-[clamp(1.9rem,2.7vw,2.8rem)] font-bold leading-[0.9] tracking-[-0.025em]'>Projects</h2>
+      </header>
+      <ul class='m-0 grid list-none grid-cols-2 gap-x-[clamp(1rem,3vw,3rem)] border-t border-site-ink p-0 max-handset:grid-cols-1'>
+        {
+          projects.map(({ data: { title, description, href } }) => (
+            <li class='border-b border-site-line'>
+              <a class='group grid min-h-24 grid-cols-[minmax(0,1fr)_1.5rem] items-start gap-[clamp(0.75rem,1.35vw,1.5rem)] px-2 py-4 text-inherit no-underline transition-colors duration-150 ease-out hover:bg-site-surface focus-visible:bg-site-surface max-handset:min-h-0 max-handset:gap-2 max-handset:px-1' href={href} target='_blank' rel='noopener noreferrer'>
+                <div>
+                  <h3 class='m-0 font-body text-[clamp(1.05rem,1.4vw,1.28rem)] font-[650] leading-[1.2] tracking-[-0.025em] underline decoration-2 decoration-transparent underline-offset-[0.2em] transition-colors duration-150 ease-out group-hover:decoration-site-blue group-focus-visible:decoration-site-blue'>{title}</h3>
+                  <p class='mt-1 text-[0.9375rem] leading-[1.45] text-site-muted'>{description}</p>
+                </div>
+                <span class='col-start-2 row-start-1 self-center font-mono text-[1.05rem] leading-none text-site-ink transition-transform duration-200 ease-out group-hover:translate-x-1 group-hover:-translate-y-1 group-focus-visible:translate-x-1 group-focus-visible:-translate-y-1' aria-hidden='true'>↗</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <section id='latest' aria-labelledby='latest-title'>
+      <header class='mb-3 flex items-end justify-between gap-4 max-handset:block'>
+        <h2 id='latest-title' class='mt-0 font-display text-[clamp(1.9rem,2.7vw,2.8rem)] font-bold leading-[0.9] tracking-[-0.025em]'>Recent</h2>
+      </header>
+      <ul class='m-0 list-none border-t border-site-ink p-0'>
+        {
+          entries.map((entry) => (
+            <li class='border-b border-site-line'>
               <a
-                class='underline'
-                href={`/posts/${post.slug}`}
-                data-astro-prefetch
-                transition:name={`post-${post.slug}--title`}
+                class='group grid min-h-24 grid-cols-[4rem_7rem_minmax(0,1fr)] items-start gap-[clamp(0.75rem,1.35vw,1.5rem)] px-2 py-4 text-inherit no-underline transition-colors duration-150 ease-out hover:bg-site-surface focus-visible:bg-site-surface max-handset:min-h-0 max-handset:grid-cols-[minmax(0,1fr)_max-content] max-handset:gap-2 max-handset:px-1'
+                href={entry.href}
               >
-                {post.title}
+                <EntryKindBadge kind={entry.kind} class='min-w-16 justify-center max-handset:col-start-1' />
+                <time
+                  class='pt-1 font-mono text-xs leading-[1.35] text-site-muted tabular-nums max-handset:col-start-2 max-handset:row-start-1 max-handset:min-w-[14ch] max-handset:justify-self-end max-handset:whitespace-nowrap'
+                  datetime={DateTime.formatIsoDate(entry.publicationDate)}
+                >
+                  {formatFullDate(entry.publicationDate.epochMilliseconds)}
+                </time>
+                <div class='max-handset:col-span-full'>
+                  <h3 class='m-0 font-body text-[clamp(1.05rem,1.4vw,1.28rem)] font-[650] leading-[1.2] tracking-[-0.025em] underline decoration-2 decoration-transparent underline-offset-[0.2em] transition-colors duration-150 ease-out group-hover:decoration-site-blue group-focus-visible:decoration-site-blue'>{entry.title}</h3>
+                  <p class='mt-1 text-[0.9375rem] leading-[1.45] text-site-muted'>{entry.description}</p>
+                  {
+                    entry.topics.length > 0 && (
+                      <ul class='mt-3 flex list-none flex-wrap gap-1 p-0 font-mono text-[0.6875rem] leading-[1.35] tracking-[0.02em] text-site-blue' aria-label='Topics'>
+                        {entry.topics.map((topic) => <li class="before:mr-1 before:text-site-line before:content-['/'] first:before:hidden">{topic}</li>)}
+                      </ul>
+                    )
+                  }
+                </div>
               </a>
             </li>
           ))
         }
       </ul>
     </section>
-    <section>
-      <h2 class='font-bold'>Projects</h2>
-      <ul class='mt-4 list-none space-y-2'>
-        {
-          projects.map(({ name, description, href }) => (
-            <li>
-              <a class='underline' href={href} target='_blank' rel='noopener noreferrer'>
-                {name}
-              </a>
-
-              <p class='text-black/60 dark:text-white/60'>{description}</p>
-            </li>
-          ))
-        }
-      </ul>
-    </section>
-  </section>
-  <Image
-    class='fixed bottom-0 left-0 -z-10 hidden h-[200px] grayscale-100 duration-500 lg:block'
-    transition:name='mackie'
-    src={author.image}
-    alt=''
-    height={200}
-  />
+  </div>
 </Layout>

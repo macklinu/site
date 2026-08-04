@@ -1,29 +1,15 @@
 .prose {
-  --prose-color: color-mix(in oklab, var(--color-black) 80%, transparent);
-  --prose-heading-color: var(--color-gray-950);
-  --prose-strong-color: var(--color-gray-950);
-  --prose-link-color: var(--color-gray-950);
-  --prose-code-color: var(--color-gray-950);
-  --prose-marker-color: color-mix(in oklab, var(--color-black) 80%, transparent);
-  --prose-link-underline-color: color-mix(in oklab, var(--color-black) 70%, transparent);
-  --prose-th-borders: var(--color-gray-300);
-  --prose-td-borders: var(--color-gray-200);
-  --prose-hr-color: color-mix(in oklab, var(--color-gray-950) 5%, transparent);
-  --prose-blockquote-border-color: color-mix(in oklab, var(--color-black) 15%, transparent);
-
-  @media (prefers-color-scheme: dark) {
-    --prose-color: color-mix(in oklab, var(--color-white) 80%, transparent);
-    --prose-heading-color: var(--color-white);
-    --prose-strong-color: var(--color-white);
-    --prose-link-color: var(--color-white);
-    --prose-code-color: var(--color-white);
-    --prose-marker-color: color-mix(in oklab, var(--color-white) 80%, transparent);
-    --prose-link-underline-color: color-mix(in oklab, var(--color-white) 70%, transparent);
-    --prose-th-borders: var(--color-gray-600);
-    --prose-td-borders: var(--color-gray-700);
-    --prose-hr-color: color-mix(in oklab, var(--color-white) 10%, transparent);
-    --prose-blockquote-border-color: color-mix(in oklab, var(--color-white) 30%, transparent);
-  }
+  --prose-color: var(--ink);
+  --prose-heading-color: var(--ink);
+  --prose-strong-color: var(--ink);
+  --prose-link-color: var(--ink);
+  --prose-code-color: var(--ink);
+  --prose-marker-color: var(--muted);
+  --prose-link-underline-color: var(--blue);
+  --prose-th-borders: var(--line);
+  --prose-td-borders: var(--line);
+  --prose-hr-color: var(--line);
+  --prose-blockquote-border-color: var(--line);
 
   color: var(--prose-color);
   font-size: var(--text-base);

@@ -1,14 +1,8 @@
 ---
-import { ClientRouter } from 'astro:transitions'
 
-import '@fontsource-variable/inconsolata'
 import '~/styles.css'
 
-import * as Effect from 'effect/Effect'
-import * as Exit from 'effect/Exit'
-
-import * as Author from '~/lib/Author'
-import { Runtime } from '~/lib/Runtime'
+import { author } from '~/lib/Author'
 
 interface Props {
   title?: string
@@ -28,24 +22,10 @@ const {
 
 const includeAnalytics = import.meta.env.PROD
 
-const handleRequest = Effect.gen(function* () {
-  const authorService = yield* Author.Service
 
-  const author = yield* authorService.me()
-
-  return { author }
-})
-
-const result = await Runtime.runPromiseExit(handleRequest.pipe(Effect.tapError(Effect.logError)))
-
-if (Exit.isFailure(result)) {
-  throw new Error('Failed to fetch author', { cause: result.cause })
-}
-
-const { author } = result.value
 ---
 
-<html lang='en'>
+<html lang='en' class='scroll-smooth bg-site-paper'>
   <head
     prefix={['og: https://ogp.me/ns#', type === 'article' && 'article: http://ogp.me/ns/article#']
       .filter(Boolean)
@@ -78,7 +58,39 @@ const { author } = result.value
     <meta name='viewport' content='width=device-width,initial-scale=1' />
     <meta name='generator' content={Astro.generator} />
     <title>{title}</title>
+    <link
+      rel='alternate'
+      type='application/rss+xml'
+      title='Mackie Underdown'
+      href='/rss.xml'
+    />
+    <script is:inline>
+      {
+        const storageKey = 'mackie.theme'
 
+        let theme = 'light'
+
+        try {
+          const storedTheme = localStorage.getItem(storageKey)
+          if (storedTheme && storedTheme !== 'dark' && storedTheme !== 'light') {
+            localStorage.removeItem(storageKey)
+          }
+          theme =
+            storedTheme === 'dark' || storedTheme === 'light'
+              ? storedTheme
+              : matchMedia('(prefers-color-scheme: dark)').matches
+                ? 'dark'
+                : 'light'
+        } catch {}
+
+        document.documentElement.dataset.theme = theme
+        document.documentElement.style.colorScheme = theme
+      }
+    </script>
+
+
+
+    <link rel='icon' type='image/svg+xml' href='/favicon.svg' />
     <link rel='icon' type='image/png' href='/favicon.png' />
 
     {
@@ -91,23 +103,81 @@ const { author } = result.value
         />
       )
     }
-    <ClientRouter />
   </head>
 
-  <body
-    class='container mx-auto min-h-screen justify-items-center bg-white/95 font-mono text-black/95 dark:bg-black/95 dark:text-white/95'
-  >
-    <div class='space-y-2 py-8 text-center'>
-      <h1 class='text-4xl font-black'>{author.name}</h1>
-      <div>{author.bio}</div>
+  <body class='m-0 min-w-80 bg-site-paper font-body text-base leading-[1.6] text-site-ink [text-rendering:optimizeLegibility]'>
+    <header class='mx-auto flex w-[min(100%-3rem,84rem)] items-center justify-between border-b border-site-ink py-3 font-mono text-[0.8125rem] tabular-nums max-catalogue:w-[min(100%-3rem,48rem)] max-handset:w-[min(100%-2rem,42rem)] max-handset:py-2'>
+      <a class='inline-flex min-h-11 w-fit items-center font-semibold tracking-[-0.04em] no-underline' href='/' aria-label='Mackie home'>
+        <span class='mr-2 size-3 border-2 border-site-ink bg-site-green' aria-hidden='true'></span>
+        Mackie
+      </a>
+      <nav class='flex gap-2 max-handset:gap-1' aria-label='Primary navigation'>
+        <a class='inline-flex min-h-11 items-center px-3 text-site-muted no-underline transition-colors duration-150 ease-out hover:bg-site-green hover:text-site-ink focus-visible:bg-site-green focus-visible:text-site-ink max-handset:px-1' href='/about'>About</a>
+        <a class='inline-flex min-h-11 items-center px-3 text-site-muted no-underline transition-colors duration-150 ease-out hover:bg-site-green hover:text-site-ink focus-visible:bg-site-green focus-visible:text-site-ink max-handset:px-1' href={`https://github.com/${author.githubHandle.slice(1)}`} rel='me'>GitHub ↗</a>
+        <button
+          class='grid size-11 cursor-pointer place-items-center border border-site-line bg-transparent p-0 text-site-muted transition-colors duration-150 ease-out hover:bg-site-green hover:text-site-green-ink focus-visible:bg-site-green focus-visible:text-site-green-ink dark:border-site-blue dark:text-site-ink'
+          type='button'
+          data-theme-toggle
+          aria-label='Switch to dark mode'
+          aria-pressed='false'
+          title='Switch to dark mode'
+        >
+          <svg class='pointer-events-none size-4 fill-none stroke-current [stroke-linecap:square] [stroke-linejoin:miter] [stroke-width:1.75] dark:hidden' aria-hidden='true' viewBox='0 0 24 24'>
+            <path d='M20.6 15.8A8.5 8.5 0 0 1 8.2 3.4 8.5 8.5 0 1 0 20.6 15.8Z' />
+          </svg>
+          <svg class='pointer-events-none hidden size-4 fill-none stroke-current [stroke-linecap:square] [stroke-linejoin:miter] [stroke-width:1.75] dark:block' aria-hidden='true' viewBox='0 0 24 24'>
+            <circle cx='12' cy='12' r='3.5' />
+            <path d='M12 2.5v2.25M12 19.25v2.25M2.5 12h2.25M19.25 12h2.25M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M18.7 5.3l-1.6 1.6M6.9 17.1l-1.6 1.6' />
+          </svg>
+        </button>
+      </nav>
+    </header>
+    <main class='mx-auto w-[min(100%-3rem,84rem)] max-catalogue:w-[min(100%-3rem,48rem)] max-handset:w-[min(100%-2rem,42rem)]'>
+      <slot />
+    </main>
+    <script is:inline>
       {
-        Astro.url.pathname !== '/' && (
-          <a class='underline' href='/'>
-            ← back
-          </a>
-        )
+        const storageKey = 'mackie.theme'
+
+        const currentTheme = () =>
+          document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light'
+
+        const syncThemeToggle = () => {
+          const toggle = document.querySelector('[data-theme-toggle]')
+
+          if (!toggle) {
+            return
+          }
+
+          const isDark = currentTheme() === 'dark'
+          const action = isDark ? 'light' : 'dark'
+
+          toggle.setAttribute('aria-label', `Switch to ${action} mode`)
+          toggle.setAttribute('aria-pressed', String(isDark))
+          toggle.setAttribute('title', `Switch to ${action} mode`)
+
+          toggle.onclick = () => {
+            const theme = currentTheme() === 'dark' ? 'light' : 'dark'
+            const root = document.documentElement
+
+            root.classList.add('theme-switching')
+            root.dataset.theme = theme
+            root.style.colorScheme = theme
+
+            try {
+              localStorage.setItem(storageKey, theme)
+            } catch {}
+
+            requestAnimationFrame(() => {
+              root.classList.remove('theme-switching')
+            })
+
+            syncThemeToggle()
+          }
+        }
+
+        syncThemeToggle()
       }
-    </div>
-    <slot />
+    </script>
   </body>
 </html>

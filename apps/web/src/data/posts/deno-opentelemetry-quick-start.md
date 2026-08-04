@@ -1,7 +1,7 @@
 ---
 date: "2025-06-14"
 title: "A quick start with Deno OpenTelemetry and Grafana"
-description: "Here are the simple steps needed to get Deno's built-in OpenTelemetry logs and traces into a locally running Grafana stack."
+description: "Send Deno's built-in OpenTelemetry logs and traces to a local Grafana stack."
 ---
 
 I'm very excited about the [built-in OpenTelemetry support in Deno](https://docs.deno.com/runtime/fundamentals/open_telemetry/) as of Deno 2.2. I usually have trouble getting OpenTelemetry logs and traces working in a Node.js app and surfaced in Grafana, but with Deno, there is much less setup.
@@ -94,6 +94,6 @@ Now make a GET request to http://localhost:8000 and another to http://localhost:
 
 Without any console.log statements or any other code to set up HTTP tracing, Deno captures key information and exports it for viewing in Grafana!
 
-![Grafana trace view](/public/assets/grafana-trace.png)
+![Grafana trace view](/assets/grafana-trace.png)
 
 Play around with adding `console.log` statements and [custom trace spans](https://docs.deno.com/runtime/fundamentals/open_telemetry/#traces-1) to see what else you can report. 🪵

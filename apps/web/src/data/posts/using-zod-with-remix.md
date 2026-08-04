@@ -1,7 +1,7 @@
 ---
 date: "2023-05-04"
 title: Using Zod with Remix
-description: Here are some of my suggestions for using Zod with Remix
+description: What I’ve learned using Zod to validate Remix forms and requests.
 ---
 
 I've recently been using [Zod][] to validate data in [Remix][] projects.

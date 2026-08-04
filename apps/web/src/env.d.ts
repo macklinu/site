@@ -6,6 +6,4 @@ declare module "*.wasm" {
   export default wasm;
 }
 
-declare module "@fontsource-variable/inconsolata";
-
 declare var __isWasmInitialized__: boolean;

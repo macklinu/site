@@ -1,0 +1,33 @@
+---
+import { DateTime } from 'effect'
+
+import EntryKindBadge from '~/components/EntryKindBadge.astro'
+import { formatFullDate } from '~/lib/DateFormat'
+import type { EntryKind } from '~/lib/Entry'
+
+interface Props {
+  title: string
+  kind: EntryKind
+  date: DateTime.Utc
+}
+
+const { title, kind, date } = Astro.props
+
+---
+
+<article class="m-0 w-full max-w-[38rem] pt-[clamp(2.5rem,5vw,4.5rem)] pb-16">
+  <header class="mb-[clamp(2rem,4vw,3rem)] max-w-[38rem] border-b-2 border-site-ink pb-8">
+    <EntryKindBadge kind={kind} />
+    <h1
+      class="mt-4 mb-6 max-w-[13ch] font-display text-[clamp(2.6rem,5vw,4.5rem)] font-bold leading-[0.88] tracking-[-0.07em] [font-variation-settings:'opsz'_48,_'wdth'_88]"
+    >
+      {title}
+    </h1>
+    <div class="flex items-center gap-2 font-mono text-xs leading-[1.35] tracking-[0.04em] text-site-muted before:h-0.5 before:w-10 before:bg-site-blue before:content-['']">
+      <time datetime={DateTime.formatIsoDate(date)}>{formatFullDate(date.epochMilliseconds)}</time>
+    </div>
+  </header>
+  <div class="prose max-w-[38rem] font-body text-[1.0625rem] leading-7 text-site-ink">
+    <slot />
+  </div>
+</article>
