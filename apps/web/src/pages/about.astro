@@ -1,17 +1,6 @@
 ---
-import { Effect } from 'effect'
-
 import Layout from '~/Layout.astro'
-import * as Author from '~/lib/Author'
-import { Runtime } from '~/lib/Runtime'
-
-const author = await Runtime.runPromise(
-  Effect.gen(function* () {
-    const authorService = yield* Author.Service
-
-    return yield* authorService.me()
-  }),
-)
+import { author } from '~/lib/Author'
 ---
 
 <Layout title='About' description={author.bio}>

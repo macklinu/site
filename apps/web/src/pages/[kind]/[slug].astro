@@ -1,48 +1,38 @@
 ---
-import { getCollection, render } from 'astro:content'
+import { render } from 'astro:content'
 import { DateTime, Effect } from 'effect'
 
 import EntryArticle from '~/components/EntryArticle.astro'
 import Layout from '~/Layout.astro'
+import { listContentRoutes } from '~/lib/ContentRoute'
 import { Runtime } from '~/lib/Runtime'
-
 
 export const getStaticPaths = () =>
   Runtime.runPromise(
-    Effect.tryPromise(() =>
-      Promise.all([
-        getCollection('notes'),
-        getCollection('demos'),
-        getCollection('guides'),
-      ])
-    ).pipe(
-      Effect.map(([notes, demos, guides]) => [
-        ...notes.map((entry) => ({
-          params: { kind: 'notes', slug: entry.id },
-          props: { entry },
-        })),
-        ...demos.map((entry) => ({
-          params: { kind: 'demos', slug: entry.id },
-          props: { entry },
-        })),
-        ...guides.map((entry) => ({
-          params: { kind: 'guides', slug: entry.id },
-          props: { entry },
-        })),
-      ]),
-      Effect.orDie,
-      Effect.withSpan('listContentStaticPaths')
+    listContentRoutes().pipe(
+      Effect.map((routes) =>
+        routes.map(({ kind, entry }) => ({
+          params: { kind, slug: entry.id },
+          props: { entry, kind },
+        }))
+      )
     )
   )
 
-const { entry } = Astro.props
+const { entry, kind } = Astro.props
 const { Content } = await render(entry)
 const date = 'updated' in entry.data ? entry.data.updated : entry.data.date
 const publicationDate = DateTime.makeUnsafe(date)
-const ogImage = new URL(`/${entry.data.kind}s/${entry.id}/og.png`, import.meta.env.SITE).toString()
+const ogImage = new URL(`/${kind}/${entry.id}/og.png`, import.meta.env.SITE).toString()
 ---
 
-<Layout title={entry.data.title} description={entry.data.description} ogImage={ogImage} type='article'>
+<Layout
+  title={entry.data.title}
+  description={entry.data.description}
+  ogImage={ogImage}
+  type='article'
+  publishedTime={DateTime.formatIso(publicationDate)}
+>
   <EntryArticle
     title={entry.data.title}
     kind={entry.data.kind}

@@ -1,44 +1,25 @@
 ---
-import { DateTime, Effect, Exit } from 'effect'
+import { getCollection } from 'astro:content'
+import { DateTime, Effect } from 'effect'
 import { Icon } from 'astro-icon/components'
 
 import EntryKindBadge from '~/components/EntryKindBadge.astro'
 import Layout from '~/Layout.astro'
 import { formatFullDate } from '~/lib/DateFormat'
-import * as Author from '~/lib/Author'
+import { author } from '~/lib/Author'
 import * as Entry from '~/lib/Entry'
-import * as Project from '~/lib/Project'
 import { Runtime } from '~/lib/Runtime'
 
-const handleRequest = Effect.gen(function* () {
-  const entryService = yield* Entry.Service
-  const projectService = yield* Project.Service
-  const authorService = yield* Author.Service
+const [entries, projects] = await Promise.all([
+  Runtime.runPromise(
+    Effect.gen(function* () {
+      const entryService = yield* Entry.Service
 
-  const [entries, projects, author] = yield* Effect.all(
-    [
-      entryService.list(),
-      projectService.list(),
-      authorService.me(),
-    ],
-    { concurrency: 'unbounded' }
-  )
-
-  return {
-    entries,
-    projects,
-    author,
-  }
-})
-
-const result = await Runtime.runPromiseExit(handleRequest.pipe(Effect.tapError(Effect.logError)))
-
-if (Exit.isFailure(result)) {
-  throw new Error('Failed to generate page', { cause: result.cause })
-}
-
-const { entries, projects, author } = result.value
-const recentEntries = entries
+      return yield* entryService.list()
+    })
+  ),
+  getCollection('projects'),
+])
 
 ---
 
@@ -60,11 +41,11 @@ const recentEntries = entries
       </header>
       <ul class='m-0 grid list-none grid-cols-2 gap-x-[clamp(1rem,3vw,3rem)] border-t border-site-ink p-0 max-handset:grid-cols-1'>
         {
-          projects.map(({ name, description, href }) => (
+          projects.map(({ data: { title, description, href } }) => (
             <li class='border-b border-site-line'>
               <a class='group grid min-h-24 grid-cols-[minmax(0,1fr)_1.5rem] items-start gap-[clamp(0.75rem,1.35vw,1.5rem)] px-2 py-4 text-inherit no-underline transition-colors duration-150 ease-out hover:bg-site-surface focus-visible:bg-site-surface max-handset:min-h-0 max-handset:gap-2 max-handset:px-1' href={href} target='_blank' rel='noopener noreferrer'>
                 <div>
-                  <h3 class='m-0 font-body text-[clamp(1.05rem,1.4vw,1.28rem)] font-[650] leading-[1.2] tracking-[-0.025em] underline decoration-2 decoration-transparent underline-offset-[0.2em] transition-colors duration-150 ease-out group-hover:decoration-site-blue group-focus-visible:decoration-site-blue'>{name}</h3>
+                  <h3 class='m-0 font-body text-[clamp(1.05rem,1.4vw,1.28rem)] font-[650] leading-[1.2] tracking-[-0.025em] underline decoration-2 decoration-transparent underline-offset-[0.2em] transition-colors duration-150 ease-out group-hover:decoration-site-blue group-focus-visible:decoration-site-blue'>{title}</h3>
                   <p class='mt-1 text-[0.9375rem] leading-[1.45] text-site-muted'>{description}</p>
                 </div>
                 <span class='col-start-2 row-start-1 self-center font-mono text-[1.05rem] leading-none text-site-ink transition-transform duration-200 ease-out group-hover:translate-x-1 group-hover:-translate-y-1 group-focus-visible:translate-x-1 group-focus-visible:-translate-y-1' aria-hidden='true'>↗</span>
@@ -81,7 +62,7 @@ const recentEntries = entries
       </header>
       <ul class='m-0 list-none border-t border-site-ink p-0'>
         {
-          recentEntries.map((entry) => (
+          entries.map((entry) => (
             <li class='border-b border-site-line'>
               <a
                 class='group grid min-h-24 grid-cols-[4rem_7rem_minmax(0,1fr)] items-start gap-[clamp(0.75rem,1.35vw,1.5rem)] px-2 py-4 text-inherit no-underline transition-colors duration-150 ease-out hover:bg-site-surface focus-visible:bg-site-surface max-handset:min-h-0 max-handset:grid-cols-[minmax(0,1fr)_max-content] max-handset:gap-2 max-handset:px-1'

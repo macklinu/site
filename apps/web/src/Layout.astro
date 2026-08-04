@@ -2,11 +2,7 @@
 
 import '~/styles.css'
 
-import * as Effect from 'effect/Effect'
-import * as Exit from 'effect/Exit'
-
-import * as Author from '~/lib/Author'
-import { Runtime } from '~/lib/Runtime'
+import { author } from '~/lib/Author'
 
 interface Props {
   title?: string
@@ -26,21 +22,7 @@ const {
 
 const includeAnalytics = import.meta.env.PROD
 
-const handleRequest = Effect.gen(function* () {
-  const authorService = yield* Author.Service
 
-  const author = yield* authorService.me()
-
-  return { author }
-})
-
-const result = await Runtime.runPromiseExit(handleRequest.pipe(Effect.tapError(Effect.logError)))
-
-if (Exit.isFailure(result)) {
-  throw new Error('Failed to fetch author', { cause: result.cause })
-}
-
-const { author } = result.value
 ---
 
 <html lang='en' class='scroll-smooth bg-site-paper'>
