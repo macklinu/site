@@ -8,16 +8,9 @@ import Layout from '~/Layout.astro'
 import { formatFullDate } from '~/lib/DateFormat'
 import { author } from '~/lib/Author'
 import * as Entry from '~/lib/Entry'
-import { Runtime } from '~/lib/Runtime'
 
 const [entries, projects] = await Promise.all([
-  Runtime.runPromise(
-    Effect.gen(function* () {
-      const entryService = yield* Entry.Service
-
-      return yield* entryService.list()
-    })
-  ),
+  Effect.runPromise(Entry.list()),
   getCollection('projects'),
 ])
 

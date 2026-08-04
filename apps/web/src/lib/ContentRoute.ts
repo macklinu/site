@@ -17,5 +17,4 @@ export const listContentRoutes = () =>
       ...guides.map((entry) => ({ kind: "guides" as const, entry })),
     ]),
     Effect.orDie,
-    Effect.withSpan("listContentRoutes"),
   );

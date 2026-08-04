@@ -1,37 +1,27 @@
 import { getCollection } from "astro:content";
-import { Context, DateTime, Effect, Layer, Schema } from "effect";
+import { DateTime, Effect } from "effect";
 
-import * as Slug from "~/lib/Slug";
+export type EntryKind = "article" | "note" | "demo" | "guide";
 
-export const EntryKind = Schema.Union([
-  Schema.Literal("article"),
-  Schema.Literal("note"),
-  Schema.Literal("demo"),
-  Schema.Literal("guide"),
-]);
-export type EntryKind = typeof EntryKind.Type;
+export type Entry = {
+  readonly kind: EntryKind;
+  readonly title: string;
+  readonly slug: string;
+  readonly description: string;
+  readonly publicationDate: DateTime.Utc;
+  readonly topics: readonly string[];
+  readonly href: string;
+};
 
-export const Entry = Schema.Struct({
-  kind: EntryKind,
-  title: Schema.String,
-  slug: Slug.UrlSlug,
-  description: Schema.String,
-  publicationDate: Schema.DateTimeUtc,
-  topics: Schema.Array(Schema.String),
-  href: Schema.String,
-});
-export type Entry = typeof Entry.Type;
-
-const EntrySource = Schema.Struct({
-  id: Schema.String,
-  data: Schema.Struct({
-    title: Schema.String,
-    description: Schema.String,
-    date: Schema.String,
-    topics: Schema.Array(Schema.String),
-  }),
-});
-type EntrySource = typeof EntrySource.Type;
+type EntrySource = {
+  readonly id: string;
+  readonly data: {
+    readonly title: string;
+    readonly description: string;
+    readonly date: string;
+    readonly topics: readonly string[];
+  };
+};
 
 const toEntry = (
   entry: EntrySource,
@@ -41,22 +31,21 @@ const toEntry = (
 ): Entry => ({
   kind,
   title: entry.data.title,
-  slug: Slug.UrlSlug.make(entry.id),
+  slug: entry.id,
   description: entry.data.description,
   publicationDate: DateTime.makeUnsafe(publicationDate),
   topics: entry.data.topics,
   href,
 });
 
-export const RssItem = Schema.Struct({
-  title: Schema.String,
-  description: Schema.String,
-  href: Schema.String,
-  publicationDate: Schema.DateTimeUtc,
-});
-export type RssItem = typeof RssItem.Type;
+export type RssItem = {
+  readonly title: string;
+  readonly description: string;
+  readonly href: string;
+  readonly publicationDate: DateTime.Utc;
+};
 
-const list = () =>
+export const list = () =>
   Effect.tryPromise(() =>
     Promise.all([
       getCollection("articles"),
@@ -76,36 +65,20 @@ const list = () =>
       ].sort((a, b) => b.publicationDate.epochMilliseconds - a.publicationDate.epochMilliseconds),
     ),
     Effect.orDie,
-    Effect.withSpan("Entry.Service.list"),
   );
 
-export class Service extends Context.Service<
-  Service,
-  {
-    readonly list: () => Effect.Effect<readonly Entry[]>;
-    readonly listRssItems: () => Effect.Effect<readonly RssItem[]>;
-  }
->()("@mackie/web/lib/Entry/Service") {
-  static readonly layerAstro = Layer.succeed(
-    Service,
-    Service.of({
-      list,
-      listRssItems: () =>
-        list().pipe(
-          Effect.map((entries) =>
-            entries
-              .filter((entry) => entry.kind !== "demo")
-              .map(
-                (entry): RssItem => ({
-                  title: entry.title,
-                  description: entry.description,
-                  href: entry.href,
-                  publicationDate: entry.publicationDate,
-                }),
-              ),
-          ),
-          Effect.withSpan("Entry.Service.listRssItems"),
+export const listRssItems = () =>
+  list().pipe(
+    Effect.map((entries) =>
+      entries
+        .filter((entry) => entry.kind !== "demo")
+        .map(
+          (entry): RssItem => ({
+            title: entry.title,
+            description: entry.description,
+            href: entry.href,
+            publicationDate: entry.publicationDate,
+          }),
         ),
-    }),
+    ),
   );
-}

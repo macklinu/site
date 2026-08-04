@@ -5,19 +5,18 @@ import { DateTime, Effect } from 'effect'
 import EntryArticle from '~/components/EntryArticle.astro'
 import Layout from '~/Layout.astro'
 import { listContentRoutes } from '~/lib/ContentRoute'
-import { Runtime } from '~/lib/Runtime'
 
 export const getStaticPaths = () =>
-  Runtime.runPromise(
+  Effect.runPromise(
     listContentRoutes().pipe(
       Effect.map((routes) =>
         routes.map(({ kind, entry }) => ({
           params: { kind, slug: entry.id },
           props: { entry, kind },
-        }))
-      )
-    )
-  )
+        })),
+      ),
+    ),
+  );
 
 const { entry, kind } = Astro.props
 const { Content } = await render(entry)
