@@ -1,5 +1,6 @@
 // @ts-check
 import react from "@astrojs/react";
+import mdx from "@astrojs/mdx";
 import tailwind from "@tailwindcss/vite";
 import expressiveCode from "astro-expressive-code";
 import icon from "astro-icon";
@@ -26,6 +27,7 @@ export default defineConfig({
         },
       },
     }),
+    mdx(),
     icon(),
   ],
   vite: {
