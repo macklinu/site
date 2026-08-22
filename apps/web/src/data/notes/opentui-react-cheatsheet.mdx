@@ -1,0 +1,95 @@
+---
+title: OpenTUI React cheat sheet
+description: Commands and links to create and test an OpenTUI React app.
+date: "2026-08-21"
+topics:
+  - OpenTUI
+  - React
+  - TUI
+---
+
+## Official resources
+
+| Resource               | Link                                                                       |
+| ---------------------- | -------------------------------------------------------------------------- |
+| React bindings         | [OpenTUI docs](https://opentui.com/docs/bindings/react)                    |
+| Components             | [OpenTUI docs](https://opentui.com/docs/components)                        |
+| OpenTUI agent skill    | [skills.sh](https://skills.sh/anomalyco/opentui/opentui)                   |
+| terminal-control skill | [skills.sh](https://skills.sh/anomalyco/terminal-control/terminal-control) |
+
+```bash
+npx skills add anomalyco/opentui --skill opentui
+npx skills add anomalyco/terminal-control --skill terminal-control
+```
+
+## Create a React app
+
+[`create-tui`](https://github.com/msmps/create-tui)
+
+```bash
+bun create tui -t react my-tui
+cd my-tui
+bun install
+bun dev
+```
+
+```tsx title="src/index.tsx"
+import { createCliRenderer } from "@opentui/core";
+import { createRoot, useKeyboard, useRenderer } from "@opentui/react";
+
+function App() {
+  const renderer = useRenderer();
+
+  useKeyboard((key) => {
+    if (key.name === "escape") {
+      renderer.destroy();
+    }
+  });
+
+  return <text>Press Escape to quit.</text>;
+}
+
+const renderer = await createCliRenderer();
+createRoot(renderer).render(<App />);
+```
+
+TypeScript JSX:
+
+```json
+{
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "jsxImportSource": "@opentui/react"
+  }
+}
+```
+
+## Test renderer
+
+```tsx
+import { testRender } from "@opentui/react/test-utils";
+
+const app = await testRender(<App />, { width: 80, height: 24 });
+await app.renderer.destroy();
+```
+
+## Terminal control
+
+[repo](https://github.com/anomalyco/terminal-control)
+
+```bash
+termctrl start demo --host opentui --cols 112 --rows 34 -- my-tui
+termctrl wait demo "Press Escape"
+termctrl show demo
+termctrl save demo --format png --out captures/home.png
+termctrl stop demo
+```
+
+## Community libraries
+
+| Resource        | What                                      | Link                                                                                           |
+| --------------- | ----------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| termcn          | Ready-made component registry             | [Docs](https://termcn.dev/docs/components) · [GitHub](https://github.com/shadcn-labs/termcn)   |
+| tuiparts        | OpenTUI primitives and editable recipes   | [Registry](https://tuiparts.sh/docs/registry) · [GitHub](https://github.com/tuiparts/tuiparts) |
+| opentui-spinner | Focused spinner package                   | [GitHub](https://github.com/msmps/opentui-spinner)                                             |
+| ghostty-opentui | ANSI parser and OpenTUI terminal renderer | [GitHub](https://github.com/remorses/ghostty-opentui)                                          |
