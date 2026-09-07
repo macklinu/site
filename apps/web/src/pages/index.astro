@@ -58,12 +58,12 @@ const [entries, projects] = await Promise.all([
           entries.map((entry) => (
             <li class='border-b border-site-line'>
               <a
-                class='group grid min-h-24 grid-cols-[4rem_7rem_minmax(0,1fr)] items-start gap-[clamp(0.75rem,1.35vw,1.5rem)] px-2 py-4 text-inherit no-underline transition-colors duration-150 ease-out hover:bg-site-surface focus-visible:bg-site-surface max-handset:min-h-0 max-handset:grid-cols-[minmax(0,1fr)_max-content] max-handset:gap-2 max-handset:px-1'
+                class='group grid min-h-24 grid-cols-[4rem_max-content_minmax(0,1fr)] items-start gap-[clamp(0.75rem,1.35vw,1.5rem)] px-2 py-4 text-inherit no-underline transition-colors duration-150 ease-out hover:bg-site-surface focus-visible:bg-site-surface max-handset:min-h-0 max-handset:grid-cols-[minmax(0,1fr)_max-content] max-handset:gap-2 max-handset:px-1'
                 href={entry.href}
               >
                 <EntryKindBadge kind={entry.kind} class='min-w-16 justify-center max-handset:col-start-1' />
                 <time
-                  class='pt-1 font-mono text-xs leading-[1.35] text-site-muted tabular-nums max-handset:col-start-2 max-handset:row-start-1 max-handset:min-w-[14ch] max-handset:justify-self-end max-handset:whitespace-nowrap'
+                  class='whitespace-nowrap pt-1 font-mono text-xs leading-[1.35] text-site-muted tabular-nums max-handset:col-start-2 max-handset:row-start-1 max-handset:min-w-[14ch] max-handset:justify-self-end'
                   datetime={DateTime.formatIsoDate(entry.publicationDate)}
                 >
                   {formatFullDate(entry.publicationDate.epochMilliseconds)}
