@@ -10,7 +10,6 @@ import {
   Option,
   Path,
   Schema,
-  SchemaGetter,
 } from "effect";
 import { Command } from "effect/unstable/cli";
 import matter from "gray-matter";
@@ -20,23 +19,15 @@ import pkg from "../package.json" with { type: "json" };
 const DEFAULT_DATA_DIRECTORY = fileURLToPath(new URL("../../web/src/data/", import.meta.url));
 const DOCUMENT_READ_CONCURRENCY = 16;
 
-const WebId = Schema.String.check(Schema.isUUID()).pipe(
-  Schema.decode({
-    decode: SchemaGetter.transform((webId: string) => webId.toLowerCase()),
-    encode: SchemaGetter.transform((webId: string) => webId.toLowerCase()),
-  }),
-);
-
 const LinkedFrontmatter = Schema.Struct({
-  webId: WebId,
-}).pipe(Schema.encodeKeys({ webId: "web_id" }));
-interface LinkedFrontmatter extends Schema.Schema.Type<typeof LinkedFrontmatter> {}
+  web_id: Schema.optionalKey(Schema.String.check(Schema.isUUID())),
+});
 
 interface ParsedDocument {
   readonly body: string;
   readonly frontmatter: Readonly<Record<string, unknown>>;
   readonly path: string;
-  readonly webId: LinkedFrontmatter["webId"];
+  readonly webId: string;
 }
 
 class ObsidianSyncError extends Schema.TaggedErrorClass<ObsidianSyncError>()("ObsidianSyncError", {
@@ -60,30 +51,40 @@ const parseLinkedDocument = Effect.fn("ObsidianSync.parseLinkedDocument")(functi
       }),
   });
 
-  return Option.map(
-    Schema.decodeUnknownOption(LinkedFrontmatter)(parsed.data),
-    (frontmatter) =>
-      ({
-        body: parsed.content,
-        frontmatter: parsed.data,
-        path,
-        webId: frontmatter.webId,
-      }) satisfies ParsedDocument,
+  const frontmatter = yield* Schema.decodeUnknownEffect(LinkedFrontmatter)(parsed.data).pipe(
+    Effect.mapError(
+      (cause) =>
+        new ObsidianSyncError({
+          message: `Invalid web_id in ${path}`,
+          cause,
+        }),
+    ),
   );
+
+  if (frontmatter.web_id === undefined) {
+    return Option.none();
+  }
+
+  return Option.some({
+    body: parsed.content,
+    frontmatter: parsed.data,
+    path,
+    webId: frontmatter.web_id.toLowerCase(),
+  } satisfies ParsedDocument);
 });
 
 const formatDocumentBody = Effect.fn("ObsidianSync.formatDocumentBody")(function* ({
   body,
-  path,
+  fileName,
 }: {
   readonly body: string;
-  readonly path: string;
+  readonly fileName: string;
 }) {
   const result = yield* Effect.tryPromise({
-    try: () => format(path, body),
+    try: () => format(fileName, body),
     catch: (cause) =>
       new ObsidianSyncError({
-        message: `Could not format ${path} for comparison`,
+        message: `Could not format ${fileName} for comparison`,
         cause,
       }),
   });
@@ -91,7 +92,7 @@ const formatDocumentBody = Effect.fn("ObsidianSync.formatDocumentBody")(function
 
   if (error !== undefined) {
     return yield* new ObsidianSyncError({
-      message: `Could not format ${path} for comparison: ${error.message}`,
+      message: `Could not format ${fileName} for comparison: ${error.message}`,
     });
   }
 
@@ -110,8 +111,8 @@ const contentHasChanged = Effect.fn("ObsidianSync.contentHasChanged")(function* 
   }
 
   const [formattedSource, formattedTarget] = yield* Effect.all([
-    formatDocumentBody({ body: source.body, path: target.path }),
-    formatDocumentBody({ body: target.body, path: target.path }),
+    formatDocumentBody({ body: source.body, fileName: target.path }),
+    formatDocumentBody({ body: target.body, fileName: target.path }),
   ]);
 
   return formattedSource !== formattedTarget;
@@ -173,13 +174,16 @@ const syncObsidian = Effect.fn("ObsidianSync.sync")(function* () {
   const vault = yield* Config.string("OBSIDIAN_VAULT");
   const vaultDocuments = yield* loadLinkedDocuments(vault);
   const webDocuments = yield* loadLinkedDocuments(DEFAULT_DATA_DIRECTORY);
-  yield* indexDocuments({ label: "Obsidian vault", documents: vaultDocuments });
+  const vaultIndex = yield* indexDocuments({
+    label: "Obsidian vault",
+    documents: vaultDocuments,
+  });
   const webIndex = yield* indexDocuments({ label: "web data", documents: webDocuments });
   let unchanged = 0;
   let unmatched = 0;
   let updated = 0;
 
-  for (const vaultDocument of vaultDocuments) {
+  for (const vaultDocument of vaultIndex.values()) {
     const webDocument = webIndex.get(vaultDocument.webId);
     const obsidianDocument = path.relative(vault, vaultDocument.path);
     if (webDocument === undefined) {
@@ -206,7 +210,8 @@ const syncObsidian = Effect.fn("ObsidianSync.sync")(function* () {
       continue;
     }
 
-    const updatedAt = DateTime.formatIso(yield* DateTime.now);
+    const now = yield* DateTime.now;
+    const updatedAt = DateTime.formatIso(now);
     const nextContent = yield* Effect.try({
       try: () =>
         matter.stringify(vaultDocument.body, {
