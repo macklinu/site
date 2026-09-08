@@ -29,7 +29,7 @@ Want pull-request previews without making production deployment a separate syste
 
 - Add the Alchemy and Cloudflare secrets to GitHub Actions.
 - Replace `example.com/*` with the production route.
-- Keep `nub run build` and `nub run astro dev` aligned with the app's normal build and dev commands.
+- Keep `nub run --node build` and `nub run --node astro dev` aligned with the app's normal build and dev commands.
 
 ## 1. Stage the resource
 
@@ -38,9 +38,9 @@ Effect.gen(function* () {
   const stage = yield* Alchemy.Stage;
   const website = yield* Cloudflare.Website.StaticSite("website", {
     name: `website-${stage}`,
-    command: "nub run build",
+    command: "nub run --node build",
     outdir: "dist",
-    dev: { command: "nub run astro dev" },
+    dev: { command: "nub run --node astro dev" },
     routes: stage === "prod" ? [{ pattern: "example.com/*" }] : undefined,
   });
 
