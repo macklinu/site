@@ -6,6 +6,7 @@ const documentFields = z.object({
   title: z.string().trim().min(1),
   description: z.string().trim().min(1),
   date: z.iso.date(),
+  updatedAt: z.iso.datetime().optional(),
   topics: z.array(z.string().trim().min(1)).max(4).default([]),
   related: z.array(z.string().trim().min(1)).max(6).default([]),
 });
@@ -36,7 +37,6 @@ const guides = defineCollection({
   loader: glob({ base: "./src/data/guides", pattern: "**/*.md" }),
   schema: documentFields.extend({
     kind: z.literal("guide").default("guide"),
-    updated: z.iso.date(),
   }),
 });
 

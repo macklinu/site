@@ -9,7 +9,8 @@
     "destroy": "turbo run destroy",
     "lint": "oxlint --disable-nested-config",
     "format": "oxfmt --disable-nested-config",
-    "format:check": "oxfmt --check --disable-nested-config ."
+    "format:check": "oxfmt --check --disable-nested-config .",
+    "apps/cli": "nub apps/cli/src/main.ts"
   },
   "devDependencies": {
     "@typescript/native": "npm:typescript@^7.0.2",

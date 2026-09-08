@@ -9,9 +9,10 @@ interface Props {
   title: string
   kind: EntryKind
   date: DateTime.Utc
+  updatedAt?: DateTime.Utc
 }
 
-const { title, kind, date } = Astro.props
+const { title, kind, date, updatedAt } = Astro.props
 
 ---
 
@@ -23,8 +24,20 @@ const { title, kind, date } = Astro.props
     >
       {title}
     </h1>
-    <div class="flex items-center gap-2 font-mono text-xs leading-[1.35] tracking-[0.04em] text-site-muted before:h-0.5 before:w-10 before:bg-site-blue before:content-['']">
-      <time datetime={DateTime.formatIsoDate(date)}>{formatFullDate(date.epochMilliseconds)}</time>
+    <div class="flex items-start gap-2 font-mono text-xs leading-[1.35] tracking-[0.04em] text-site-muted before:mt-2 before:h-0.5 before:w-10 before:bg-site-blue before:content-['']">
+      <div>
+        <time datetime={DateTime.formatIsoDate(date)}>{formatFullDate(date.epochMilliseconds)}</time>
+        {
+          updatedAt && (
+            <span class="mt-1 block text-[0.6875rem] tracking-[0.02em]">
+              Revised{' '}
+              <time datetime={DateTime.formatIso(updatedAt)}>
+                {formatFullDate(updatedAt.epochMilliseconds)}
+              </time>
+            </span>
+          )
+        }
+      </div>
     </div>
   </header>
   <div class="prose max-w-[38rem] font-body text-[1.0625rem] leading-7 text-site-ink">
