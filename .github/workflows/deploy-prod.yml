@@ -27,11 +27,8 @@ jobs:
       - uses: actions/checkout@v7
       - uses: nubjs/setup-nub@v0
         with:
-          nub-version: 0.5.0
-      - name: Set up pnpm shim
-        run: |
-          nub pm shim
-          echo "$HOME/.nub/shims" >> "$GITHUB_PATH"
+          nub-version: 0.8.3
+          shim: true
       - name: Install dependencies
         run: nub install --frozen-lockfile
       - name: Deploy

@@ -84,12 +84,10 @@ jobs:
       - uses: actions/checkout@v7
       - uses: nubjs/setup-nub@v0
         with:
-          nub-version: 0.5.0
-      - run: |
-          nub pm shim
-          echo "$HOME/.nub/shims" >> "$GITHUB_PATH"
+          nub-version: 0.8.3
+          shim: true
       - run: nub install --frozen-lockfile
-      - run: nub --cwd apps/web exec astro check
+      - run: nub exec --node --cwd apps/web astro check
 
   typecheck:
     runs-on: ubuntu-latest
@@ -97,12 +95,10 @@ jobs:
       - uses: actions/checkout@v7
       - uses: nubjs/setup-nub@v0
         with:
-          nub-version: 0.5.0
-      - run: |
-          nub pm shim
-          echo "$HOME/.nub/shims" >> "$GITHUB_PATH"
+          nub-version: 0.8.3
+          shim: true
       - run: nub install --frozen-lockfile
-      - run: nub --cwd apps/web exec astro sync
+      - run: nub exec --node --cwd apps/web astro sync
       - run: nub exec tsc --project apps/web/tsconfig.json --noEmit
 ```
 
