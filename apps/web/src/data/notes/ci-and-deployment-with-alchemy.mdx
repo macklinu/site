@@ -121,6 +121,7 @@ env:
   CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
   CLOUDFLARE_EMAIL: ${{ secrets.CLOUDFLARE_EMAIL }}
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  NODE_COMPAT: "1"
 ```
 
 ```yaml title=".github/workflows/deploy-preview.yml"
@@ -130,7 +131,7 @@ jobs:
       github.event.action != 'closed' &&
       github.event.pull_request.head.repo.full_name == github.repository
     steps:
-      # repeat the checkout, nub setup, shim, and install steps from verify.yml
+      # repeat the checkout, setup-nub, and install steps from verify.yml
       - run: nub run deploy -- --yes --stage ${{ env.STAGE }}
 
   cleanup-preview:
@@ -138,7 +139,7 @@ jobs:
       github.event.action == 'closed' &&
       github.event.pull_request.head.repo.full_name == github.repository
     steps:
-      # repeat the checkout, nub setup, shim, and install steps from verify.yml
+      # repeat the checkout, setup-nub, and install steps from verify.yml
       - run: nub run destroy -- --yes --stage ${{ env.STAGE }}
 ```
 

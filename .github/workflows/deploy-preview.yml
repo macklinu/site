@@ -17,6 +17,7 @@ env:
   CLOUDFLARE_EMAIL: ${{ secrets.CLOUDFLARE_EMAIL }}
   PULL_REQUEST: ${{ github.event.number }}
   BUILD_SHA: ${{ github.sha }}
+  NODE_COMPAT: "1"
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 jobs:
   deploy-preview:

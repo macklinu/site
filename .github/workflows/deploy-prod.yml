@@ -16,6 +16,7 @@ env:
   CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
   CLOUDFLARE_EMAIL: ${{ secrets.CLOUDFLARE_EMAIL }}
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  NODE_COMPAT: "1"
 jobs:
   verify:
     uses: ./.github/workflows/verify.yml
