@@ -2,6 +2,7 @@
 title: PR previews with Alchemy, Cloudflare, and GitHub Actions
 description: A small recipe for CI, disposable pull-request previews, and production deploys.
 date: "2026-08-04"
+updatedAt: "2026-09-08T15:52:18.860Z"
 topics:
   - GitHub Actions
   - Alchemy
@@ -29,7 +30,7 @@ Want pull-request previews without making production deployment a separate syste
 
 - Add the Alchemy and Cloudflare secrets to GitHub Actions.
 - Replace `example.com/*` with the production route.
-- Keep `nub run build` and `nub run astro dev` aligned with the app's normal build and dev commands.
+- Keep `nub run --node build` and `nub run --node astro dev` aligned with the app's normal build and dev commands.
 
 ## 1. Stage the resource
 
@@ -38,9 +39,9 @@ Effect.gen(function* () {
   const stage = yield* Alchemy.Stage;
   const website = yield* Cloudflare.Website.StaticSite("website", {
     name: `website-${stage}`,
-    command: "nub run build",
+    command: "nub run --node build",
     outdir: "dist",
-    dev: { command: "nub run astro dev" },
+    dev: { command: "nub run --node astro dev" },
     routes: stage === "prod" ? [{ pattern: "example.com/*" }] : undefined,
   });
 
@@ -84,12 +85,10 @@ jobs:
       - uses: actions/checkout@v7
       - uses: nubjs/setup-nub@v0
         with:
-          nub-version: 0.5.0
-      - run: |
-          nub pm shim
-          echo "$HOME/.nub/shims" >> "$GITHUB_PATH"
+          nub-version: 0.8.3
+          shim: true
       - run: nub install --frozen-lockfile
-      - run: nub --cwd apps/web exec astro check
+      - run: nub exec --node --cwd apps/web astro check
 
   typecheck:
     runs-on: ubuntu-latest
@@ -97,12 +96,10 @@ jobs:
       - uses: actions/checkout@v7
       - uses: nubjs/setup-nub@v0
         with:
-          nub-version: 0.5.0
-      - run: |
-          nub pm shim
-          echo "$HOME/.nub/shims" >> "$GITHUB_PATH"
+          nub-version: 0.8.3
+          shim: true
       - run: nub install --frozen-lockfile
-      - run: nub --cwd apps/web exec astro sync
+      - run: nub exec --node --cwd apps/web astro sync
       - run: nub exec tsc --project apps/web/tsconfig.json --noEmit
 ```
 
@@ -125,6 +122,7 @@ env:
   CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
   CLOUDFLARE_EMAIL: ${{ secrets.CLOUDFLARE_EMAIL }}
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  NODE_COMPAT: "1"
 ```
 
 ```yaml title=".github/workflows/deploy-preview.yml"
@@ -134,7 +132,7 @@ jobs:
       github.event.action != 'closed' &&
       github.event.pull_request.head.repo.full_name == github.repository
     steps:
-      # repeat the checkout, nub setup, shim, and install steps from verify.yml
+      # repeat the checkout, setup-nub, and install steps from verify.yml
       - run: nub run deploy -- --yes --stage ${{ env.STAGE }}
 
   cleanup-preview:
@@ -142,7 +140,7 @@ jobs:
       github.event.action == 'closed' &&
       github.event.pull_request.head.repo.full_name == github.repository
     steps:
-      # repeat the checkout, nub setup, shim, and install steps from verify.yml
+      # repeat the checkout, setup-nub, and install steps from verify.yml
       - run: nub run destroy -- --yes --stage ${{ env.STAGE }}
 ```
 

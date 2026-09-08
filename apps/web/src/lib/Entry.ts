@@ -23,17 +23,12 @@ type EntrySource = {
   };
 };
 
-const toEntry = (
-  entry: EntrySource,
-  kind: EntryKind,
-  href: string,
-  publicationDate = entry.data.date,
-): Entry => ({
+const toEntry = (entry: EntrySource, kind: EntryKind, href: string): Entry => ({
   kind,
   title: entry.data.title,
   slug: entry.id,
   description: entry.data.description,
-  publicationDate: DateTime.makeUnsafe(publicationDate),
+  publicationDate: DateTime.makeUnsafe(entry.data.date),
   topics: entry.data.topics,
   href,
 });
@@ -59,9 +54,7 @@ export const list = () =>
         ...articles.map((entry) => toEntry(entry, "article", `/posts/${entry.id}`)),
         ...notes.map((entry) => toEntry(entry, "note", `/notes/${entry.id}`)),
         ...demos.map((entry) => toEntry(entry, "demo", `/demos/${entry.id}`)),
-        ...guides.map((entry) =>
-          toEntry(entry, "guide", `/guides/${entry.id}`, entry.data.updated),
-        ),
+        ...guides.map((entry) => toEntry(entry, "guide", `/guides/${entry.id}`)),
       ].sort((a, b) => b.publicationDate.epochMilliseconds - a.publicationDate.epochMilliseconds),
     ),
     Effect.orDie,

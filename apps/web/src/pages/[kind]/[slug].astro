@@ -16,7 +16,6 @@ export const getStaticPaths = () =>
           props: {
             entry: route.entry,
             kind: route.kind,
-            date: route.kind === 'guides' ? route.entry.data.updated : route.entry.data.date,
           },
         })),
       ),
@@ -25,9 +24,10 @@ export const getStaticPaths = () =>
 type Props = InferGetStaticPropsType<typeof getStaticPaths>
 
 
-const { entry, kind, date } = Astro.props
+const { entry, kind } = Astro.props
 const { Content } = await render(entry)
-const publicationDate = DateTime.makeUnsafe(date)
+const publicationDate = DateTime.makeUnsafe(entry.data.date)
+const updatedAt = entry.data.updatedAt ? DateTime.makeUnsafe(entry.data.updatedAt) : undefined
 const ogImage = new URL(`/${kind}/${entry.id}/og.png`, import.meta.env.SITE).toString()
 ---
 
@@ -37,11 +37,13 @@ const ogImage = new URL(`/${kind}/${entry.id}/og.png`, import.meta.env.SITE).toS
   ogImage={ogImage}
   type='article'
   publishedTime={DateTime.formatIso(publicationDate)}
+  modifiedTime={updatedAt && DateTime.formatIso(updatedAt)}
 >
   <EntryArticle
     title={entry.data.title}
     kind={entry.data.kind}
     date={publicationDate}
+    updatedAt={updatedAt}
   >
     <Content />
   </EntryArticle>
