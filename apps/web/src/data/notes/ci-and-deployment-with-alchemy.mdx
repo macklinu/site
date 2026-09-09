@@ -2,7 +2,7 @@
 title: PR previews with Alchemy, Cloudflare, and GitHub Actions
 description: A small recipe for CI, disposable pull-request previews, and production deploys.
 date: "2026-08-04"
-updatedAt: "2026-09-08T15:52:18.860Z"
+updatedAt: "2026-09-09T15:05:20.000Z"
 topics:
   - GitHub Actions
   - Alchemy
@@ -85,7 +85,7 @@ jobs:
       - uses: actions/checkout@v7
       - uses: nubjs/setup-nub@v0
         with:
-          nub-version: 0.8.3
+          nub-version: 0.9.0
           shim: true
       - run: nub install --frozen-lockfile
       - run: nub exec --node --cwd apps/web astro check
@@ -96,7 +96,7 @@ jobs:
       - uses: actions/checkout@v7
       - uses: nubjs/setup-nub@v0
         with:
-          nub-version: 0.8.3
+          nub-version: 0.9.0
           shim: true
       - run: nub install --frozen-lockfile
       - run: nub exec --node --cwd apps/web astro sync
