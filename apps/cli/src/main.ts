@@ -11,9 +11,10 @@ import {
   Path,
   Schema,
 } from "effect";
-import { Command } from "effect/unstable/cli";
+import { Argument, Command } from "effect/unstable/cli";
 import matter from "gray-matter";
 import { format } from "oxfmt";
+import { selectWebMarkdownDocument, updateWebTimestamp } from "./web-timestamp.js";
 import pkg from "../package.json" with { type: "json" };
 
 const DEFAULT_DATA_DIRECTORY = fileURLToPath(new URL("../../web/src/data/", import.meta.url));
@@ -250,9 +251,33 @@ const obsidianCommand = Command.make("obsidian").pipe(
   Command.withSubcommands([syncCommand]),
 );
 
+const touchCommand = Command.make(
+  "touch",
+  {
+    file: Argument.file("file", { mustExist: true }).pipe(
+      Argument.optional,
+      Argument.withDescription("Markdown or MDX file. Omit to select one interactively."),
+    ),
+  },
+  Effect.fn("WebTimestamp.command")(function* ({ file }) {
+    const documentPath = Option.isSome(file) ? file.value : yield* selectWebMarkdownDocument();
+    const { relativePath, updatedAt } = yield* updateWebTimestamp(documentPath);
+    yield* Console.log(`Updated ${relativePath} at ${updatedAt}.`);
+  }),
+).pipe(
+  Command.withDescription(
+    "Set a Markdown or MDX file's updatedAt frontmatter timestamp to the current time.",
+  ),
+);
+
+const webCommand = Command.make("web").pipe(
+  Command.withDescription("Maintain files in the web application."),
+  Command.withSubcommands([touchCommand]),
+);
+
 const cli = Command.make(pkg.name).pipe(
   Command.withDescription("mackie.underdown.wiki maintenance commands."),
-  Command.withSubcommands([obsidianCommand]),
+  Command.withSubcommands([obsidianCommand, webCommand]),
 );
 
 Command.run(cli, { version: pkg.version }).pipe(
