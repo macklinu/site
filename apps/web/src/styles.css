@@ -3,6 +3,7 @@
 @import "@fontsource/ibm-plex-mono/400.css";
 @import "@fontsource/ibm-plex-mono/500.css";
 @import "@fontsource/ibm-plex-mono/600.css";
+@import "maplibre-gl/dist/maplibre-gl.css";
 @import "tailwindcss";
 @import "./typography.css" layer(components);
 
@@ -40,6 +41,11 @@
   --green-ink: oklch(0.26 0.06 145);
   --coral: oklch(0.57 0.2 27);
   --focus: oklch(0.43 0.16 240);
+  --amber: oklch(0.68 0.15 80);
+  --purple: oklch(0.52 0.18 320);
+  --orange: oklch(0.65 0.18 55);
+  --teal: oklch(0.5 0.13 190);
+  --transit: oklch(0.78 0.16 100);
   --ease-out: cubic-bezier(0.2, 0.7, 0, 1);
 }
 :root[data-theme="dark"] {
@@ -54,6 +60,11 @@
   --green-ink: oklch(0.18 0.045 150);
   --coral: oklch(0.7 0.13 30);
   --focus: oklch(0.78 0.1 235);
+  --amber: oklch(0.78 0.13 85);
+  --purple: oklch(0.65 0.14 320);
+  --orange: oklch(0.73 0.14 55);
+  --teal: oklch(0.5 0.1 190);
+  --transit: oklch(0.78 0.13 100);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -69,6 +80,11 @@
     --green-ink: oklch(0.18 0.045 150);
     --coral: oklch(0.7 0.13 30);
     --focus: oklch(0.78 0.1 235);
+    --amber: oklch(0.78 0.13 85);
+    --purple: oklch(0.65 0.14 320);
+    --orange: oklch(0.73 0.14 55);
+    --teal: oklch(0.5 0.1 190);
+    --transit: oklch(0.78 0.13 100);
   }
 }
 
@@ -89,5 +105,272 @@
   *::after {
     scroll-behavior: auto !important;
     transition-duration: 0.01ms !important;
+  }
+}
+
+.sf-map__filter-swatch {
+  display: inline-block;
+  flex: none;
+  width: 0.5rem;
+  height: 0.5rem;
+  box-shadow: 0 0 0 1px var(--ink);
+}
+
+.sf-map__filter-swatch[data-kind="food"] {
+  background: var(--coral);
+}
+
+.sf-map__filter-swatch[data-kind="coffee"] {
+  background: var(--amber);
+}
+
+.sf-map__filter-swatch[data-kind="books"] {
+  background: var(--blue);
+}
+
+.sf-map__filter-swatch[data-kind="art"] {
+  background: var(--purple);
+}
+
+.sf-map__filter-swatch[data-kind="nature"] {
+  background: var(--green);
+}
+
+.sf-map__filter-swatch[data-kind="shopping"] {
+  background: var(--orange);
+}
+
+.sf-map__filter-swatch[data-kind="community"] {
+  background: var(--teal);
+}
+
+.sf-map__filter-swatch[data-kind="sights"] {
+  background: var(--ink);
+}
+
+.sf-map__filter-swatch[data-kind="transit"] {
+  background: var(--transit);
+}
+
+.sf-map-marker {
+  display: grid;
+  z-index: 2;
+  box-sizing: border-box;
+  width: 1.85rem;
+  height: 1.85rem;
+  padding: 0;
+  place-items: center;
+  border: 2px solid var(--ink);
+  border-radius: 0;
+  appearance: none;
+  background: var(--blue);
+  color: var(--paper);
+  cursor: pointer;
+  line-height: 0;
+  transition:
+    outline-color 150ms var(--ease-out),
+    transform 150ms var(--ease-out);
+}
+
+.sf-map-marker[data-selected="true"] {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+  transform: scale(1.12);
+}
+
+.sf-map-marker svg {
+  display: block;
+  width: 1rem;
+  height: 1rem;
+  fill: none;
+  stroke: currentcolor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2;
+}
+
+.sf-map-marker[data-kind="food"] {
+  background: var(--coral);
+}
+
+.sf-map-marker[data-kind="coffee"] {
+  background: var(--amber);
+  color: var(--green-ink);
+}
+
+.sf-map-marker[data-kind="books"] {
+  background: var(--blue);
+}
+
+.sf-map-marker[data-kind="art"] {
+  background: var(--purple);
+}
+
+.sf-map-marker[data-kind="nature"] {
+  background: var(--green);
+  color: var(--green-ink);
+}
+
+.sf-map-marker[data-kind="shopping"] {
+  background: var(--orange);
+  color: var(--green-ink);
+}
+
+.sf-map-marker[data-kind="community"] {
+  background: var(--teal);
+}
+
+.sf-map-marker[data-kind="sights"] {
+  background: var(--ink);
+}
+
+.sf-map-marker[data-kind="transit"] {
+  background: var(--transit);
+  color: var(--green-ink);
+}
+
+.sf-map-marker:hover,
+.sf-map-marker:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+  transform: scale(1.12);
+}
+
+.sf-map-marker:active {
+  transform: scale(0.9);
+}
+
+.sf-map-user-marker {
+  display: block;
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 3px solid var(--paper);
+  border-radius: 50%;
+  outline: 2px solid var(--ink);
+  background: var(--blue);
+}
+
+.sf-map .maplibregl-popup {
+  z-index: 3;
+  max-width: min(20rem, calc(100vw - 3rem)) !important;
+}
+
+.sf-map .maplibregl-popup-content {
+  min-width: min(17rem, calc(100vw - 4rem));
+  padding: 1rem;
+  border: 2px solid var(--ink);
+  border-radius: 0;
+  background: var(--paper);
+  color: var(--ink);
+  box-shadow: 0.4rem 0.4rem 0 var(--green);
+  font-family: var(--font-body);
+}
+
+.sf-map .maplibregl-popup-close-button {
+  width: 2.25rem;
+  height: 2.25rem;
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 1.25rem;
+}
+
+.sf-map .maplibregl-popup-close-button:hover {
+  background: var(--surface);
+}
+
+.sf-map .maplibregl-popup-anchor-bottom .maplibregl-popup-tip {
+  border-top-color: var(--ink);
+}
+
+.sf-map .maplibregl-popup-anchor-top .maplibregl-popup-tip {
+  border-bottom-color: var(--ink);
+}
+
+.sf-map .maplibregl-popup-anchor-left .maplibregl-popup-tip {
+  border-right-color: var(--ink);
+}
+
+.sf-map .maplibregl-popup-anchor-right .maplibregl-popup-tip {
+  border-left-color: var(--ink);
+}
+
+.sf-map-popup__title {
+  margin: 0 2rem 0.375rem 0;
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 700;
+  font-style: normal;
+  line-height: 0.95;
+  letter-spacing: -0.035em;
+  overflow-wrap: anywhere;
+}
+
+.sf-map-popup__description,
+.sf-map-popup__address {
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.45;
+}
+
+.sf-map-popup__address {
+  margin-top: 0.5rem;
+  color: var(--muted);
+}
+
+.sf-map-popup__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  margin: 0.75rem 0;
+  padding: 0;
+  list-style: none;
+  color: var(--blue);
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  line-height: 1.35;
+  letter-spacing: 0.02em;
+}
+
+.sf-map-popup__tags li::before {
+  margin-right: 0.25rem;
+  color: var(--line);
+  content: "/";
+}
+
+.sf-map-popup__tags li:first-child::before {
+  display: none;
+}
+
+.sf-map-popup__link {
+  display: inline-flex;
+  min-height: 2.5rem;
+  align-items: center;
+  padding: 0.5rem 0.625rem;
+  background: var(--blue);
+  color: var(--paper);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.015em;
+  text-decoration: none;
+}
+
+.sf-map-popup__link:hover,
+.sf-map-popup__link:focus-visible {
+  background: var(--focus);
+  color: var(--paper);
+}
+
+@media (max-width: 38.75rem) {
+  .sf-map__toolbar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .sf-map__canvas {
+    min-height: min(31rem, 68svh);
   }
 }

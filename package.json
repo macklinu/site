@@ -10,15 +10,18 @@
     "lint": "oxlint --disable-nested-config",
     "format": "oxfmt --disable-nested-config",
     "format:check": "oxfmt --check --disable-nested-config .",
-    "apps/cli": "nub apps/cli/src/main.ts"
+    "apps/cli": "pnpm --dir apps/cli run start"
   },
   "devDependencies": {
     "@typescript/native": "npm:typescript@^7.0.2",
     "lefthook": "^2.1.10",
     "oxfmt": "^0.61.0",
     "oxlint": "^1.76.0",
+    "prettier": "^3.9.8",
+    "prettier-plugin-astro": "^1.0.1",
+    "tsx": "^4.23.15",
     "turbo": "^2.7.5",
     "typescript": "^6.0.2"
   },
-  "packageManager": "pnpm@11.18.0+sha512.33d83c77da82f49fba836925c6f1b841181ec3132b670639bd012f7075f5c7cf634c5f870147c19aae7478fac01df09d8892e880454896edd23ee9b33757563c"
+  "packageManager": "pnpm@12.5.1"
 }

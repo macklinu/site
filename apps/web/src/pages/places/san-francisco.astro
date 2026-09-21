@@ -1,0 +1,49 @@
+---
+import { getCollection } from "astro:content";
+
+import SanFranciscoMap from "~/components/SanFranciscoMap";
+import PlacesLayout from "~/layouts/PlacesLayout.astro";
+
+const places = (await getCollection("places"))
+  .map(({ id, body, data }) => ({
+    ...data,
+    slug: id,
+    description: body?.trim() ?? "",
+  }))
+  .sort((left, right) => left.title.localeCompare(right.title));
+const placeCount = places.filter((place) => place.kind === "place").length;
+const ogImage = new URL(
+  "/places/san-francisco/og.png",
+  import.meta.env.SITE,
+).toString();
+---
+
+<PlacesLayout
+  title="San Francisco"
+  description="My favorite places from when I lived in San Francisco from 2018 to 2020."
+  ogImage={ogImage}
+>
+  <article class="w-full py-[clamp(2.5rem,5vw,4.5rem)] pb-16">
+    <header class="max-w-[48rem] border-b-2 border-site-ink pb-8">
+      <a
+        class="font-mono text-xs tracking-[0.04em] text-site-blue"
+        href="/places"
+      >
+        Places
+      </a>
+      <h1 class='mt-4 mb-3 font-display text-[clamp(2.75rem,5vw,4.5rem)] font-bold leading-[0.88] tracking-[-0.07em] [font-variation-settings:"opsz"_48,_"wdth"_88]'>
+        San Francisco
+      </h1>
+      <p class="mb-0 max-w-[42rem] text-[1.0625rem] leading-7 text-site-muted">
+        My favorite places from when I lived in San Francisco from 2018 to 2020.
+      </p>
+    </header>
+
+    <section class="mt-10" aria-label="San Francisco places map">
+      <p class="mb-3 w-fit bg-site-green px-2 py-1 font-mono text-xs leading-[1.35] tracking-[0.04em] text-site-green-ink">
+        {placeCount} places
+      </p>
+      <SanFranciscoMap client:load places={places} />
+    </section>
+  </article>
+</PlacesLayout>

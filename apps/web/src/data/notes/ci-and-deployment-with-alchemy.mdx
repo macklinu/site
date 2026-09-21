@@ -30,7 +30,7 @@ Want pull-request previews without making production deployment a separate syste
 
 - Add the Alchemy and Cloudflare secrets to GitHub Actions.
 - Replace `example.com/*` with the production route.
-- Keep `nub run --node build` and `nub run --node astro dev` aligned with the app's normal build and dev commands.
+- Keep `pnpm run build` and `pnpm run astro dev` aligned with the app's normal build and dev commands.
 
 ## 1. Stage the resource
 
@@ -39,9 +39,9 @@ Effect.gen(function* () {
   const stage = yield* Alchemy.Stage;
   const website = yield* Cloudflare.Website.StaticSite("website", {
     name: `website-${stage}`,
-    command: "nub run --node build",
+    command: "pnpm run build",
     outdir: "dist",
-    dev: { command: "nub run --node astro dev" },
+    dev: { command: "pnpm run astro dev" },
     routes: stage === "prod" ? [{ pattern: "example.com/*" }] : undefined,
   });
 
@@ -83,24 +83,30 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - uses: nubjs/setup-nub@v0
+      - uses: pnpm/action-setup@v4
         with:
-          nub-version: 0.9.0
-          shim: true
-      - run: nub install --frozen-lockfile
-      - run: nub exec --node --cwd apps/web astro check
+          version: 11.18.0
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --dir apps/web exec astro check
 
   typecheck:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - uses: nubjs/setup-nub@v0
+      - uses: pnpm/action-setup@v4
         with:
-          nub-version: 0.9.0
-          shim: true
-      - run: nub install --frozen-lockfile
-      - run: nub exec --node --cwd apps/web astro sync
-      - run: nub exec tsc --project apps/web/tsconfig.json --noEmit
+          version: 11.18.0
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --dir apps/web exec astro sync
+      - run: pnpm exec tsc --project apps/web/tsconfig.json --noEmit
 ```
 
 `workflow_call` lets production reuse the same gate. The concurrency key drops outdated PR checks.
@@ -132,16 +138,16 @@ jobs:
       github.event.action != 'closed' &&
       github.event.pull_request.head.repo.full_name == github.repository
     steps:
-      # repeat the checkout, setup-nub, and install steps from verify.yml
-      - run: nub run deploy -- --yes --stage ${{ env.STAGE }}
+      # repeat the checkout, pnpm setup, and install steps from verify.yml
+      - run: pnpm run deploy -- --yes --stage ${{ env.STAGE }}
 
   cleanup-preview:
     if: >-
       github.event.action == 'closed' &&
       github.event.pull_request.head.repo.full_name == github.repository
     steps:
-      # repeat the checkout, setup-nub, and install steps from verify.yml
-      - run: nub run destroy -- --yes --stage ${{ env.STAGE }}
+      # repeat the checkout, pnpm setup, and install steps from verify.yml
+      - run: pnpm run destroy -- --yes --stage ${{ env.STAGE }}
 ```
 
 The repository guard keeps deployment secrets out of forked PRs. Leave preview runs uncancelled: a deploy and destroy for the same stage must not overlap.
@@ -161,8 +167,8 @@ jobs:
   deploy-prod:
     needs: verify
     steps:
-      # checkout, set up nub, install from the lockfile
-      - run: nub run deploy -- --yes --stage ${{ env.STAGE }}
+      # checkout, set up pnpm, install from the lockfile
+      - run: pnpm run deploy -- --yes --stage ${{ env.STAGE }}
 ```
 
 That is the complete shape: one stack, named stages, disposable PR environments, and production gated by the same checks.

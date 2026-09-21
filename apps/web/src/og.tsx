@@ -1,20 +1,22 @@
 import type { EntryKind } from "~/lib/Entry";
 
-const labels: Record<EntryKind, string> = {
+type ShareKind = EntryKind | "places";
+const labels: Record<ShareKind, string> = {
   article: "POST",
   note: "NOTE",
   demo: "DEMO",
   guide: "GUIDE",
+  places: "PLACES",
 };
-
-const labelColors: Record<EntryKind, { backgroundColor: string; color: string }> = {
+const labelColors: Record<ShareKind, { backgroundColor: string; color: string }> = {
   article: { backgroundColor: "#266bb0", color: "#f4f8fa" },
   note: { backgroundColor: "#49d158", color: "#1b293b" },
   demo: { backgroundColor: "#c13c37", color: "#f4f8fa" },
   guide: { backgroundColor: "#1b293b", color: "#f4f8fa" },
+  places: { backgroundColor: "#49d158", color: "#1b293b" },
 };
 
-export function entryImage(entry: { title: string; description: string; kind: EntryKind }) {
+export function entryImage(entry: { title: string; description: string; kind: ShareKind }) {
   const labelColor = labelColors[entry.kind];
 
   return (
@@ -117,12 +119,18 @@ export function entryImage(entry: { title: string; description: string; kind: En
             justifyContent: "center",
             overflow: "hidden",
             borderLeft: "6px solid #1b293b",
-            backgroundColor: "#dce8ef",
+            backgroundColor: "#f4f8fa",
           }}
         >
           <img
-            style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center" }}
-            src={new URL(`/silly-grayscale.png`, import.meta.env.SITE).toString()}
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              objectPosition: "center",
+              filter: "brightness(1.25)",
+            }}
+            src={new URL(`/silly.png`, import.meta.env.SITE).toString()}
             alt=""
           />
         </aside>

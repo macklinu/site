@@ -1,4 +1,4 @@
-import { NodeRuntime, NodeServices } from "@effect/platform-node";
+import { NodeHttpClient, NodeRuntime, NodeServices } from "@effect/platform-node";
 import { fileURLToPath } from "node:url";
 import {
   Array as EffectArray,
@@ -11,12 +11,16 @@ import {
   Path,
   Schema,
 } from "effect";
-import { Argument, Command } from "effect/unstable/cli";
+import { Argument, Command, Flag } from "effect/unstable/cli";
 import matter from "gray-matter";
 import { format } from "oxfmt";
 import { selectWebMarkdownDocument, updateWebTimestamp } from "./web-timestamp.js";
+import { lookupAppleMapsPlace } from "./apple-maps.js";
+import { PlaceUpsertResult, upsertAppleMapsPlace } from "./places.js";
 import pkg from "../package.json" with { type: "json" };
 
+const PLACES_DATA_DIRECTORY = fileURLToPath(new URL("../../web/src/data/places/", import.meta.url));
+const REPOSITORY_DIRECTORY = fileURLToPath(new URL("../../../", import.meta.url));
 const DEFAULT_DATA_DIRECTORY = fileURLToPath(new URL("../../web/src/data/", import.meta.url));
 const DOCUMENT_READ_CONCURRENCY = 16;
 
@@ -274,13 +278,62 @@ const webCommand = Command.make("web").pipe(
   Command.withDescription("Maintain files in the web application."),
   Command.withSubcommands([touchCommand]),
 );
+const lookupPlaceCommand = Command.make(
+  "lookup",
+  {
+    url: Argument.string("apple-maps-url").pipe(
+      Argument.withSchema(Schema.URLFromString),
+      Argument.withDescription("Apple Maps place URL."),
+    ),
+  },
+  Effect.fn("AppleMaps.command")(function* ({ url }) {
+    const place = yield* lookupAppleMapsPlace(url);
+    yield* Console.log(JSON.stringify(place, null, 2));
+  }),
+).pipe(Command.withDescription("Fetch one Apple Maps place as structured JSON."));
+const upsertPlaceCommand = Command.make(
+  "upsert",
+  {
+    city: Flag.string("city").pipe(
+      Flag.optional,
+      Flag.withDescription("City for a newly created place."),
+    ),
+    url: Argument.string("apple-maps-url").pipe(
+      Argument.withSchema(Schema.URLFromString),
+      Argument.withDescription("Apple Maps place URL."),
+    ),
+  },
+  Effect.fn("Places.upsertCommand")(function* ({ city, url }) {
+    const path = yield* Path.Path;
+    const place = yield* lookupAppleMapsPlace(url);
+    const result = yield* upsertAppleMapsPlace({
+      city,
+      directory: PLACES_DATA_DIRECTORY,
+      place,
+    });
+    const relativePath = path.relative(REPOSITORY_DIRECTORY, result.path);
+    const message = PlaceUpsertResult.$match(result, {
+      Created: () => `Created ${relativePath}.`,
+      Updated: ({ changedFields }) => `Updated ${relativePath}: ${changedFields.join(", ")}.`,
+      Unchanged: () => `${relativePath} is unchanged.`,
+    });
+
+    yield* Console.log(message);
+  }),
+).pipe(Command.withDescription("Create or update a place from an Apple Maps URL."));
+
+const placesCommand = Command.make("places").pipe(
+  Command.withDescription("Inspect and maintain place data."),
+  Command.withSubcommands([lookupPlaceCommand, upsertPlaceCommand]),
+);
 
 const cli = Command.make(pkg.name).pipe(
   Command.withDescription("mackie.underdown.wiki maintenance commands."),
-  Command.withSubcommands([obsidianCommand, webCommand]),
+  Command.withSubcommands([obsidianCommand, placesCommand, webCommand]),
 );
 
 Command.run(cli, { version: pkg.version }).pipe(
+  Effect.provide(NodeHttpClient.layerFetch),
   Effect.provide(NodeServices.layer),
   NodeRuntime.runMain,
 );

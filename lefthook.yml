@@ -1,8 +1,13 @@
 pre-commit:
   commands:
     format:
-      run: nub run format --no-error-on-unmatched-pattern {staged_files}
+      glob: "*.{js,mjs,cjs,jsx,ts,mts,cts,tsx,json,jsonc,css,md,yaml,yml}"
+      run: pnpm run format -- --no-error-on-unmatched-pattern {staged_files}
+      stage_fixed: true
+    format-astro:
+      glob: "*.astro"
+      run: pnpm exec prettier --write {staged_files}
       stage_fixed: true
     lint:
-      run: nub run lint --fix --no-error-on-unmatched-pattern {staged_files}
+      run: pnpm run lint -- --fix --no-error-on-unmatched-pattern {staged_files}
       stage_fixed: true

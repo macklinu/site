@@ -16,7 +16,6 @@ env:
   CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
   CLOUDFLARE_EMAIL: ${{ secrets.CLOUDFLARE_EMAIL }}
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  NODE_COMPAT: "1"
 jobs:
   verify:
     uses: ./.github/workflows/verify.yml
@@ -26,11 +25,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - uses: nubjs/setup-nub@v0
+      - uses: pnpm/action-setup@v4
         with:
-          nub-version: 0.9.0
-          shim: true
+          version: 11.18.0
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
       - name: Install dependencies
-        run: nub install --frozen-lockfile
+        run: pnpm install --frozen-lockfile
       - name: Deploy
-        run: nub run deploy -- --yes --stage ${{ env.STAGE }}
+        run: pnpm run deploy -- --yes --stage ${{ env.STAGE }}
