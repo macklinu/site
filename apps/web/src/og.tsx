@@ -1,4 +1,5 @@
 import type { EntryKind } from "~/lib/Entry";
+import silly from "./assets/silly.png?inline";
 
 type ShareKind = EntryKind | "places";
 const labels: Record<ShareKind, string> = {
@@ -130,7 +131,7 @@ export function entryImage(entry: { title: string; description: string; kind: Sh
               objectPosition: "center",
               filter: "brightness(1.25)",
             }}
-            src={new URL(`/silly.png`, import.meta.env.SITE).toString()}
+            src={silly}
             alt=""
           />
         </aside>

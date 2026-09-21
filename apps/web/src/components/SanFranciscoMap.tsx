@@ -16,6 +16,19 @@ import {
 import * as maplibregl from "maplibre-gl";
 import { createRoot, type Root } from "react-dom/client";
 
+type PlaceKind =
+  | "food"
+  | "coffee"
+  | "books"
+  | "art"
+  | "nature"
+  | "shopping"
+  | "community"
+  | "sights"
+  | "transit";
+type PlaceFilter = "all" | PlaceKind;
+type LocationState = "idle" | "locating" | "located" | "error";
+
 export interface SanFranciscoPlace {
   kind: "place";
   slug: string;
@@ -35,7 +48,7 @@ interface SanFranciscoNeighborhood {
   description: string;
   boundary: {
     type: "Polygon";
-    coordinates: number[][][];
+    coordinates: [number, number][][];
   };
 }
 
