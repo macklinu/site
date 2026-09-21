@@ -9,5 +9,6 @@ pre-commit:
       run: pnpm exec prettier --write {staged_files}
       stage_fixed: true
     lint:
+      glob: "*.{js,mjs,cjs,jsx,ts,mts,cts,tsx}"
       run: pnpm run lint -- --fix --no-error-on-unmatched-pattern {staged_files}
       stage_fixed: true
