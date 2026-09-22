@@ -510,7 +510,34 @@ export default function SanFranciscoMap({ places }: Props) {
       aria-label="Map of saved San Francisco places"
     >
       <div className="flex items-start justify-between gap-3 border-b-2 border-site-ink bg-site-paper p-3">
-        <div className="flex flex-wrap gap-1.5" role="group" aria-label="Filter places">
+        <div className="min-w-0 flex-1 handset:hidden">
+          <select
+            className="min-h-9 w-full border border-site-ink bg-site-paper px-2 font-mono text-[0.6875rem] leading-none font-semibold tracking-[0.02em] text-site-ink"
+            aria-label="Filter places"
+            value={selectedFilter}
+            onChange={(event) => {
+              const filter = filterDefinitions.find(
+                ({ kind }) => kind === event.currentTarget.value,
+              );
+              if (filter) setSelectedFilter(filter.kind);
+            }}
+          >
+            {filterDefinitions.map(({ kind, label }) => {
+              const count = kind === "all" ? pointPlaces.length : counts[kind];
+
+              return (
+                <option key={kind} value={kind} disabled={kind !== "all" && count === 0}>
+                  {label} — {count}
+                </option>
+              );
+            })}
+          </select>
+        </div>
+        <div
+          className="hidden flex-wrap gap-1.5 handset:flex"
+          role="group"
+          aria-label="Filter places"
+        >
           {filterDefinitions.map(({ kind, label }) => {
             const count = kind === "all" ? pointPlaces.length : counts[kind];
             const unavailable = kind !== "all" && count === 0;
