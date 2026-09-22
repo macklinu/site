@@ -10,3 +10,5 @@ appleMapsUrl: >-
   https://maps.apple.com/place?address=566%20Dolores%20St,%20San%20Francisco,%20CA%20%2094110,%20United%20States&coordinate=37.759765,-122.427108&name=Mission%20Dolores%20Park&place-id=I501E3D5FE2B085EF&map=explore
 tags: []
 ---
+
+Classic park in the Mission. You could hang here and read a book and people watch all day.

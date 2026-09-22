@@ -10,3 +10,5 @@ appleMapsUrl: >-
   https://maps.apple.com/place?address=San%20Francisco,%20CA,%20United%20States&coordinate=37.776412,-122.394873&name=San%20Francisco%20Caltrain%20Station&place-id=IB16AB359586C18A0&map=explore
 tags: []
 ---
+
+If you taking Caltrain into the city, this is where you will land! You can easily connect to a Muni train or bus nearby to go elsewhere in town or walk towards SoMa or downtown.

@@ -10,3 +10,5 @@ appleMapsUrl: >-
   https://maps.apple.com/place?address=Crosstown%20Trail,%20San%20Francisco,%20CA%20%2094121,%20United%20States&coordinate=37.785281,-122.506188&name=Lands%20End&place-id=IE30BEFE2898A5DFE&map=explore
 tags: []
 ---
+
+A great place to hike in the northwest corner of the city.

@@ -12,3 +12,5 @@ tags:
   - cole-valley
   - dessert
 ---
+
+Retro ice cream place. Incredible ice cream. Equipment/furniture is from Mackinac Island! If you're near here, you must go.

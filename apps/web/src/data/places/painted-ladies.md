@@ -12,3 +12,5 @@ tags:
   - alamo-square
   - architecture
 ---
+
+If you're a Full House fan, you need to see it and just hang at the neighboring Alamo Square park.

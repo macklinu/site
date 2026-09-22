@@ -12,3 +12,5 @@ tags:
   - yerba-buena
   - modern-art
 ---
+
+If you're already near downtown and the weather is bad or you want a museum, check this place out.
