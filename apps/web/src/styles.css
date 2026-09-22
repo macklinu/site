@@ -373,4 +373,12 @@
   .sf-map__canvas {
     min-height: min(31rem, 68svh);
   }
+
+  .sf-map .maplibregl-popup {
+    max-width: 13rem !important;
+  }
+
+  .sf-map .maplibregl-popup-content {
+    min-width: 0;
+  }
 }

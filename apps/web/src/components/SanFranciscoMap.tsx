@@ -103,6 +103,13 @@ const sanFranciscoZoom = 11;
 const initialMaxZoom = 12;
 const mapTransitionDuration = 800;
 
+const popupOptions = {
+  closeButton: true,
+  closeOnClick: true,
+  offset: 20,
+  padding: { top: 12, right: 12, bottom: 12, left: 12 },
+} satisfies maplibregl.PopupOptions;
+
 function styleForCurrentTheme() {
   const root = document.documentElement;
   const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
@@ -322,7 +329,7 @@ export default function SanFranciscoMap({ places }: Props) {
       activePopupRef.current = null;
       previousPopup?.remove();
 
-      const popup = new maplibregl.Popup({ closeButton: true, closeOnClick: true, offset: 20 })
+      const popup = new maplibregl.Popup(popupOptions)
         .setLngLat([place.longitude, place.latitude])
         .setDOMContent(createPopupContent(place))
         .addTo(map);
@@ -348,7 +355,7 @@ export default function SanFranciscoMap({ places }: Props) {
       updateSelectedMarker(null);
       updateUrl(null);
 
-      const popup = new maplibregl.Popup({ closeButton: true, closeOnClick: true, offset: 20 })
+      const popup = new maplibregl.Popup(popupOptions)
         .setLngLat(lngLat)
         .setDOMContent(createNeighborhoodPopupContent(neighborhood))
         .addTo(map);
