@@ -153,10 +153,13 @@ function createPopupContent(place: SanFranciscoPlace) {
   title.textContent = place.title;
   content.append(title);
 
-  const description = document.createElement("p");
-  description.className = "sf-map-popup__description";
-  description.textContent = place.description;
-  content.append(description);
+  const descriptionText = place.description.trim();
+  if (descriptionText) {
+    const description = document.createElement("p");
+    description.className = "sf-map-popup__description";
+    description.textContent = descriptionText;
+    content.append(description);
+  }
 
   const appleMapsLink = document.createElement("a");
   appleMapsLink.className = "sf-map-popup__link";
