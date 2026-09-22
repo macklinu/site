@@ -307,40 +307,10 @@
   overflow-wrap: anywhere;
 }
 
-.sf-map-popup__description,
-.sf-map-popup__address {
+.sf-map-popup__description {
   margin: 0;
   font-size: 0.875rem;
   line-height: 1.45;
-}
-
-.sf-map-popup__address {
-  margin-top: 0.5rem;
-  color: var(--muted);
-}
-
-.sf-map-popup__tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.25rem;
-  margin: 0.75rem 0;
-  padding: 0;
-  list-style: none;
-  color: var(--blue);
-  font-family: var(--font-mono);
-  font-size: 0.6875rem;
-  line-height: 1.35;
-  letter-spacing: 0.02em;
-}
-
-.sf-map-popup__tags li::before {
-  margin-right: 0.25rem;
-  color: var(--line);
-  content: "/";
-}
-
-.sf-map-popup__tags li:first-child::before {
-  display: none;
 }
 
 .sf-map-popup__link {

@@ -158,23 +158,6 @@ function createPopupContent(place: SanFranciscoPlace) {
   description.textContent = place.description;
   content.append(description);
 
-  const address = document.createElement("p");
-  address.className = "sf-map-popup__address";
-  address.textContent = place.address;
-  content.append(address);
-
-  const tags = document.createElement("ul");
-  tags.className = "sf-map-popup__tags";
-  tags.setAttribute("aria-label", "Categories");
-
-  for (const tag of [place.category, ...place.tags]) {
-    const item = document.createElement("li");
-    item.textContent = tag.replaceAll("-", " ");
-    tags.append(item);
-  }
-
-  content.append(tags);
-
   const appleMapsLink = document.createElement("a");
   appleMapsLink.className = "sf-map-popup__link";
   appleMapsLink.href = place.appleMapsUrl;
