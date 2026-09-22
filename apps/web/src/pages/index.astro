@@ -17,9 +17,9 @@ const [entries, projects] = await Promise.all([
 
 <Layout description={author.bio}>
   <div class='flex flex-col gap-y-[clamp(2rem,4vw,3.5rem)] py-[clamp(2rem,5vw,4rem)] pb-20 max-catalogue:pt-6'>
-    <header class='border-b border-site-ink py-3 pb-4'>
+    <header class='py-3 pb-1'>
       <div>
-        <p class='inline-flex w-fit items-center gap-1 bg-site-ink px-1 py-1 font-mono text-xs leading-[1.35] tracking-[0.04em] text-site-paper'>
+        <p class='flex w-fit items-center gap-1 font-mono text-xs leading-[1.35] tracking-[0.04em] text-site-muted'>
           <Icon name='lucide:map-pin' size='0.85em' aria-hidden='true' />
           Detroit
         </p>
@@ -42,7 +42,7 @@ const [entries, projects] = await Promise.all([
           Projects
         </h2>
       </header>
-      <ul class='m-0 grid list-none grid-cols-2 gap-x-[clamp(1rem,3vw,3rem)] border-t border-site-ink p-0 max-handset:grid-cols-1'>
+      <ul class='m-0 grid list-none grid-cols-2 gap-x-[clamp(1rem,3vw,3rem)] p-0 max-handset:grid-cols-1'>
         {projects.map(({ data: { title, description, href } }) => (
           <li class='border-b border-site-line'>
             <a
