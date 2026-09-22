@@ -11,7 +11,6 @@ const places = (await getCollection('places'))
     description: body?.trim() ?? '',
   }))
   .sort((left, right) => left.title.localeCompare(right.title))
-const placeCount = places.filter((place) => place.kind === 'place').length
 const ogImage = new URL(
   '/places/san-francisco/og.png',
   import.meta.env.SITE
@@ -40,9 +39,6 @@ const ogImage = new URL(
     </header>
 
     <section class='mt-10' aria-label='San Francisco places map'>
-      <p class='mb-3 w-fit bg-site-green px-2 py-1 font-mono text-xs leading-[1.35] tracking-[0.04em] text-site-green-ink'>
-        {placeCount} places
-      </p>
       <SanFranciscoMap client:load places={places} />
     </section>
   </article>
