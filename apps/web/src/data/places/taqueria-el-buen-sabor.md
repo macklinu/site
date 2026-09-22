@@ -12,5 +12,3 @@ tags:
   - mission-district
   - burritos
 ---
-
-A Valencia Street taqueria for breakfast burritos, super burritos, and food to take to Dolores Park.

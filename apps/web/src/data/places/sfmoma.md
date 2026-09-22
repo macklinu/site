@@ -12,5 +12,3 @@ tags:
   - yerba-buena
   - modern-art
 ---
-
-A modern and contemporary art museum in Yerba Buena with painting, sculpture, photography, design, and media arts.

@@ -14,4 +14,4 @@ tags:
   - deli
 ---
 
-A neighborhood grocery store on Haight Street.
+This was our neighborhood grocery store that we would walk to a lot - our main spot aside from taking the bus to Safeway.

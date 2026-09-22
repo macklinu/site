@@ -12,5 +12,3 @@ tags:
   - alamo-square
   - architecture
 ---
-
-A row of Victorian houses at Alamo Square, known for their painted architectural detail.

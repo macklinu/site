@@ -12,5 +12,3 @@ tags:
   - mission-dolores
   - restaurant
 ---
-
-A Filipino restaurant that combines sisig with the portable format of taqueria dishes.

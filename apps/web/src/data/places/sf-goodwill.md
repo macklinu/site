@@ -13,4 +13,4 @@ tags:
   - shopping
 ---
 
-A Goodwill thrift store on Haight Street for second-hand clothing and goods.
+One of the best Goodwill stores I've ever been to, and I used to live across the street from it!

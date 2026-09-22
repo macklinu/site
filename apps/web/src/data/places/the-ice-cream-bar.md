@@ -12,5 +12,3 @@ tags:
   - cole-valley
   - dessert
 ---
-
-A Cole Valley ice cream shop with a retro soda-fountain setting and seasonal flavors.

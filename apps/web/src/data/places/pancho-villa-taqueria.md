@@ -12,5 +12,3 @@ tags:
   - mission-district
   - burritos
 ---
-
-A Mission taqueria for handmade tacos, burritos, fresh salsas, and aguas frescas.

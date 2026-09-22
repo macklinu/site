@@ -18,4 +18,4 @@ boundary:
       - [-122.448389686, 37.7688646280001]
 ---
 
-I lived in the Upper Haight, within the Haight-Ashbury neighborhood, from 2018 to 2020.
+I lived here from 2018 to 2020.

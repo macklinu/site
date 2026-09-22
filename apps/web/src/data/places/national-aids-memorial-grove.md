@@ -13,4 +13,4 @@ tags:
   - history
 ---
 
-A memorial garden in Golden Gate Park for remembrance, healing, and learning about the AIDS pandemic.
+A beautiful memorial garden - where I would go to reflect quietly and be still in nature.

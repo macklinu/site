@@ -12,5 +12,3 @@ tags:
   - mission-district
   - late-night
 ---
-
-A Mission taqueria for super burritos, tacos, and quesadillas, with late-night hours on most days.
