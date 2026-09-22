@@ -1,39 +1,38 @@
 import { Effect, Schema } from "effect";
 import * as HttpClient from "effect/unstable/http/HttpClient";
+import * as HttpClientRequest from "effect/unstable/http/HttpClientRequest";
 import { parse, type DefaultTreeAdapterTypes } from "parse5";
 
-const isAppleMapsPlaceUrl = (url: URL) =>
-  url.protocol === "https:" && url.hostname === "maps.apple.com";
-
-const isAppleMapsShortUrl = (url: URL) =>
-  url.protocol === "https:" &&
-  url.hostname === "maps.apple" &&
-  url.pathname.startsWith("/p/") &&
-  url.pathname.length > 3;
-
 const AppleMapsPlaceUrl = Schema.URL.check(
-  Schema.makeFilter(isAppleMapsPlaceUrl, {
+  Schema.makeFilter((url) => url.protocol === "https:" && url.hostname === "maps.apple.com", {
     expected: "an https://maps.apple.com URL",
   }),
 );
 
-const AppleMapsCanonicalUrl = Schema.URLFromString.check(
-  Schema.makeFilter(isAppleMapsPlaceUrl, {
+const AppleMapsPlaceUrlFromString = Schema.URLFromString.check(
+  Schema.makeFilter(Schema.is(AppleMapsPlaceUrl), {
     expected: "an https://maps.apple.com URL",
   }),
 );
+
+const AppleMapsShortUrl = Schema.URLFromString.check(
+  Schema.makeFilter(
+    (url) =>
+      url.protocol === "https:" &&
+      url.hostname === "maps.apple" &&
+      url.pathname.startsWith("/p/") &&
+      url.pathname.length > 3,
+    { expected: "an https://maps.apple/p/ URL" },
+  ),
+);
+
+export const AppleMapsUrl = Schema.Union([AppleMapsPlaceUrlFromString, AppleMapsShortUrl]);
 
 const TrimmedNonEmptyString = Schema.Trim.check(Schema.isMinLength(1));
 
 const PlaceName = TrimmedNonEmptyString.check(
   Schema.makeFilter((name) => name.toLowerCase() !== "marked location", {
     expected: "a place name other than marked location",
-  }),
-);
-
-export const AppleMapsUrl = Schema.URLFromString.check(
-  Schema.makeFilter((url) => isAppleMapsPlaceUrl(url) || isAppleMapsShortUrl(url), {
-    expected: "an https://maps.apple.com or https://maps.apple/p/ URL",
   }),
 );
 
@@ -99,9 +98,9 @@ const parsePlaceDocument = Effect.fn("AppleMaps.parsePlaceDocument")(function* (
   const { canonicalUrl, metadata } = extractDocumentMetadata(html);
   const coordinate = url.searchParams.get("coordinate") ?? url.searchParams.get("ll");
   const [urlLatitude, urlLongitude] = coordinate?.split(",") ?? [];
-  const canonical = yield* Schema.decodeUnknownEffect(Schema.UndefinedOr(AppleMapsCanonicalUrl))(
-    canonicalUrl,
-  ).pipe(
+  const canonical = yield* Schema.decodeUnknownEffect(
+    Schema.UndefinedOr(AppleMapsPlaceUrlFromString),
+  )(canonicalUrl).pipe(
     Effect.mapError(
       (cause) =>
         new AppleMapsLookupError({
@@ -129,66 +128,47 @@ const parsePlaceDocument = Effect.fn("AppleMaps.parsePlaceDocument")(function* (
   );
 });
 
-const resolveAppleMapsUrl = Effect.fn("AppleMaps.resolveUrl")(function* (url: URL) {
-  if (isAppleMapsPlaceUrl(url)) return url;
-
-  if (!isAppleMapsShortUrl(url)) {
-    return yield* new AppleMapsLookupError({
-      message: "Expected an https://maps.apple.com or https://maps.apple/p/ URL.",
-    });
-  }
-
-  const client = yield* HttpClient.HttpClient;
-  const response = yield* client.get(url).pipe(
-    Effect.mapError(
-      (cause) =>
-        new AppleMapsLookupError({
-          message: `Could not resolve ${url.toString()}`,
-          cause,
-        }),
-    ),
-  );
-  const location = response.headers.location;
-
-  if (response.status < 300 || response.status >= 400 || location === undefined) {
-    return yield* new AppleMapsLookupError({
-      message: `Expected ${url.toString()} to redirect to maps.apple.com.`,
-    });
-  }
-
-  const resolvedUrl = yield* Effect.try({
-    try: () => new URL(location, url),
-    catch: (cause) =>
-      new AppleMapsLookupError({
-        message: `Apple Maps returned an invalid redirect URL: ${location}`,
-        cause,
-      }),
-  });
-
-  if (!isAppleMapsPlaceUrl(resolvedUrl)) {
-    return yield* new AppleMapsLookupError({
-      message: `Expected ${url.toString()} to redirect to maps.apple.com.`,
-    });
-  }
-
-  return resolvedUrl;
-});
-
 export const lookupAppleMapsPlace = Effect.fn("AppleMaps.lookupPlace")(function* (url: URL) {
-  const resolvedUrl = yield* resolveAppleMapsUrl(url);
-  const client = yield* HttpClient.HttpClient;
-  const html = yield* HttpClient.filterStatusOk(client)
-    .get(resolvedUrl)
+  const client = (yield* HttpClient.HttpClient).pipe(HttpClient.followRedirects());
+  const response = yield* HttpClient.filterStatusOk(client)
+    .get(url)
     .pipe(
-      Effect.flatMap((response) => response.text),
       Effect.mapError(
         (cause) =>
           new AppleMapsLookupError({
-            message: `Could not fetch ${resolvedUrl.toString()}`,
+            message: `Could not fetch ${url.toString()}`,
             cause,
           }),
       ),
     );
+  const resolvedUrl =
+    url.protocol === "https:" && url.hostname === "maps.apple.com"
+      ? url
+      : yield* Effect.fromOption(
+          HttpClientRequest.toUrl(response.request),
+          () =>
+            new AppleMapsLookupError({
+              message: `Apple Maps returned an invalid URL for ${url.toString()}.`,
+            }),
+        ).pipe(
+          Effect.flatMap(Schema.decodeUnknownEffect(AppleMapsPlaceUrl)),
+          Effect.mapError(
+            (cause) =>
+              new AppleMapsLookupError({
+                message: `Expected ${url.toString()} to resolve to https://maps.apple.com.`,
+                cause,
+              }),
+          ),
+        );
+  const html = yield* response.text.pipe(
+    Effect.mapError(
+      (cause) =>
+        new AppleMapsLookupError({
+          message: `Could not read ${resolvedUrl.toString()}`,
+          cause,
+        }),
+    ),
+  );
 
   return yield* parsePlaceDocument({ html, url: resolvedUrl });
 });
