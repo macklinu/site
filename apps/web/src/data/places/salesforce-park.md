@@ -10,3 +10,5 @@ appleMapsUrl: >-
   https://maps.apple.com/place?address=425%20Mission%20St,%20San%20Francisco,%20CA%2094105,%20United%20States&coordinate=37.789764,-122.396080&name=Salesforce%20Park&place-id=I3DFDF75F9695553B&map=explore
 tags: []
 ---
+
+This is an interesting park on the roof of an office building downtown. A lot of people walk around the track on the roof during their work day. I wouldn't go out of my way to visit, but if I was staying or working nearby, I would check it out to see something different.

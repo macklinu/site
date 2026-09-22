@@ -12,3 +12,5 @@ tags:
   - mission-dolores
   - restaurant
 ---
+
+They opened this restaurant near the end of my time in the city, but I used to go to the food truck a lot near the financial district when I worked downtown. Really good Filipino fusion burritos.

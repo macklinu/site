@@ -10,3 +10,5 @@ appleMapsUrl: >-
   https://maps.apple.com/place?address=3115%20Fillmore%20St,%20San%20Francisco,%20CA%20%2094123,%20United%20States&coordinate=37.798264,-122.435927&name=Tacko&place-id=I7C7BC45B8418690A&map=explore
 tags: []
 ---
+
+I ate a lot of burritos here before meetings at the Dry Dock or a nearby church.

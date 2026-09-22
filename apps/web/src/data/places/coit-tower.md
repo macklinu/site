@@ -10,3 +10,5 @@ appleMapsUrl: >-
   https://maps.apple.com/place?address=1%20Telegraph%20Hill%20Blvd,%20San%20Francisco,%20CA%20%2094133,%20United%20States&coordinate=37.802337,-122.405838&name=Coit%20Tower&place-id=IE9C565A395E9AAF2&map=explore
 tags: []
 ---
+
+Cool sight in North Beach if you want a good climb and view!
