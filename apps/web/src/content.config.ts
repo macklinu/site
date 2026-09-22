@@ -40,6 +40,45 @@ const guides = defineCollection({
   }),
 });
 
+const placeCategory = z.enum([
+  "food",
+  "coffee",
+  "books",
+  "art",
+  "nature",
+  "shopping",
+  "community",
+  "sights",
+  "transit",
+]);
+
+const places = defineCollection({
+  loader: glob({ base: "./src/data/places", pattern: "**/*.md" }),
+  schema: z.union([
+    z.object({
+      kind: z.literal("place").default("place"),
+      title: z.string().trim().min(1),
+      category: placeCategory,
+      city: z.string().trim().min(1),
+      address: z.string().trim().min(1),
+      latitude: z.number().gte(-90).lte(90),
+      longitude: z.number().gte(-180).lte(180),
+      appleMapsPlaceId: z.string().trim().min(1),
+      appleMapsUrl: z.url(),
+      tags: z.array(z.string().trim().min(1)).default([]),
+    }),
+    z.object({
+      kind: z.literal("neighborhood"),
+      title: z.string().trim().min(1),
+      city: z.string().trim().min(1),
+      boundary: z.object({
+        type: z.literal("Polygon"),
+        coordinates: z.array(z.array(z.tuple([z.number(), z.number()]))).min(1),
+      }),
+    }),
+  ]),
+});
+
 const projects = defineCollection({
   loader: glob({ base: "./src/data/projects", pattern: "**/*.yaml" }),
   schema: z.object({
@@ -49,4 +88,4 @@ const projects = defineCollection({
   }),
 });
 
-export const collections = { articles, notes, demos, guides, projects };
+export const collections = { articles, notes, demos, guides, places, projects };

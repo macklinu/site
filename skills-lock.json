@@ -19,12 +19,6 @@
       "skillPath": "skills/gh/SKILL.md",
       "computedHash": "d6812a8155e8db4aae6dffcfbc3a340ede4da0ea123bb98c16ba32d79f239906"
     },
-    "nub": {
-      "source": "nubjs/nub",
-      "sourceType": "github",
-      "skillPath": "skills/nub/SKILL.md",
-      "computedHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
-    },
     "probe-platforms": {
       "source": "nubjs/nub",
       "sourceType": "github",

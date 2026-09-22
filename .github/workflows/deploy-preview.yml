@@ -17,7 +17,6 @@ env:
   CLOUDFLARE_EMAIL: ${{ secrets.CLOUDFLARE_EMAIL }}
   PULL_REQUEST: ${{ github.event.number }}
   BUILD_SHA: ${{ github.sha }}
-  NODE_COMPAT: "1"
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 jobs:
   deploy-preview:
@@ -27,14 +26,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - uses: nubjs/setup-nub@v0
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
         with:
-          nub-version: 0.9.0
-          shim: true
+          node-version-file: .nvmrc
+          cache: pnpm
       - name: Install dependencies
-        run: nub install --frozen-lockfile
+        run: pnpm install --frozen-lockfile
       - name: Deploy
-        run: nub run deploy -- --yes --stage ${{ env.STAGE }}
+        run: pnpm run deploy -- --yes --stage ${{ env.STAGE }}
 
   cleanup-preview:
     if: >-
@@ -43,11 +43,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - uses: nubjs/setup-nub@v0
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
         with:
-          nub-version: 0.9.0
-          shim: true
+          node-version-file: .nvmrc
+          cache: pnpm
       - name: Install dependencies
-        run: nub install --frozen-lockfile
+        run: pnpm install --frozen-lockfile
       - name: Destroy Preview Environment
-        run: nub run destroy -- --yes --stage ${{ env.STAGE }}
+        run: pnpm run destroy -- --yes --stage ${{ env.STAGE }}
