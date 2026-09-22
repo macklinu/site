@@ -163,8 +163,7 @@ const writeAtomically = Effect.fn("Places.writeAtomically")(function* ({
       fileSystem
         .writeFileString(temporaryPath, content)
         .pipe(Effect.andThen(fileSystem.rename(temporaryPath, targetPath))),
-    (temporaryPath) =>
-      fileSystem.remove(path.dirname(temporaryPath), { recursive: true }).pipe(Effect.ignore),
+    (temporaryPath) => fileSystem.remove(temporaryPath).pipe(Effect.ignore),
   ).pipe(
     Effect.mapError(
       (cause) => new PlaceUpsertError({ message: `Could not write ${targetPath}`, cause }),
@@ -172,10 +171,10 @@ const writeAtomically = Effect.fn("Places.writeAtomically")(function* ({
   );
 });
 
-const slugify = (name: string) =>
-  name
-    .normalize("NFKD")
-    .replace(/[\u0300-\u036f]/g, "")
+const removeDiacritics = (value: string) => value.normalize("NFKD").replace(/[\u0300-\u036f]/g, "");
+
+const toPlaceFilename = (name: string) =>
+  removeDiacritics(name)
     .toLowerCase()
     .replace(/&/g, " and ")
     .replace(/[^a-z0-9]+/g, "-")
@@ -192,21 +191,13 @@ export const upsertAppleMapsPlace = Effect.fn("Places.upsert")(function* ({
 }) {
   const fileSystem = yield* FileSystem.FileSystem;
   const path = yield* Path.Path;
-  const address = place.address?.trim();
-
-  if (address === undefined || address.length === 0) {
-    return yield* new PlaceUpsertError({
-      message: "Apple Maps did not return an address. Use a full Apple Maps place URL.",
-    });
-  }
-
   const machineMetadata = {
-    title: place.name.trim(),
-    address,
+    title: place.name,
+    address: place.address,
     latitude: place.latitude,
     longitude: place.longitude,
     appleMapsPlaceId: place.appleMapsPlaceId,
-    appleMapsUrl: place.appleMapsUrl,
+    appleMapsUrl: place.appleMapsUrl.toString(),
   } satisfies Record<MachineField, string | number>;
   const documents = yield* loadPlaces(directory);
   const index = yield* indexPlaces(documents);
@@ -239,7 +230,7 @@ export const upsertAppleMapsPlace = Effect.fn("Places.upsert")(function* ({
     });
   }
 
-  const slug = slugify(place.name);
+  const slug = toPlaceFilename(place.name);
   if (slug.length === 0) {
     return yield* new PlaceUpsertError({ message: `Could not make a filename from ${place.name}` });
   }

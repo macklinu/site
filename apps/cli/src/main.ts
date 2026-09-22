@@ -7,6 +7,7 @@ import {
   Effect,
   DateTime,
   FileSystem,
+  Layer,
   Option,
   Path,
   Schema,
@@ -15,7 +16,7 @@ import { Argument, Command, Flag } from "effect/unstable/cli";
 import matter from "gray-matter";
 import { format } from "oxfmt";
 import { selectWebMarkdownDocument, updateWebTimestamp } from "./web-timestamp.js";
-import { lookupAppleMapsPlace } from "./apple-maps.js";
+import { AppleMapsUrl, lookupAppleMapsPlace } from "./apple-maps.js";
 import { PlaceUpsertResult, upsertAppleMapsPlace } from "./places.js";
 import pkg from "../package.json" with { type: "json" };
 
@@ -278,11 +279,17 @@ const webCommand = Command.make("web").pipe(
   Command.withDescription("Maintain files in the web application."),
   Command.withSubcommands([touchCommand]),
 );
+
+const cliHttpLayer = Layer.merge(
+  NodeHttpClient.layerFetch,
+  Layer.succeed(NodeHttpClient.RequestInit, { redirect: "manual" }),
+);
+
 const lookupPlaceCommand = Command.make(
   "lookup",
   {
     url: Argument.string("apple-maps-url").pipe(
-      Argument.withSchema(Schema.URLFromString),
+      Argument.withSchema(AppleMapsUrl),
       Argument.withDescription("Apple Maps place URL."),
     ),
   },
@@ -299,7 +306,7 @@ const upsertPlaceCommand = Command.make(
       Flag.withDescription("City for a newly created place."),
     ),
     url: Argument.string("apple-maps-url").pipe(
-      Argument.withSchema(Schema.URLFromString),
+      Argument.withSchema(AppleMapsUrl),
       Argument.withDescription("Apple Maps place URL."),
     ),
   },
@@ -333,7 +340,7 @@ const cli = Command.make(pkg.name).pipe(
 );
 
 Command.run(cli, { version: pkg.version }).pipe(
-  Effect.provide(NodeHttpClient.layerFetch),
+  Effect.provide(cliHttpLayer),
   Effect.provide(NodeServices.layer),
   NodeRuntime.runMain,
 );

@@ -1,113 +1,6 @@
 import { Effect, Schema } from "effect";
 import * as HttpClient from "effect/unstable/http/HttpClient";
-import * as FetchHttpClient from "effect/unstable/http/FetchHttpClient";
 import { parse, type DefaultTreeAdapterTypes } from "parse5";
-
-export interface AppleMapsPlace {
-  readonly address: string | null;
-  readonly appleMapsPlaceId: string;
-  readonly appleMapsUrl: string;
-  readonly canonicalUrl: string | null;
-  readonly latitude: number;
-  readonly longitude: number;
-  readonly metadata: Readonly<Record<string, string>>;
-  readonly name: string;
-}
-
-export class AppleMapsLookupError extends Schema.TaggedErrorClass<AppleMapsLookupError>()(
-  "AppleMapsLookupError",
-  {
-    message: Schema.String,
-    cause: Schema.optionalKey(Schema.Defect()),
-  },
-) {}
-
-const parsePlaceDocument = Effect.fn("AppleMaps.parsePlaceDocument")(function* ({
-  html,
-  url,
-}: {
-  readonly html: string;
-  readonly url: URL;
-}) {
-  const document = parse(html);
-  const metadata: Record<string, string> = {};
-  let canonicalUrl: string | null = null;
-
-  const visit = (node: DefaultTreeAdapterTypes.Node): void => {
-    if ("tagName" in node) {
-      const attributes = Object.fromEntries(node.attrs.map(({ name, value }) => [name, value]));
-
-      if (node.tagName === "meta" && attributes.content !== undefined) {
-        const key = attributes.property ?? attributes.name;
-        if (key !== undefined) metadata[key] = attributes.content;
-      }
-
-      if (node.tagName === "link" && attributes.rel === "canonical") {
-        canonicalUrl = attributes.href ?? null;
-      }
-    }
-
-    if ("childNodes" in node) {
-      for (const child of node.childNodes) visit(child);
-    }
-  };
-
-  visit(document);
-
-  const coordinate = url.searchParams.get("coordinate") ?? url.searchParams.get("ll");
-  const [urlLatitude, urlLongitude] = coordinate?.split(",") ?? [];
-  const latitude = Number(metadata["place:location:latitude"] ?? urlLatitude);
-  const longitude = Number(metadata["place:location:longitude"] ?? urlLongitude);
-  const name = metadata["og:title"] ?? url.searchParams.get("name") ?? url.searchParams.get("q");
-  let canonical: URL | null = null;
-  if (canonicalUrl !== null) {
-    const canonicalHref = canonicalUrl;
-    canonical = yield* Effect.try({
-      try: () => new URL(canonicalHref, url),
-      catch: (cause) =>
-        new AppleMapsLookupError({
-          message: `Apple Maps returned an invalid canonical URL: ${canonicalHref}`,
-          cause,
-        }),
-    });
-  }
-  const appleMapsPlaceId =
-    url.searchParams.get("place-id") ?? canonical?.searchParams.get("place-id") ?? null;
-
-  if (name?.trim().toLowerCase() === "marked location") {
-    return yield* new AppleMapsLookupError({
-      message: "Apple Maps returned a marked location, not a place of interest.",
-    });
-  }
-
-  if (appleMapsPlaceId === null) {
-    return yield* new AppleMapsLookupError({
-      message: "Apple Maps did not return a place ID for this URL.",
-    });
-  }
-
-  if (
-    name === null ||
-    name === undefined ||
-    !Number.isFinite(latitude) ||
-    !Number.isFinite(longitude)
-  ) {
-    return yield* new AppleMapsLookupError({
-      message: "Apple Maps did not return a place name and coordinates for this URL.",
-    });
-  }
-
-  return {
-    address: url.searchParams.get("address"),
-    appleMapsPlaceId,
-    appleMapsUrl: url.toString(),
-    canonicalUrl: canonical?.toString() ?? null,
-    latitude,
-    longitude,
-    metadata,
-    name,
-  } satisfies AppleMapsPlace;
-});
 
 const isAppleMapsPlaceUrl = (url: URL) =>
   url.protocol === "https:" && url.hostname === "maps.apple.com";
@@ -118,10 +11,125 @@ const isAppleMapsShortUrl = (url: URL) =>
   url.pathname.startsWith("/p/") &&
   url.pathname.length > 3;
 
-const resolveAppleMapsUrl = Effect.fn("AppleMaps.resolveUrl")(function* (
-  client: HttpClient.HttpClient,
-  url: URL,
-) {
+const AppleMapsPlaceUrl = Schema.URL.check(
+  Schema.makeFilter(isAppleMapsPlaceUrl, {
+    expected: "an https://maps.apple.com URL",
+  }),
+);
+
+const AppleMapsCanonicalUrl = Schema.URLFromString.check(
+  Schema.makeFilter(isAppleMapsPlaceUrl, {
+    expected: "an https://maps.apple.com URL",
+  }),
+);
+
+const TrimmedNonEmptyString = Schema.Trim.check(Schema.isMinLength(1));
+
+const PlaceName = TrimmedNonEmptyString.check(
+  Schema.makeFilter((name) => name.toLowerCase() !== "marked location", {
+    expected: "a place name other than marked location",
+  }),
+);
+
+export const AppleMapsUrl = Schema.URLFromString.check(
+  Schema.makeFilter((url) => isAppleMapsPlaceUrl(url) || isAppleMapsShortUrl(url), {
+    expected: "an https://maps.apple.com or https://maps.apple/p/ URL",
+  }),
+);
+
+export const AppleMapsPlace = Schema.Struct({
+  address: TrimmedNonEmptyString,
+  appleMapsPlaceId: Schema.NonEmptyString,
+  appleMapsUrl: AppleMapsPlaceUrl,
+  latitude: Schema.FiniteFromString.check(Schema.isBetween({ minimum: -90, maximum: 90 })),
+  longitude: Schema.FiniteFromString.check(Schema.isBetween({ minimum: -180, maximum: 180 })),
+  name: PlaceName,
+});
+
+export type AppleMapsPlace = Schema.Schema.Type<typeof AppleMapsPlace>;
+
+export class AppleMapsLookupError extends Schema.TaggedErrorClass<AppleMapsLookupError>()(
+  "AppleMapsLookupError",
+  {
+    message: Schema.String,
+    cause: Schema.optionalKey(Schema.Defect()),
+  },
+) {}
+
+const extractDocumentMetadata = (html: string) => {
+  const document = parse(html);
+  const metadata = new Map<string, string>();
+  let canonicalUrl: string | undefined;
+
+  const visit = (node: DefaultTreeAdapterTypes.Node): void => {
+    if ("tagName" in node) {
+      if (node.tagName === "meta") {
+        const content = node.attrs.find((attribute) => attribute.name === "content")?.value;
+        const key =
+          node.attrs.find((attribute) => attribute.name === "property")?.value ??
+          node.attrs.find((attribute) => attribute.name === "name")?.value;
+
+        if (content !== undefined && key !== undefined) metadata.set(key, content);
+      }
+
+      if (node.tagName === "link") {
+        const rel = node.attrs.find((attribute) => attribute.name === "rel")?.value;
+        if (rel === "canonical") {
+          canonicalUrl = node.attrs.find((attribute) => attribute.name === "href")?.value;
+        }
+      }
+    }
+
+    if ("childNodes" in node) {
+      for (const child of node.childNodes) visit(child);
+    }
+  };
+
+  visit(document);
+  return { canonicalUrl, metadata };
+};
+
+const parsePlaceDocument = Effect.fn("AppleMaps.parsePlaceDocument")(function* ({
+  html,
+  url,
+}: {
+  readonly html: string;
+  readonly url: URL;
+}) {
+  const { canonicalUrl, metadata } = extractDocumentMetadata(html);
+  const coordinate = url.searchParams.get("coordinate") ?? url.searchParams.get("ll");
+  const [urlLatitude, urlLongitude] = coordinate?.split(",") ?? [];
+  const canonical = yield* Schema.decodeUnknownEffect(Schema.UndefinedOr(AppleMapsCanonicalUrl))(
+    canonicalUrl,
+  ).pipe(
+    Effect.mapError(
+      (cause) =>
+        new AppleMapsLookupError({
+          message: "Apple Maps returned an invalid canonical URL.",
+          cause,
+        }),
+    ),
+  );
+
+  return yield* Schema.decodeUnknownEffect(AppleMapsPlace)({
+    address: url.searchParams.get("address"),
+    appleMapsPlaceId: url.searchParams.get("place-id") ?? canonical?.searchParams.get("place-id"),
+    appleMapsUrl: url,
+    latitude: metadata.get("place:location:latitude") ?? urlLatitude,
+    longitude: metadata.get("place:location:longitude") ?? urlLongitude,
+    name: metadata.get("og:title") ?? url.searchParams.get("name") ?? url.searchParams.get("q"),
+  }).pipe(
+    Effect.mapError(
+      (cause) =>
+        new AppleMapsLookupError({
+          message: "Apple Maps returned invalid place data.",
+          cause,
+        }),
+    ),
+  );
+});
+
+const resolveAppleMapsUrl = Effect.fn("AppleMaps.resolveUrl")(function* (url: URL) {
   if (isAppleMapsPlaceUrl(url)) return url;
 
   if (!isAppleMapsShortUrl(url)) {
@@ -130,8 +138,8 @@ const resolveAppleMapsUrl = Effect.fn("AppleMaps.resolveUrl")(function* (
     });
   }
 
+  const client = yield* HttpClient.HttpClient;
   const response = yield* client.get(url).pipe(
-    Effect.provideService(FetchHttpClient.RequestInit, { redirect: "manual" }),
     Effect.mapError(
       (cause) =>
         new AppleMapsLookupError({
@@ -167,8 +175,8 @@ const resolveAppleMapsUrl = Effect.fn("AppleMaps.resolveUrl")(function* (
 });
 
 export const lookupAppleMapsPlace = Effect.fn("AppleMaps.lookupPlace")(function* (url: URL) {
+  const resolvedUrl = yield* resolveAppleMapsUrl(url);
   const client = yield* HttpClient.HttpClient;
-  const resolvedUrl = yield* resolveAppleMapsUrl(client, url);
   const html = yield* HttpClient.filterStatusOk(client)
     .get(resolvedUrl)
     .pipe(

@@ -1,18 +1,18 @@
 ---
-import SiteShell from "~/layouts/SiteShell.astro";
+import SiteShell from '~/layouts/SiteShell.astro'
 
 interface Props {
-  title?: string;
-  description: string;
-  ogImage?: string;
-  type?: "website" | "article";
-  publishedTime?: string;
-  modifiedTime?: string;
+  title?: string
+  description: string
+  ogImage?: string
+  type?: 'website' | 'article'
+  publishedTime?: string
+  modifiedTime?: string
 }
 ---
 
 <SiteShell {...Astro.props}>
-  <main class="mx-auto w-[min(100%-3rem,84rem)] max-catalogue:w-[min(100%-3rem,48rem)] max-handset:w-[min(100%-2rem,42rem)]">
+  <main class='mx-auto w-[min(100%-3rem,84rem)] max-catalogue:w-[min(100%-3rem,48rem)] max-handset:w-[min(100%-2rem,42rem)]'>
     <slot />
   </main>
 </SiteShell>
