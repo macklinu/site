@@ -166,7 +166,7 @@ function createPopupContent(place: SanFranciscoPlace) {
   appleMapsLink.href = place.appleMapsUrl;
   appleMapsLink.target = "_blank";
   appleMapsLink.rel = "noopener noreferrer";
-  appleMapsLink.textContent = "Open in Apple Maps ↗";
+  appleMapsLink.textContent = "Apple Maps ↗";
   content.append(appleMapsLink);
 
   return content;
