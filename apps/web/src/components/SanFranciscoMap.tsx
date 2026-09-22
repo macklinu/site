@@ -509,10 +509,10 @@ export default function SanFranciscoMap({ places }: Props) {
       className="sf-map isolate border-2 border-site-ink bg-site-surface"
       aria-label="Map of saved San Francisco places"
     >
-      <div className="flex items-start justify-between gap-3 border-b-2 border-site-ink bg-site-paper p-3">
+      <div className="flex items-center justify-between gap-3 border-b-2 border-site-ink bg-site-paper p-3 handset:items-start">
         <div className="min-w-0 flex-1 handset:hidden">
           <select
-            className="min-h-9 w-full border border-site-ink bg-site-paper px-2 font-mono text-[0.6875rem] leading-none font-semibold tracking-[0.02em] text-site-ink"
+            className="box-border h-9 w-full border border-site-ink bg-site-paper px-2 font-mono text-[0.6875rem] leading-none font-semibold tracking-[0.02em] text-site-ink"
             aria-label="Filter places"
             value={selectedFilter}
             onChange={(event) => {
