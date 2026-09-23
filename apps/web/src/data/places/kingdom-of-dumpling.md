@@ -10,3 +10,5 @@ appleMapsUrl: >-
   https://maps.apple.com/place?address=1713%20Taraval%20St,%20San%20Francisco,%20CA%20%2094116,%20United%20States&coordinate=37.742540,-122.484663&name=Kingdom%20Of%20Dumpling&place-id=I8B526419E4CEA830&map=explore
 tags: []
 ---
+
+The best little hole-in-the-wall dumpling place. I ate so many wonderful meals here with various people. It's a place dear to my heart.

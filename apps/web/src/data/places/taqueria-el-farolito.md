@@ -12,3 +12,5 @@ tags:
   - mission-district
   - late-night
 ---
+
+Huge Mission-style burritos. Open late. I would go to this one and the 24th St one a lot when I lived in the Mission for a couple months while Carrie and I were apartment hunting.

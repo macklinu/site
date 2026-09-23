@@ -10,3 +10,5 @@ appleMapsUrl: >-
   https://maps.apple.com/place?address=3991%2017th%20St,%20Ste%20A,%20San%20Francisco,%20CA%20%2094114,%20United%20States&coordinate=37.762285,-122.434821&name=Orphan%20Andy%27s&place-id=I94927A23C6571BBD&map=explore
 tags: []
 ---
+
+Very expensive diner in the Castro but I love the vibe and would still get huge diner breakfasts, dinners, or milkshakes here.

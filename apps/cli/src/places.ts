@@ -157,14 +157,13 @@ const writeAtomically = Effect.fn("Places.writeAtomically")(function* ({
   const path = yield* Path.Path;
   const directory = path.dirname(targetPath);
 
-  yield* Effect.acquireUseRelease(
-    fileSystem.makeTempFile({ directory, prefix: ".place-", suffix: ".md" }),
-    (temporaryPath) =>
+  yield* fileSystem.makeTempFileScoped({ directory, prefix: ".place-", suffix: ".md" }).pipe(
+    Effect.flatMap((temporaryPath) =>
       fileSystem
         .writeFileString(temporaryPath, content)
         .pipe(Effect.andThen(fileSystem.rename(temporaryPath, targetPath))),
-    (temporaryPath) => fileSystem.remove(temporaryPath).pipe(Effect.ignore),
-  ).pipe(
+    ),
+    Effect.scoped,
     Effect.mapError(
       (cause) => new PlaceUpsertError({ message: `Could not write ${targetPath}`, cause }),
     ),

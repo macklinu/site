@@ -12,3 +12,5 @@ tags:
   - mission-district
   - burritos
 ---
+
+Carrie and I's favorite taqueria in the northen area of the Mission. Simple, no flair, delicious.

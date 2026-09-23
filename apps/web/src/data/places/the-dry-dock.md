@@ -14,4 +14,4 @@ tags:
   - 12-step
 ---
 
-A nonprofit recovery community space that hosts 12-step meetings.
+A 12-step meeting space with lots of meetings and lots of characters. Really nice that the city has so many of these types of spaces.

@@ -10,3 +10,5 @@ appleMapsUrl: >-
   https://maps.apple.com/place?address=1%20Ferry%20Building,%20San%20Francisco,%20CA%20%2094111,%20United%20States&coordinate=37.795435,-122.393467&name=Ferry%20Building&place-id=IBE1F65094A7A13B1&map=explore
 tags: []
 ---
+
+This is a sight worth seeing along the water and Embarcadero road. You would walk all along northbound until you get to Fishermans' Wharf if you want a very touristy but kind of fun experience.
