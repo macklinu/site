@@ -38,7 +38,7 @@ type RssItem = {
 };
 
 interface EntryServiceShape {
-  readonly getArticle: (id: ArticleId) => Effect.Effect<CollectionEntry<"articles"> | undefined>;
+  readonly getArticle: (id: ArticleId) => Effect.Effect<CollectionEntry<"articles">>;
   readonly list: () => Effect.Effect<readonly Entry[]>;
   readonly listContentRoutes: () => Effect.Effect<readonly ContentRoute[]>;
   readonly listRssItems: () => Effect.Effect<readonly RssItem[]>;
@@ -48,7 +48,13 @@ export class EntryService extends Context.Service<EntryService, EntryServiceShap
   "@mackie/EntryService",
 ) {}
 
-const toEntry = (entry: EntrySource, kind: EntryKind, href: string): Entry => ({
+type EntryProjection = {
+  readonly entry: EntrySource;
+  readonly kind: EntryKind;
+  readonly href: string;
+};
+
+const toEntry = ({ entry, kind, href }: EntryProjection): Entry => ({
   kind,
   title: entry.data.title,
   slug: entry.id,
@@ -60,30 +66,35 @@ const toEntry = (entry: EntrySource, kind: EntryKind, href: string): Entry => ({
 
 export const layer = Layer.sync(EntryService, () => {
   const loadCollections = Effect.fn("EntryService.loadCollections")(function* () {
-    return yield* Effect.tryPromise(() =>
-      Promise.all([
-        getCollection("articles"),
-        getCollection("notes"),
-        getCollection("demos"),
-        getCollection("guides"),
-      ]),
+    return yield* Effect.all(
+      {
+        articles: Effect.tryPromise(() => getCollection("articles")),
+        notes: Effect.tryPromise(() => getCollection("notes")),
+        demos: Effect.tryPromise(() => getCollection("demos")),
+        guides: Effect.tryPromise(() => getCollection("guides")),
+      },
+      { concurrency: "unbounded" },
     ).pipe(Effect.orDie);
   });
 
   const getArticle = Effect.fn("EntryService.getArticle")(function* (id: ArticleId) {
-    return yield* Effect.tryPromise(() => Promise.resolve(getEntry("articles", id))).pipe(
+    return yield* Effect.tryPromise(() => getEntry({ collection: "articles", id })).pipe(
+      Effect.filterOrFail(
+        (entry): entry is CollectionEntry<"articles"> => entry !== undefined,
+        () => new Error(`Article not found: ${id}`),
+      ),
       Effect.orDie,
     );
   });
 
   const list = Effect.fn("EntryService.list")(function* () {
-    const [articles, notes, demos, guides] = yield* loadCollections();
+    const { articles, notes, demos, guides } = yield* loadCollections();
 
     return [
-      ...articles.map((entry) => toEntry(entry, "article", `/posts/${entry.id}`)),
-      ...notes.map((entry) => toEntry(entry, "note", `/notes/${entry.id}`)),
-      ...demos.map((entry) => toEntry(entry, "demo", `/demos/${entry.id}`)),
-      ...guides.map((entry) => toEntry(entry, "guide", `/guides/${entry.id}`)),
+      ...articles.map((entry) => toEntry({ entry, kind: "article", href: `/posts/${entry.id}` })),
+      ...notes.map((entry) => toEntry({ entry, kind: "note", href: `/notes/${entry.id}` })),
+      ...demos.map((entry) => toEntry({ entry, kind: "demo", href: `/demos/${entry.id}` })),
+      ...guides.map((entry) => toEntry({ entry, kind: "guide", href: `/guides/${entry.id}` })),
     ].sort(
       (left, right) =>
         right.publicationDate.epochMilliseconds - left.publicationDate.epochMilliseconds,
@@ -91,7 +102,7 @@ export const layer = Layer.sync(EntryService, () => {
   });
 
   const listContentRoutes = Effect.fn("EntryService.listContentRoutes")(function* () {
-    const [articles, notes, demos, guides] = yield* loadCollections();
+    const { articles, notes, demos, guides } = yield* loadCollections();
 
     return [
       ...articles.map((entry) => ({ kind: "posts" as const, entry })),

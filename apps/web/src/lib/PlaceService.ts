@@ -17,7 +17,7 @@ export class PlaceService extends Context.Service<PlaceService, PlaceServiceShap
 
 export const layer = Layer.sync(PlaceService, () => {
   const getGuide = Effect.fn("PlaceService.getGuide")(function* (id: PlaceGuideId) {
-    return yield* Effect.tryPromise(() => Promise.resolve(getEntry("placeGuides", id))).pipe(
+    return yield* Effect.tryPromise(() => getEntry({ collection: "placeGuides", id })).pipe(
       Effect.orDie,
     );
   });

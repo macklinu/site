@@ -20,30 +20,20 @@ const {
     const placeService = yield* PlaceService.PlaceService
     const projectService = yield* ProjectService.ProjectService
 
-    const [
-      entries,
-      projects,
-      featuredGuide,
-      selectedSstArticle,
-      selectedStatesArticle,
-    ] = yield* Effect.all(
-      [
-        entryService.list(),
-        projectService.list(),
-        placeService.getGuide('san-francisco'),
-        entryService.getArticle('sst-cloudflare-worker-hono'),
-        entryService.getArticle('prefer-explicit-enumerated-states'),
-      ],
+    return yield* Effect.all(
+      {
+        entries: entryService.list(),
+        projects: projectService.list(),
+        featuredGuide: placeService.getGuide('san-francisco'),
+        selectedSstArticle: entryService.getArticle(
+          'sst-cloudflare-worker-hono'
+        ),
+        selectedStatesArticle: entryService.getArticle(
+          'prefer-explicit-enumerated-states'
+        ),
+      },
       { concurrency: 'unbounded' }
     )
-
-    return {
-      entries,
-      projects,
-      featuredGuide,
-      selectedSstArticle,
-      selectedStatesArticle,
-    }
   }).pipe(
     Effect.provide(
       Layer.mergeAll(
@@ -59,9 +49,7 @@ if (featuredGuide === undefined) {
   throw new Error('The San Francisco place guide is missing.')
 }
 
-const selectedArticles = [selectedSstArticle, selectedStatesArticle].filter(
-  (article): article is NonNullable<typeof article> => article !== undefined
-)
+const selectedArticles = [selectedSstArticle, selectedStatesArticle]
 const recentEntries = entries.slice(0, 4)
 const postEntries = entries.filter(
   (entry) => entry.kind === 'article' || entry.kind === 'guide'
@@ -71,21 +59,21 @@ const demoEntries = entries.filter((entry) => entry.kind === 'demo')
 ---
 
 <Layout description='A personal wiki by Mackie Underdown.'>
-  <div class='py-[var(--space-2xl)] pb-[var(--space-5xl)]'>
-    <header class='py-[var(--space-lg)] pb-[var(--space-3xl)]'>
+  <div class='py-12 pb-32'>
+    <header class='py-6 pb-18'>
       <div class='min-w-0'>
         <p class='m-0 font-mono text-[var(--text-label)] leading-[1.35] tracking-[0.06em] text-site-muted'>
           Personal wiki
         </p>
-        <h1 class='m-0 mt-[var(--space-sm)] min-w-0 [overflow-wrap:anywhere] font-display text-[clamp(var(--text-4xl),6vw,var(--text-7xl))] font-[720] leading-[0.92] tracking-[-0.06em]'>
+        <h1 class='m-0 mt-3 min-w-0 [overflow-wrap:anywhere] font-display text-[clamp(var(--text-4xl),6vw,var(--text-7xl))] font-[720] leading-[0.92] tracking-[-0.06em]'>
           Mackie Underdown
         </h1>
       </div>
     </header>
 
-    <section class='py-[var(--space-3xl)]' aria-labelledby='featured-title'>
+    <section class='py-18' aria-labelledby='featured-title'>
       <a
-        class='grid grid-cols-[auto_minmax(0,1fr)_auto] items-start gap-[var(--space-md)] border-y-2 border-site-ink px-[var(--space-md)] py-[var(--space-lg)] text-inherit no-underline transition-colors duration-150 ease-[var(--ease-out)] hover:bg-site-surface focus-visible:bg-site-surface active:bg-site-line motion-reduce:duration-[0.01ms]'
+        class='grid grid-cols-[auto_minmax(0,1fr)_auto] items-start gap-4 border-y-2 border-site-ink px-4 py-6 text-inherit no-underline transition-colors duration-150 ease-[var(--ease-out)] hover:bg-site-surface focus-visible:bg-site-surface active:bg-site-line motion-reduce:duration-[0.01ms]'
         href={`/places/${featuredGuide.id}`}
       >
         <EntryKindBadge kind={featuredGuide.data.kind} />
@@ -95,11 +83,11 @@ const demoEntries = entries.filter((entry) => entry.kind === 'demo')
           </p>
           <h2
             id='featured-title'
-            class='m-0 mt-[var(--space-xs)] min-w-0 max-w-[20ch] [overflow-wrap:anywhere] font-display text-[clamp(var(--text-2xl),4vw,var(--text-4xl))] font-[680] leading-[0.95] tracking-[-0.045em]'
+            class='m-0 mt-2 min-w-0 max-w-[20ch] [overflow-wrap:anywhere] font-display text-[clamp(var(--text-2xl),4vw,var(--text-4xl))] font-[680] leading-[0.95] tracking-[-0.045em]'
           >
             {featuredGuide.data.title}
           </h2>
-          <p class='m-0 mt-[var(--space-sm)] max-w-[60ch] text-[var(--text-sm)] leading-[1.45] text-site-muted'>
+          <p class='m-0 mt-3 max-w-[60ch] text-[var(--text-sm)] leading-[1.45] text-site-muted'>
             {featuredGuide.data.description}
           </p>
         </div>
@@ -108,11 +96,11 @@ const demoEntries = entries.filter((entry) => entry.kind === 'demo')
         </span>
       </a>
     </section>
-    <section class='py-[var(--space-3xl)]' aria-labelledby='selected-title'>
-      <header class='mb-[var(--space-lg)] min-w-0'>
+    <section class='py-18' aria-labelledby='selected-title'>
+      <header class='mb-6 min-w-0'>
         <h2
           id='selected-title'
-          class='m-0 mt-[var(--space-xs)] min-w-0 max-w-[22ch] [overflow-wrap:anywhere] font-display text-[clamp(var(--text-2xl),3.2vw,var(--text-4xl))] font-[680] leading-[0.95] tracking-[-0.045em]'
+          class='m-0 mt-2 min-w-0 max-w-[22ch] [overflow-wrap:anywhere] font-display text-[clamp(var(--text-2xl),3.2vw,var(--text-4xl))] font-[680] leading-[0.95] tracking-[-0.045em]'
         >
           Selected entries
         </h2>
@@ -121,7 +109,7 @@ const demoEntries = entries.filter((entry) => entry.kind === 'demo')
         {selectedArticles.map((article) => (
           <li class='border-b border-site-line'>
             <a
-              class='grid grid-cols-[auto_minmax(0,1fr)_auto] items-start gap-[var(--space-md)] p-[var(--space-md)] text-inherit no-underline transition-colors duration-150 ease-[var(--ease-out)] hover:bg-site-surface focus-visible:bg-site-surface active:bg-site-line motion-reduce:duration-[0.01ms]'
+              class='grid grid-cols-[auto_minmax(0,1fr)_auto] items-start gap-4 p-4 text-inherit no-underline transition-colors duration-150 ease-[var(--ease-out)] hover:bg-site-surface focus-visible:bg-site-surface active:bg-site-line motion-reduce:duration-[0.01ms]'
               href={`/posts/${article.id}`}
             >
               <EntryKindBadge kind={article.data.kind} />
@@ -129,7 +117,7 @@ const demoEntries = entries.filter((entry) => entry.kind === 'demo')
                 <h3 class='m-0 text-[var(--text-lg)] font-[650] leading-[1.2] tracking-[-0.03em]'>
                   {article.data.title}
                 </h3>
-                <p class='m-0 mt-[var(--space-2xs)] max-w-[60ch] text-[var(--text-sm)] leading-[1.45] text-site-muted'>
+                <p class='m-0 mt-1 max-w-[60ch] text-[var(--text-sm)] leading-[1.45] text-site-muted'>
                   {article.data.description}
                 </p>
               </div>
@@ -145,12 +133,8 @@ const demoEntries = entries.filter((entry) => entry.kind === 'demo')
       </ol>
     </section>
 
-    <section
-      class='py-[var(--space-3xl)]'
-      id='recent'
-      aria-labelledby='recent-title'
-    >
-      <header class='mb-[var(--space-lg)] min-w-0'>
+    <section class='py-18' id='recent' aria-labelledby='recent-title'>
+      <header class='mb-6 min-w-0'>
         <h2
           id='recent-title'
           class='m-0 min-w-0 max-w-[22ch] [overflow-wrap:anywhere] font-display text-[clamp(var(--text-2xl),3.2vw,var(--text-4xl))] font-[680] leading-[0.95] tracking-[-0.045em]'
@@ -162,7 +146,7 @@ const demoEntries = entries.filter((entry) => entry.kind === 'demo')
         {recentEntries.map((entry) => (
           <li class='border-b border-site-line'>
             <a
-              class='grid w-full grid-cols-1 items-center gap-[var(--space-sm)] px-[var(--space-xs)] py-[var(--space-sm)] text-start text-inherit no-underline transition-colors duration-150 ease-[var(--ease-out)] hover:bg-site-surface focus-visible:bg-site-surface active:bg-site-line motion-reduce:duration-[0.01ms] min-[40rem]:grid-cols-[10rem_minmax(0,1fr)]'
+              class='grid w-full grid-cols-1 items-center gap-3 px-2 py-3 text-start text-inherit no-underline transition-colors duration-150 ease-[var(--ease-out)] hover:bg-site-surface focus-visible:bg-site-surface active:bg-site-line motion-reduce:duration-[0.01ms] min-[40rem]:grid-cols-[10rem_minmax(0,1fr)]'
               href={entry.href}
             >
               <time
@@ -171,7 +155,7 @@ const demoEntries = entries.filter((entry) => entry.kind === 'demo')
               >
                 {formatFullDate(entry.publicationDate.epochMilliseconds)}
               </time>
-              <span class='inline-flex min-w-0 items-center gap-[var(--space-sm)] px-[var(--space-xs)] py-[var(--space-2xs)] text-[var(--text-sm)] font-semibold leading-[1.25] tracking-[-0.015em]'>
+              <span class='inline-flex min-w-0 items-center gap-3 px-2 py-1 text-[var(--text-sm)] font-semibold leading-[1.25] tracking-[-0.015em]'>
                 <EntryKindBadge kind={entry.kind} />
                 <span class='min-w-0'>{entry.title}</span>
               </span>
@@ -181,12 +165,8 @@ const demoEntries = entries.filter((entry) => entry.kind === 'demo')
       </ol>
     </section>
 
-    <section
-      class='py-[var(--space-3xl)]'
-      id='work'
-      aria-labelledby='work-title'
-    >
-      <header class='mb-[var(--space-lg)] min-w-0'>
+    <section class='py-18' id='work' aria-labelledby='work-title'>
+      <header class='mb-6 min-w-0'>
         <h2
           id='work-title'
           class='m-0 min-w-0 max-w-[22ch] [overflow-wrap:anywhere] font-display text-[clamp(var(--text-2xl),3.2vw,var(--text-4xl))] font-[680] leading-[0.95] tracking-[-0.045em]'
@@ -198,7 +178,7 @@ const demoEntries = entries.filter((entry) => entry.kind === 'demo')
         {projects.map(({ data: project }) => (
           <li class='border-b border-site-line'>
             <a
-              class='grid min-h-20 grid-cols-[minmax(0,1fr)_auto] items-center gap-[var(--space-md)] p-[var(--space-md)] text-inherit no-underline transition-colors duration-150 ease-[var(--ease-out)] hover:bg-site-surface focus-visible:bg-site-surface active:bg-site-line motion-reduce:duration-[0.01ms]'
+              class='grid min-h-20 grid-cols-[minmax(0,1fr)_auto] items-center gap-4 p-4 text-inherit no-underline transition-colors duration-150 ease-[var(--ease-out)] hover:bg-site-surface focus-visible:bg-site-surface active:bg-site-line motion-reduce:duration-[0.01ms]'
               href={project.href}
               target='_blank'
               rel='noopener noreferrer'
@@ -207,7 +187,7 @@ const demoEntries = entries.filter((entry) => entry.kind === 'demo')
                 <strong class='block text-[var(--text-md)] font-[650] leading-[1.2] tracking-[-0.02em]'>
                   {project.title}
                 </strong>
-                <small class='mt-[var(--space-2xs)] block text-[var(--text-sm)] leading-[1.4] text-site-muted'>
+                <small class='mt-1 block text-[var(--text-sm)] leading-[1.4] text-site-muted'>
                   {project.description}
                 </small>
               </span>
@@ -223,15 +203,11 @@ const demoEntries = entries.filter((entry) => entry.kind === 'demo')
       </ul>
     </section>
 
-    <section
-      class='py-[var(--space-3xl)]'
-      id='archive'
-      aria-labelledby='archive-title'
-    >
-      <header class='mb-[var(--space-lg)] min-w-0'>
+    <section class='py-18' id='archive' aria-labelledby='archive-title'>
+      <header class='mb-6 min-w-0'>
         <h2
           id='archive-title'
-          class='m-0 mt-[var(--space-xs)] min-w-0 max-w-[22ch] [overflow-wrap:anywhere] font-display text-[clamp(var(--text-2xl),3.2vw,var(--text-4xl))] font-[680] leading-[0.95] tracking-[-0.045em]'
+          class='m-0 mt-2 min-w-0 max-w-[22ch] [overflow-wrap:anywhere] font-display text-[clamp(var(--text-2xl),3.2vw,var(--text-4xl))] font-[680] leading-[0.95] tracking-[-0.045em]'
         >
           Index
         </h2>
