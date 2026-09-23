@@ -79,6 +79,15 @@ const places = defineCollection({
   ]),
 });
 
+const placeGuides = defineCollection({
+  loader: glob({ base: "./src/data/place-guides", pattern: "**/*.md" }),
+  schema: z.object({
+    kind: z.literal("place").default("place"),
+    title: z.string().trim().min(1),
+    description: z.string().trim().min(1),
+  }),
+});
+
 const projects = defineCollection({
   loader: glob({ base: "./src/data/projects", pattern: "**/*.yaml" }),
   schema: z.object({
@@ -88,4 +97,12 @@ const projects = defineCollection({
   }),
 });
 
-export const collections = { articles, notes, demos, guides, places, projects };
+export const collections = {
+  articles,
+  notes,
+  demos,
+  guides,
+  places,
+  placeGuides,
+  projects,
+};

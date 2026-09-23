@@ -5,30 +5,35 @@ import { DateTime, Effect } from 'effect'
 
 import EntryArticle from '~/components/EntryArticle.astro'
 import Layout from '~/Layout.astro'
-import { listContentRoutes } from '~/lib/ContentRoute'
+import * as EntryService from '~/lib/EntryService'
 
 export const getStaticPaths = () =>
   Effect.runPromise(
-    listContentRoutes().pipe(
-      Effect.map((routes) =>
-        routes.map((route) => ({
-          params: { kind: route.kind, slug: route.entry.id },
-          props: {
-            entry: route.entry,
-            kind: route.kind,
-          },
-        })),
-      ),
-    ),
-  );
-type Props = InferGetStaticPropsType<typeof getStaticPaths>
+    Effect.gen(function* () {
+      const entryService = yield* EntryService.EntryService
+      const routes = yield* entryService.listContentRoutes()
 
+      return routes.map((route) => ({
+        params: { kind: route.kind, slug: route.entry.id },
+        props: {
+          entry: route.entry,
+          kind: route.kind,
+        },
+      }))
+    }).pipe(Effect.provide(EntryService.layer))
+  )
+type Props = InferGetStaticPropsType<typeof getStaticPaths>
 
 const { entry, kind } = Astro.props
 const { Content } = await render(entry)
 const publicationDate = DateTime.makeUnsafe(entry.data.date)
-const updatedAt = entry.data.updatedAt ? DateTime.makeUnsafe(entry.data.updatedAt) : undefined
-const ogImage = new URL(`/${kind}/${entry.id}/og.png`, import.meta.env.SITE).toString()
+const updatedAt = entry.data.updatedAt
+  ? DateTime.makeUnsafe(entry.data.updatedAt)
+  : undefined
+const ogImage = new URL(
+  `/${kind}/${entry.id}/og.png`,
+  import.meta.env.SITE
+).toString()
 ---
 
 <Layout

@@ -1,8 +1,6 @@
 ---
 import '~/styles.css'
 
-import { author } from '~/lib/Author'
-
 interface Props {
   title?: string
   description: string
@@ -119,9 +117,13 @@ const includeAnalytics = import.meta.env.PROD
         aria-label='Mackie home'
       >
         <span
-          class='mr-2 size-3 border-2 border-site-ink bg-site-green'
+          class='mr-2 grid size-3 place-items-center border-2 border-site-ink bg-site-paper p-px'
           aria-hidden='true'
-        ></span>
+        >
+          <span class='block size-full bg-site-ink p-px'>
+            <span class='block size-full bg-site-brand'></span>
+          </span>
+        </span>
         Mackie
       </a>
       <nav class='flex gap-2 max-handset:gap-1' aria-label='Primary navigation'>
@@ -133,10 +135,9 @@ const includeAnalytics = import.meta.env.PROD
         </a>
         <a
           class='inline-flex min-h-11 items-center px-3 text-site-muted no-underline transition-colors duration-150 ease-out hover:bg-site-green hover:text-site-ink focus-visible:bg-site-green focus-visible:text-site-ink max-handset:px-1'
-          href={`https://github.com/${author.githubHandle.slice(1)}`}
-          rel='me'
+          href='/places/san-francisco'
         >
-          GitHub ↗
+          Places
         </a>
         <button
           class='grid size-11 cursor-pointer place-items-center border border-site-line bg-transparent p-0 text-site-muted transition-colors duration-150 ease-out hover:bg-site-green hover:text-site-green-ink focus-visible:bg-site-green focus-visible:text-site-green-ink dark:border-site-blue dark:text-site-ink'

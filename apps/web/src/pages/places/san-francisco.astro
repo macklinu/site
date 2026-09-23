@@ -1,10 +1,27 @@
 ---
-import { getCollection } from 'astro:content'
+import { Effect } from 'effect'
 
 import SanFranciscoMap from '~/components/SanFranciscoMap'
 import PlacesLayout from '~/layouts/PlacesLayout.astro'
+import * as PlaceService from '~/lib/PlaceService'
 
-const places = (await getCollection('places'))
+const { guide, placeEntries } = await Effect.runPromise(
+  Effect.gen(function* () {
+    const placeService = yield* PlaceService.PlaceService
+    const [guide, placeEntries] = yield* Effect.all(
+      [placeService.getGuide('san-francisco'), placeService.list()],
+      { concurrency: 'unbounded' }
+    )
+
+    return { guide, placeEntries }
+  }).pipe(Effect.provide(PlaceService.layer))
+)
+
+if (guide === undefined) {
+  throw new Error('The San Francisco place guide is missing.')
+}
+
+const places = placeEntries
   .map(({ id, body, data }) => ({
     ...data,
     slug: id,
@@ -18,23 +35,17 @@ const ogImage = new URL(
 ---
 
 <PlacesLayout
-  title='San Francisco'
-  description='My favorite places from when I lived in San Francisco from 2018 to 2020.'
+  title={guide.data.title}
+  description={guide.data.description}
   ogImage={ogImage}
 >
-  <article class='w-full py-[clamp(2.5rem,5vw,4.5rem)] pb-16'>
+  <article class='sf-page w-full py-[clamp(2.5rem,5vw,4.5rem)] pb-16'>
     <header class='max-w-[48rem] border-b-2 border-site-ink pb-8'>
-      <a
-        class='font-mono text-xs tracking-[0.04em] text-site-blue'
-        href='/places'
-      >
-        Places
-      </a>
-      <h1 class='mt-4 mb-3 font-display text-[clamp(2.75rem,5vw,4.5rem)] font-bold leading-[0.88] tracking-[-0.07em] [font-variation-settings:"opsz"_48,_"wdth"_88]'>
-        San Francisco
+      <h1 class='mt-0 mb-3 font-display text-[clamp(2.75rem,5vw,4.5rem)] font-bold leading-[0.88] tracking-[-0.07em] [font-variation-settings:"opsz"_48,_"wdth"_88]'>
+        {guide.data.title}
       </h1>
       <p class='mb-0 max-w-[42rem] text-[1.0625rem] leading-7 text-site-muted'>
-        My favorite places from when I lived in San Francisco from 2018 to 2020.
+        {guide.data.description}
       </p>
     </header>
 
