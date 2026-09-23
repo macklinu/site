@@ -13,16 +13,30 @@ export default defineConfig({
   integrations: [
     react(),
     expressiveCode({
-      themes: ["night-owl-light", "night-owl"],
+      emitExternalStylesheet: false,
+      themes: ["github-light-high-contrast", "github-dark-high-contrast"],
       themeCssSelector: (theme) => `[data-theme="${theme.type}"]`,
       useDarkModeMediaQuery: false,
+      customizeTheme(theme) {
+        theme.applyHueAndChromaAdjustments({
+          accents: "#000000",
+          backgrounds: "#000000",
+        });
+      },
       styleOverrides: {
         uiFontFamily: "var(--font-mono)",
         codeFontFamily: "var(--font-mono)",
         borderRadius: "0",
+        borderWidth: "1px",
         borderColor: "var(--line)",
+        codeBackground: "var(--surface)",
         focusBorder: "var(--focus)",
         frames: {
+          editorBackground: "var(--surface)",
+          editorTabBarBackground: "var(--line)",
+          terminalBackground: "var(--surface)",
+          terminalTitlebarBackground: "var(--line)",
+          terminalTitlebarForeground: "var(--ink)",
           frameBoxShadowCssValue: "none",
         },
       },

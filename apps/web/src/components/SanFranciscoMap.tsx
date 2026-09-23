@@ -451,6 +451,8 @@ export default function SanFranciscoMap({ places }: Props) {
     }
 
     for (const { element, kind } of markersRef.current) {
+      // MapLibre owns marker elements outside React's render tree.
+      // oxlint-disable-next-line react/immutability
       element.hidden = selectedFilter !== "all" && kind !== selectedFilter;
     }
   }, [selectedFilter]);
@@ -497,6 +499,8 @@ export default function SanFranciscoMap({ places }: Props) {
     );
   };
 
+  // These non-form control groups and live status messages use their correct ARIA roles.
+  /* oxlint-disable jsx-a11y/prefer-tag-over-role */
   return (
     <section
       className="sf-map isolate border-2 border-site-ink bg-site-surface"
@@ -610,4 +614,5 @@ export default function SanFranciscoMap({ places }: Props) {
       <div ref={container} className="min-h-[clamp(25rem,72svh,40rem)]" />
     </section>
   );
+  /* oxlint-enable jsx-a11y/prefer-tag-over-role */
 }

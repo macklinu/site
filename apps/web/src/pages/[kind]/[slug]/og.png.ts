@@ -1,15 +1,13 @@
 import type { APIRoute, GetStaticPaths } from "astro";
 import { Effect } from "effect";
 
-import type { EntryKind } from "~/lib/Entry";
-import { listContentRoutes } from "~/lib/ContentRoute";
+import * as EntryService from "~/lib/EntryService";
 import { renderOpenGraphImage } from "~/lib/OpenGraph";
 import { entryImage } from "~/og";
 
 type OpenGraphEntry = {
   readonly title: string;
   readonly description: string;
-  readonly kind: EntryKind;
 };
 
 type OpenGraphProps = {
@@ -30,14 +28,15 @@ const generateOpenGraphImageResponse = (entry: OpenGraphEntry) =>
 
 export const getStaticPaths: GetStaticPaths = () =>
   Effect.runPromise(
-    listContentRoutes().pipe(
-      Effect.map((routes) =>
-        routes.map(({ kind, entry }) => ({
-          params: { kind, slug: entry.id },
-          props: { entry: entry.data },
-        })),
-      ),
-    ),
+    Effect.gen(function* () {
+      const entryService = yield* EntryService.EntryService;
+      const routes = yield* entryService.listContentRoutes();
+
+      return routes.map(({ kind, entry }) => ({
+        params: { kind, slug: entry.id },
+        props: { entry: entry.data },
+      }));
+    }).pipe(Effect.provide(EntryService.layer)),
   );
 
 export const GET: APIRoute<OpenGraphProps, Record<string, string | undefined>> = ({ props }) =>

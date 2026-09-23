@@ -89,6 +89,8 @@ export default function MermaidDiagram({ definition, label = "Diagram" }: Props)
     };
   }, [definition, id]);
 
+  // The injected SVG is one labelled graphic, not an image resource.
+  /* oxlint-disable jsx-a11y/prefer-tag-over-role */
   return (
     <div
       ref={container}
@@ -97,4 +99,5 @@ export default function MermaidDiagram({ definition, label = "Diagram" }: Props)
       className="my-6 overflow-x-auto border border-site-line bg-site-surface p-4 [&_svg]:block [&_svg]:min-w-[36rem]"
     />
   );
+  /* oxlint-enable jsx-a11y/prefer-tag-over-role */
 }

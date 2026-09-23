@@ -9,7 +9,7 @@ const description = "My favorite places from when I lived in San Francisco from 
 
 export const GET: APIRoute = () =>
   Effect.runPromise(
-    renderOpenGraphImage(entryImage({ title, description, kind: "places" })).pipe(
+    renderOpenGraphImage(entryImage({ title, description })).pipe(
       Effect.map(
         (image) =>
           new Response(image, {
