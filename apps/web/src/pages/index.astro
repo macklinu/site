@@ -1,66 +1,198 @@
 ---
-import { getCollection } from 'astro:content'
-import { DateTime, Effect } from 'effect'
-import { Icon } from 'astro-icon/components'
+import { DateTime, Effect, Layer } from 'effect'
 
 import EntryKindBadge from '~/components/EntryKindBadge.astro'
 import Layout from '~/Layout.astro'
 import { formatFullDate } from '~/lib/DateFormat'
-import { author } from '~/lib/Author'
-import * as Entry from '~/lib/Entry'
+import * as EntryService from '~/lib/EntryService'
+import * as ProjectService from '~/lib/ProjectService'
+import * as PlaceService from '~/lib/PlaceService'
 
-const [entries, projects] = await Promise.all([
-  Effect.runPromise(Entry.list()),
-  getCollection('projects'),
-])
+const {
+  entries,
+  projects,
+  featuredGuide,
+  selectedSstArticle,
+  selectedStatesArticle,
+} = await Effect.runPromise(
+  Effect.gen(function* () {
+    const entryService = yield* EntryService.EntryService
+    const placeService = yield* PlaceService.PlaceService
+    const projectService = yield* ProjectService.ProjectService
+
+    return yield* Effect.all(
+      {
+        entries: entryService.list(),
+        projects: projectService.list(),
+        featuredGuide: placeService.getGuide('san-francisco'),
+        selectedSstArticle: entryService.getArticle(
+          'sst-cloudflare-worker-hono'
+        ),
+        selectedStatesArticle: entryService.getArticle(
+          'prefer-explicit-enumerated-states'
+        ),
+      },
+      { concurrency: 'unbounded' }
+    )
+  }).pipe(
+    Effect.provide(
+      Layer.mergeAll(
+        EntryService.layer,
+        PlaceService.layer,
+        ProjectService.layer
+      )
+    )
+  )
+)
+
+if (featuredGuide === undefined) {
+  throw new Error('The San Francisco place guide is missing.')
+}
+
+const selectedArticles = [selectedSstArticle, selectedStatesArticle]
+const recentEntries = entries.slice(0, 4)
+const postEntries = entries.filter(
+  (entry) => entry.kind === 'article' || entry.kind === 'guide'
+)
+const noteEntries = entries.filter((entry) => entry.kind === 'note')
+const demoEntries = entries.filter((entry) => entry.kind === 'demo')
 ---
 
-<Layout description={author.bio}>
-  <div class='flex flex-col gap-y-[clamp(2rem,4vw,3.5rem)] py-[clamp(2rem,5vw,4rem)] pb-20 max-catalogue:pt-6'>
-    <header class='border-b border-site-ink py-3 pb-4'>
-      <div>
-        <p class='inline-flex w-fit items-center gap-1 bg-site-ink px-1 py-1 font-mono text-xs leading-[1.35] tracking-[0.04em] text-site-paper'>
-          <Icon name='lucide:map-pin' size='0.85em' aria-hidden='true' />
-          Detroit
+<Layout description='A personal wiki by Mackie Underdown.'>
+  <div class='py-12 pb-32'>
+    <header class='py-6 pb-18'>
+      <div class='min-w-0'>
+        <p class='m-0 font-mono text-xs leading-[1.35] tracking-[0.06em] text-site-muted'>
+          Personal wiki
         </p>
-        <h1 class='mt-2 font-display text-[clamp(2.75rem,4vw,4.25rem)] font-bold leading-[0.84] tracking-[-0.035em] [font-variation-settings:"opsz"_48,_"wdth"_100]'>
-          Index
+        <h1 class='m-0 mt-3 min-w-0 [overflow-wrap:anywhere] font-display text-[clamp(var(--text-4xl),6vw,var(--text-7xl))] font-[720] leading-[0.92] tracking-[-0.06em]'>
+          Mackie Underdown
         </h1>
       </div>
     </header>
 
-    <section
-      class='max-catalogue:mt-9 max-catalogue:mb-8'
-      id='projects'
-      aria-labelledby='projects-title'
-    >
-      <header class='mb-3 flex items-end justify-between gap-4 max-handset:block'>
+    <section class='py-18' aria-labelledby='featured-title'>
+      <a
+        class='grid grid-cols-[auto_minmax(0,1fr)_auto] items-start gap-4 border-y-2 border-site-ink px-4 py-6 text-inherit no-underline transition-colors duration-150 ease-[var(--ease-out)] hover:bg-site-surface focus-visible:bg-site-surface active:bg-site-line motion-reduce:duration-[0.01ms]'
+        href={`/places/${featuredGuide.id}`}
+      >
+        <EntryKindBadge kind={featuredGuide.data.kind} />
+        <div>
+          <p class='m-0 font-mono text-xs leading-[1.35] tracking-[0.06em] text-site-muted'>
+            Featured
+          </p>
+          <h2
+            id='featured-title'
+            class='m-0 mt-2 min-w-0 max-w-[20ch] [overflow-wrap:anywhere] font-display text-[clamp(var(--text-2xl),4vw,var(--text-4xl))] font-[680] leading-[0.95] tracking-[-0.045em]'
+          >
+            {featuredGuide.data.title}
+          </h2>
+          <p class='m-0 mt-3 max-w-[60ch] text-sm leading-[1.45] text-site-muted'>
+            {featuredGuide.data.description}
+          </p>
+        </div>
+        <span class='font-mono leading-none text-site-muted' aria-hidden='true'>
+          →
+        </span>
+      </a>
+    </section>
+    <section class='py-18' aria-labelledby='selected-title'>
+      <header class='mb-6 min-w-0'>
         <h2
-          id='projects-title'
-          class='mt-0 font-display text-[clamp(1.9rem,2.7vw,2.8rem)] font-bold leading-[0.9] tracking-[-0.025em]'
+          id='selected-title'
+          class='m-0 mt-2 min-w-0 max-w-[22ch] [overflow-wrap:anywhere] font-display text-[clamp(var(--text-2xl),3.2vw,var(--text-4xl))] font-[680] leading-[0.95] tracking-[-0.045em]'
+        >
+          Selected entries
+        </h2>
+      </header>
+      <ol class='m-0 list-none border-t-2 border-site-ink p-0'>
+        {selectedArticles.map((article) => (
+          <li class='border-b border-site-line'>
+            <a
+              class='grid grid-cols-[auto_minmax(0,1fr)_auto] items-start gap-4 p-4 text-inherit no-underline transition-colors duration-150 ease-[var(--ease-out)] hover:bg-site-surface focus-visible:bg-site-surface active:bg-site-line motion-reduce:duration-[0.01ms]'
+              href={`/posts/${article.id}`}
+            >
+              <EntryKindBadge kind={article.data.kind} />
+              <div>
+                <h3 class='m-0 text-lg font-[650] leading-[1.2] tracking-[-0.03em]'>
+                  {article.data.title}
+                </h3>
+                <p class='m-0 mt-1 max-w-[60ch] text-sm leading-[1.45] text-site-muted'>
+                  {article.data.description}
+                </p>
+              </div>
+              <span
+                class='font-mono leading-none text-site-muted'
+                aria-hidden='true'
+              >
+                →
+              </span>
+            </a>
+          </li>
+        ))}
+      </ol>
+    </section>
+
+    <section class='py-18' id='recent' aria-labelledby='recent-title'>
+      <header class='mb-6 min-w-0'>
+        <h2
+          id='recent-title'
+          class='m-0 min-w-0 max-w-[22ch] [overflow-wrap:anywhere] font-display text-[clamp(var(--text-2xl),3.2vw,var(--text-4xl))] font-[680] leading-[0.95] tracking-[-0.045em]'
+        >
+          Recent
+        </h2>
+      </header>
+      <ol class='m-0 list-none border-t-2 border-site-ink p-0'>
+        {recentEntries.map((entry) => (
+          <li class='border-b border-site-line'>
+            <a
+              class='grid w-full grid-cols-1 items-center gap-3 px-2 py-3 text-start text-inherit no-underline transition-colors duration-150 ease-[var(--ease-out)] hover:bg-site-surface focus-visible:bg-site-surface active:bg-site-line motion-reduce:duration-[0.01ms] min-[40rem]:grid-cols-[10rem_minmax(0,1fr)]'
+              href={entry.href}
+            >
+              <time
+                class='whitespace-nowrap font-mono text-sm leading-[1.35] text-site-muted'
+                datetime={DateTime.formatIsoDate(entry.publicationDate)}
+              >
+                {formatFullDate(entry.publicationDate.epochMilliseconds)}
+              </time>
+              <span class='inline-flex min-w-0 items-center gap-3 px-2 py-1 text-base font-semibold leading-[1.25] tracking-[-0.015em]'>
+                <EntryKindBadge kind={entry.kind} />
+                <span class='min-w-0'>{entry.title}</span>
+              </span>
+            </a>
+          </li>
+        ))}
+      </ol>
+    </section>
+
+    <section class='py-18' id='work' aria-labelledby='work-title'>
+      <header class='mb-6 min-w-0'>
+        <h2
+          id='work-title'
+          class='m-0 min-w-0 max-w-[22ch] [overflow-wrap:anywhere] font-display text-[clamp(var(--text-2xl),3.2vw,var(--text-4xl))] font-[680] leading-[0.95] tracking-[-0.045em]'
         >
           Projects
         </h2>
       </header>
-      <ul class='m-0 grid list-none grid-cols-2 gap-x-[clamp(1rem,3vw,3rem)] border-t border-site-ink p-0 max-handset:grid-cols-1'>
-        {projects.map(({ data: { title, description, href } }) => (
+      <ul class='m-0 list-none border-t-2 border-site-ink p-0'>
+        {projects.map(({ data: project }) => (
           <li class='border-b border-site-line'>
             <a
-              class='group grid min-h-24 grid-cols-[minmax(0,1fr)_1.5rem] items-start gap-[clamp(0.75rem,1.35vw,1.5rem)] px-2 py-4 text-inherit no-underline transition-colors duration-150 ease-out hover:bg-site-surface focus-visible:bg-site-surface max-handset:min-h-0 max-handset:gap-2 max-handset:px-1'
-              href={href}
+              class='grid min-h-20 grid-cols-[minmax(0,1fr)_auto] items-center gap-4 p-4 text-inherit no-underline transition-colors duration-150 ease-[var(--ease-out)] hover:bg-site-surface focus-visible:bg-site-surface active:bg-site-line motion-reduce:duration-[0.01ms]'
+              href={project.href}
               target='_blank'
               rel='noopener noreferrer'
             >
-              <div>
-                <h3 class='m-0 font-body text-[clamp(1.05rem,1.4vw,1.28rem)] font-[650] leading-[1.2] tracking-[-0.025em] underline decoration-2 decoration-transparent underline-offset-[0.2em] transition-colors duration-150 ease-out group-hover:decoration-site-blue group-focus-visible:decoration-site-blue'>
-                  {title}
-                </h3>
-                <p class='mt-1 text-[0.9375rem] leading-[1.45] text-site-muted'>
-                  {description}
-                </p>
-              </div>
+              <span>
+                <strong class='block text-base font-[650] leading-[1.2] tracking-[-0.02em]'>
+                  {project.title}
+                </strong>
+                <small class='mt-1 block text-sm leading-[1.4] text-site-muted'>
+                  {project.description}
+                </small>
+              </span>
               <span
-                class='col-start-2 row-start-1 self-center font-mono text-[1.05rem] leading-none text-site-ink transition-transform duration-200 ease-out group-hover:translate-x-1 group-hover:-translate-y-1 group-focus-visible:translate-x-1 group-focus-visible:-translate-y-1'
+                class='font-mono leading-none text-site-muted'
                 aria-hidden='true'
               >
                 ↗
@@ -71,56 +203,120 @@ const [entries, projects] = await Promise.all([
       </ul>
     </section>
 
-    <section id='latest' aria-labelledby='latest-title'>
-      <header class='mb-3 flex items-end justify-between gap-4 max-handset:block'>
+    <section class='py-18' id='archive' aria-labelledby='archive-title'>
+      <header class='mb-6 min-w-0'>
         <h2
-          id='latest-title'
-          class='mt-0 font-display text-[clamp(1.9rem,2.7vw,2.8rem)] font-bold leading-[0.9] tracking-[-0.025em]'
+          id='archive-title'
+          class='m-0 mt-2 min-w-0 max-w-[22ch] [overflow-wrap:anywhere] font-display text-[clamp(var(--text-2xl),3.2vw,var(--text-4xl))] font-[680] leading-[0.95] tracking-[-0.045em]'
         >
-          Recent
+          Index
         </h2>
       </header>
-      <ul class='m-0 list-none border-t border-site-ink p-0'>
-        {entries.map((entry) => (
-          <li class='border-b border-site-line'>
-            <a
-              class='group grid min-h-24 grid-cols-[4rem_9rem_minmax(0,1fr)] items-start gap-[clamp(0.75rem,1.35vw,1.5rem)] px-2 py-4 text-inherit no-underline transition-colors duration-150 ease-out hover:bg-site-surface focus-visible:bg-site-surface max-handset:min-h-0 max-handset:grid-cols-[minmax(0,1fr)_max-content] max-handset:gap-2 max-handset:px-1'
-              href={entry.href}
-            >
-              <EntryKindBadge
-                kind={entry.kind}
-                class='min-w-16 justify-center max-handset:col-start-1'
-              />
-              <time
-                class='whitespace-nowrap pt-1 font-mono text-xs leading-[1.35] text-site-muted tabular-nums max-handset:col-start-2 max-handset:row-start-1 max-handset:min-w-[14ch] max-handset:justify-self-end'
-                datetime={DateTime.formatIsoDate(entry.publicationDate)}
-              >
-                {formatFullDate(entry.publicationDate.epochMilliseconds)}
-              </time>
-              <div class='max-handset:col-span-full'>
-                <h3 class='m-0 font-body text-[clamp(1.05rem,1.4vw,1.28rem)] font-[650] leading-[1.2] tracking-[-0.025em] underline decoration-2 decoration-transparent underline-offset-[0.2em] transition-colors duration-150 ease-out group-hover:decoration-site-blue group-focus-visible:decoration-site-blue'>
-                  {entry.title}
-                </h3>
-                <p class='mt-1 text-[0.9375rem] leading-[1.45] text-site-muted'>
-                  {entry.description}
-                </p>
-                {entry.topics.length > 0 && (
-                  <ul
-                    class='mt-3 flex list-none flex-wrap gap-1 p-0 font-mono text-[0.6875rem] leading-[1.35] tracking-[0.02em] text-site-blue'
-                    aria-label='Topics'
+      <div class='grid gap-8 min-[40rem]:grid-cols-2 min-[40rem]:items-start'>
+        <section aria-labelledby='posts-index-title'>
+          <h3
+            id='posts-index-title'
+            class='mb-3 font-mono text-xs font-medium uppercase leading-[1.35] tracking-[0.06em]'
+          >
+            Posts
+          </h3>
+          <ul class='m-0 list-none border-t-2 border-site-ink p-0'>
+            {postEntries.map((entry) => (
+              <li class='border-b border-site-line'>
+                <a
+                  class='grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-4 px-2 py-3 text-sm font-semibold leading-[1.35] tracking-[-0.015em] text-inherit no-underline transition-colors duration-150 ease-[var(--ease-out)] hover:bg-site-surface focus-visible:bg-site-surface active:bg-site-line motion-reduce:duration-[0.01ms]'
+                  href={entry.href}
+                >
+                  <span>{entry.title}</span>
+                  <time
+                    class='whitespace-nowrap font-mono text-xs leading-[1.35] text-site-muted'
+                    datetime={DateTime.formatIsoDate(entry.publicationDate)}
                   >
-                    {entry.topics.map((topic) => (
-                      <li class="before:mr-1 before:text-site-line before:content-['/'] first:before:hidden">
-                        {topic}
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </div>
-            </a>
-          </li>
-        ))}
-      </ul>
+                    {DateTime.formatIsoDate(entry.publicationDate)}
+                  </time>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <div class='grid content-start gap-8'>
+          <section aria-labelledby='notes-index-title'>
+            <h3
+              id='notes-index-title'
+              class='mb-3 font-mono text-xs font-medium uppercase leading-[1.35] tracking-[0.06em]'
+            >
+              Notes
+            </h3>
+            <ul class='m-0 list-none border-t-2 border-site-ink p-0'>
+              {noteEntries.map((entry) => (
+                <li class='border-b border-site-line'>
+                  <a
+                    class='grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-4 px-2 py-3 text-sm font-semibold leading-[1.35] tracking-[-0.015em] text-inherit no-underline transition-colors duration-150 ease-[var(--ease-out)] hover:bg-site-surface focus-visible:bg-site-surface active:bg-site-line motion-reduce:duration-[0.01ms]'
+                    href={entry.href}
+                  >
+                    <span>{entry.title}</span>
+                    <time
+                      class='whitespace-nowrap font-mono text-xs leading-[1.35] text-site-muted'
+                      datetime={DateTime.formatIsoDate(entry.publicationDate)}
+                    >
+                      {DateTime.formatIsoDate(entry.publicationDate)}
+                    </time>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </section>
+
+          <section aria-labelledby='places-index-title'>
+            <h3
+              id='places-index-title'
+              class='mb-3 font-mono text-xs font-medium uppercase leading-[1.35] tracking-[0.06em]'
+            >
+              Places
+            </h3>
+            <ul class='m-0 list-none border-t-2 border-site-ink p-0'>
+              <li class='border-b border-site-line'>
+                <a
+                  class='grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-4 px-2 py-3 text-sm font-semibold leading-[1.35] tracking-[-0.015em] text-inherit no-underline transition-colors duration-150 ease-[var(--ease-out)] hover:bg-site-surface focus-visible:bg-site-surface active:bg-site-line motion-reduce:duration-[0.01ms]'
+                  href='/places/san-francisco'
+                >
+                  <span>San Francisco</span>
+                </a>
+              </li>
+            </ul>
+          </section>
+
+          {demoEntries.length > 0 && (
+            <section aria-labelledby='demos-index-title'>
+              <h3
+                id='demos-index-title'
+                class='mb-3 font-mono text-xs font-medium uppercase leading-[1.35] tracking-[0.06em]'
+              >
+                Demos
+              </h3>
+              <ul class='m-0 list-none border-t-2 border-site-ink p-0'>
+                {demoEntries.map((entry) => (
+                  <li class='border-b border-site-line'>
+                    <a
+                      class='grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-4 px-2 py-3 text-sm font-semibold leading-[1.35] tracking-[-0.015em] text-inherit no-underline transition-colors duration-150 ease-[var(--ease-out)] hover:bg-site-surface focus-visible:bg-site-surface active:bg-site-line motion-reduce:duration-[0.01ms]'
+                      href={entry.href}
+                    >
+                      <span>{entry.title}</span>
+                      <time
+                        class='whitespace-nowrap font-mono text-xs leading-[1.35] text-site-muted'
+                        datetime={DateTime.formatIsoDate(entry.publicationDate)}
+                      >
+                        {DateTime.formatIsoDate(entry.publicationDate)}
+                      </time>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
+        </div>
+      </div>
     </section>
   </div>
 </Layout>

@@ -2,10 +2,15 @@ import type { APIRoute } from "astro";
 import rss from "@astrojs/rss";
 import { Effect } from "effect";
 
-import * as Entry from "~/lib/Entry";
+import * as EntryService from "~/lib/EntryService";
 
 export const GET: APIRoute = async (context) => {
-  const items = await Effect.runPromise(Entry.listRssItems());
+  const items = await Effect.runPromise(
+    Effect.gen(function* () {
+      const entryService = yield* EntryService.EntryService;
+      return yield* entryService.listRssItems();
+    }).pipe(Effect.provide(EntryService.layer)),
+  );
 
   if (context.site === undefined) {
     throw new Error("The Astro site configuration is required to generate the RSS feed.");
