@@ -62,7 +62,7 @@ const demoEntries = entries.filter((entry) => entry.kind === 'demo')
   <div class='py-12 pb-32'>
     <header class='py-6 pb-18'>
       <div class='min-w-0'>
-        <p class='m-0 font-mono text-[var(--text-label)] leading-[1.35] tracking-[0.06em] text-site-muted'>
+        <p class='m-0 font-mono text-xs leading-[1.35] tracking-[0.06em] text-site-muted'>
           Personal wiki
         </p>
         <h1 class='m-0 mt-3 min-w-0 [overflow-wrap:anywhere] font-display text-[clamp(var(--text-4xl),6vw,var(--text-7xl))] font-[720] leading-[0.92] tracking-[-0.06em]'>
@@ -78,7 +78,7 @@ const demoEntries = entries.filter((entry) => entry.kind === 'demo')
       >
         <EntryKindBadge kind={featuredGuide.data.kind} />
         <div>
-          <p class='m-0 font-mono text-[var(--text-label)] leading-[1.35] tracking-[0.06em] text-site-muted'>
+          <p class='m-0 font-mono text-xs leading-[1.35] tracking-[0.06em] text-site-muted'>
             Featured
           </p>
           <h2
@@ -87,7 +87,7 @@ const demoEntries = entries.filter((entry) => entry.kind === 'demo')
           >
             {featuredGuide.data.title}
           </h2>
-          <p class='m-0 mt-3 max-w-[60ch] text-[var(--text-sm)] leading-[1.45] text-site-muted'>
+          <p class='m-0 mt-3 max-w-[60ch] text-sm leading-[1.45] text-site-muted'>
             {featuredGuide.data.description}
           </p>
         </div>
@@ -114,10 +114,10 @@ const demoEntries = entries.filter((entry) => entry.kind === 'demo')
             >
               <EntryKindBadge kind={article.data.kind} />
               <div>
-                <h3 class='m-0 text-[var(--text-lg)] font-[650] leading-[1.2] tracking-[-0.03em]'>
+                <h3 class='m-0 text-lg font-[650] leading-[1.2] tracking-[-0.03em]'>
                   {article.data.title}
                 </h3>
-                <p class='m-0 mt-1 max-w-[60ch] text-[var(--text-sm)] leading-[1.45] text-site-muted'>
+                <p class='m-0 mt-1 max-w-[60ch] text-sm leading-[1.45] text-site-muted'>
                   {article.data.description}
                 </p>
               </div>
@@ -150,12 +150,12 @@ const demoEntries = entries.filter((entry) => entry.kind === 'demo')
               href={entry.href}
             >
               <time
-                class='whitespace-nowrap font-mono text-[var(--text-label)] leading-[1.35] text-site-muted'
+                class='whitespace-nowrap font-mono text-sm leading-[1.35] text-site-muted'
                 datetime={DateTime.formatIsoDate(entry.publicationDate)}
               >
                 {formatFullDate(entry.publicationDate.epochMilliseconds)}
               </time>
-              <span class='inline-flex min-w-0 items-center gap-3 px-2 py-1 text-[var(--text-sm)] font-semibold leading-[1.25] tracking-[-0.015em]'>
+              <span class='inline-flex min-w-0 items-center gap-3 px-2 py-1 text-base font-semibold leading-[1.25] tracking-[-0.015em]'>
                 <EntryKindBadge kind={entry.kind} />
                 <span class='min-w-0'>{entry.title}</span>
               </span>
@@ -184,10 +184,10 @@ const demoEntries = entries.filter((entry) => entry.kind === 'demo')
               rel='noopener noreferrer'
             >
               <span>
-                <strong class='block text-[var(--text-md)] font-[650] leading-[1.2] tracking-[-0.02em]'>
+                <strong class='block text-base font-[650] leading-[1.2] tracking-[-0.02em]'>
                   {project.title}
                 </strong>
-                <small class='mt-1 block text-[var(--text-sm)] leading-[1.4] text-site-muted'>
+                <small class='mt-1 block text-sm leading-[1.4] text-site-muted'>
                   {project.description}
                 </small>
               </span>
