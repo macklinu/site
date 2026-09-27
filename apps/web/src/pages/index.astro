@@ -65,7 +65,7 @@ const demoEntries = entries.filter((entry) => entry.kind === 'demo')
         <p class='m-0 font-mono text-xs leading-[1.35] tracking-[0.06em] text-site-muted'>
           Personal wiki
         </p>
-        <h1 class='m-0 mt-3 min-w-0 [overflow-wrap:anywhere] font-display text-[clamp(var(--text-4xl),6vw,var(--text-7xl))] font-[720] leading-[0.92] tracking-[-0.06em]'>
+        <h1 class='m-0 mt-3 min-w-0 [overflow-wrap:anywhere] font-display text-[clamp(var(--home-heading-max),6vw,var(--home-title-max))] font-[720] leading-[0.92] tracking-[-0.06em]'>
           Mackie Underdown
         </h1>
       </div>
@@ -83,7 +83,7 @@ const demoEntries = entries.filter((entry) => entry.kind === 'demo')
           </p>
           <h2
             id='featured-title'
-            class='m-0 mt-2 min-w-0 max-w-[20ch] [overflow-wrap:anywhere] font-display text-[clamp(var(--text-2xl),4vw,var(--text-4xl))] font-[680] leading-[0.95] tracking-[-0.045em]'
+            class='m-0 mt-2 min-w-0 max-w-[20ch] [overflow-wrap:anywhere] font-display text-[clamp(var(--home-heading-min),4vw,var(--home-heading-max))] font-[680] leading-[0.95] tracking-[-0.045em]'
           >
             {featuredGuide.data.title}
           </h2>
@@ -100,7 +100,7 @@ const demoEntries = entries.filter((entry) => entry.kind === 'demo')
       <header class='mb-6 min-w-0'>
         <h2
           id='selected-title'
-          class='m-0 mt-2 min-w-0 max-w-[22ch] [overflow-wrap:anywhere] font-display text-[clamp(var(--text-2xl),3.2vw,var(--text-4xl))] font-[680] leading-[0.95] tracking-[-0.045em]'
+          class='m-0 mt-2 min-w-0 max-w-[22ch] [overflow-wrap:anywhere] font-display text-[clamp(var(--home-heading-min),3.2vw,var(--home-heading-max))] font-[680] leading-[0.95] tracking-[-0.045em]'
         >
           Selected entries
         </h2>
@@ -117,7 +117,7 @@ const demoEntries = entries.filter((entry) => entry.kind === 'demo')
                 <h3 class='m-0 text-lg font-[650] leading-[1.2] tracking-[-0.03em]'>
                   {article.data.title}
                 </h3>
-                <p class='m-0 mt-1 max-w-[60ch] text-sm leading-[1.45] text-site-muted'>
+                <p class='m-0 mt-1 text-sm leading-[1.45] text-site-muted'>
                   {article.data.description}
                 </p>
               </div>
@@ -137,7 +137,7 @@ const demoEntries = entries.filter((entry) => entry.kind === 'demo')
       <header class='mb-6 min-w-0'>
         <h2
           id='recent-title'
-          class='m-0 min-w-0 max-w-[22ch] [overflow-wrap:anywhere] font-display text-[clamp(var(--text-2xl),3.2vw,var(--text-4xl))] font-[680] leading-[0.95] tracking-[-0.045em]'
+          class='m-0 min-w-0 max-w-[22ch] [overflow-wrap:anywhere] font-display text-[clamp(var(--home-heading-min),3.2vw,var(--home-heading-max))] font-[680] leading-[0.95] tracking-[-0.045em]'
         >
           Recent
         </h2>
@@ -146,7 +146,7 @@ const demoEntries = entries.filter((entry) => entry.kind === 'demo')
         {recentEntries.map((entry) => (
           <li class='border-b border-site-line'>
             <a
-              class='grid w-full grid-cols-1 items-center gap-3 px-2 py-3 text-start text-inherit no-underline transition-colors duration-150 ease-[var(--ease-out)] hover:bg-site-surface focus-visible:bg-site-surface active:bg-site-line motion-reduce:duration-[0.01ms] min-[40rem]:grid-cols-[10rem_minmax(0,1fr)]'
+              class='grid w-full grid-cols-1 items-center gap-3 px-2 py-3 text-start text-inherit no-underline transition-colors duration-150 ease-[var(--ease-out)] hover:bg-site-surface focus-visible:bg-site-surface active:bg-site-line motion-reduce:duration-[0.01ms] sm:grid-cols-[10rem_minmax(0,1fr)]'
               href={entry.href}
             >
               <time
@@ -169,7 +169,7 @@ const demoEntries = entries.filter((entry) => entry.kind === 'demo')
       <header class='mb-6 min-w-0'>
         <h2
           id='work-title'
-          class='m-0 min-w-0 max-w-[22ch] [overflow-wrap:anywhere] font-display text-[clamp(var(--text-2xl),3.2vw,var(--text-4xl))] font-[680] leading-[0.95] tracking-[-0.045em]'
+          class='m-0 min-w-0 max-w-[22ch] [overflow-wrap:anywhere] font-display text-[clamp(var(--home-heading-min),3.2vw,var(--home-heading-max))] font-[680] leading-[0.95] tracking-[-0.045em]'
         >
           Projects
         </h2>
@@ -207,12 +207,12 @@ const demoEntries = entries.filter((entry) => entry.kind === 'demo')
       <header class='mb-6 min-w-0'>
         <h2
           id='archive-title'
-          class='m-0 mt-2 min-w-0 max-w-[22ch] [overflow-wrap:anywhere] font-display text-[clamp(var(--text-2xl),3.2vw,var(--text-4xl))] font-[680] leading-[0.95] tracking-[-0.045em]'
+          class='m-0 mt-2 min-w-0 max-w-[22ch] [overflow-wrap:anywhere] font-display text-[clamp(var(--home-heading-min),3.2vw,var(--home-heading-max))] font-[680] leading-[0.95] tracking-[-0.045em]'
         >
           Index
         </h2>
       </header>
-      <div class='grid gap-8 min-[40rem]:grid-cols-2 min-[40rem]:items-start'>
+      <div class='grid gap-8 sm:grid-cols-2 sm:items-start'>
         <section aria-labelledby='posts-index-title'>
           <h3
             id='posts-index-title'

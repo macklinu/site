@@ -50,12 +50,9 @@
   --teal: oklch(0.55 0 0);
   --transit: oklch(0.72 0 0);
   --brand-green: oklch(0.73 0.19 145);
-  --text-sm: 0.875rem;
-  --text-lg: 1.125rem;
-  --text-2xl: 1.75rem;
-  --text-3xl: 2.25rem;
-  --text-4xl: 3rem;
-  --text-7xl: 5.5rem;
+  --home-heading-min: 1.75rem;
+  --home-heading-max: 3rem;
+  --home-title-max: 5.5rem;
   --rule: 1px solid var(--line);
   --rule-strong: 2px solid var(--ink);
   --ease-out: cubic-bezier(0.2, 0.7, 0, 1);
