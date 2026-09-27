@@ -45,10 +45,6 @@ const {
   )
 )
 
-if (featuredGuide === undefined) {
-  throw new Error('The San Francisco place guide is missing.')
-}
-
 const selectedArticles = [selectedSstArticle, selectedStatesArticle]
 const recentEntries = entries.slice(0, 4)
 const postEntries = entries.filter(

@@ -17,10 +17,6 @@ const { guide, placeEntries } = await Effect.runPromise(
   }).pipe(Effect.provide(PlaceService.layer))
 )
 
-if (guide === undefined) {
-  throw new Error('The San Francisco place guide is missing.')
-}
-
 const places = placeEntries
   .map(({ id, body, data }) => ({
     ...data,

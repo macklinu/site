@@ -18,7 +18,7 @@ export const GET: APIRoute = async (context) => {
 
   return rss({
     title: "Mackie Underdown",
-    description: "A public reference for Mackie Underdown’s writing, notes, and guides.",
+    description: "A public reference for Mackie Underdown’s writing, notes, demos, and guides.",
     site: context.site,
     items: items.map((item) => ({
       title: item.title,

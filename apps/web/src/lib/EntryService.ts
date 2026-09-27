@@ -115,16 +115,14 @@ export const layer = Layer.sync(EntryService, () => {
   const listRssItems = Effect.fn("EntryService.listRssItems")(function* () {
     const entries = yield* list();
 
-    return entries
-      .filter((entry) => entry.kind !== "demo")
-      .map(
-        (entry): RssItem => ({
-          title: entry.title,
-          description: entry.description,
-          href: entry.href,
-          publicationDate: entry.publicationDate,
-        }),
-      );
+    return entries.map(
+      (entry): RssItem => ({
+        title: entry.title,
+        description: entry.description,
+        href: entry.href,
+        publicationDate: entry.publicationDate,
+      }),
+    );
   });
 
   return EntryService.of({ getArticle, list, listContentRoutes, listRssItems });
