@@ -1,34 +1,15 @@
-import type { EntryKind } from "~/lib/Entry";
 import silly from "./assets/silly.png?inline";
 
-type ShareKind = EntryKind | "places";
-const labels: Record<ShareKind, string> = {
-  article: "POST",
-  note: "NOTE",
-  demo: "DEMO",
-  guide: "GUIDE",
-  places: "PLACES",
-};
-const labelColors: Record<ShareKind, { backgroundColor: string; color: string }> = {
-  article: { backgroundColor: "#266bb0", color: "#f4f8fa" },
-  note: { backgroundColor: "#49d158", color: "#1b293b" },
-  demo: { backgroundColor: "#c13c37", color: "#f4f8fa" },
-  guide: { backgroundColor: "#1b293b", color: "#f4f8fa" },
-  places: { backgroundColor: "#49d158", color: "#1b293b" },
-};
-
-export function entryImage(entry: { title: string; description: string; kind: ShareKind }) {
-  const labelColor = labelColors[entry.kind];
-
+export function entryImage({ title, description }: { title: string; description: string }) {
   return (
     <div
       style={{
         display: "flex",
         width: "100%",
         height: "100%",
-        padding: 36,
-        backgroundColor: "#f4f8fa",
-        color: "#1b293b",
+        padding: 32,
+        backgroundColor: "#000000",
+        color: "#ffffff",
         fontFamily: "Inconsolata",
       }}
     >
@@ -36,91 +17,109 @@ export function entryImage(entry: { title: string; description: string; kind: Sh
         style={{
           display: "flex",
           width: "100%",
-          border: "6px solid #1b293b",
+          border: "4px solid #ffffff",
         }}
       >
         <div
           style={{
             display: "flex",
-            flexDirection: "column",
             flex: 1,
-            padding: "38px 44px",
+            flexDirection: "column",
+            padding: "40px 48px",
           }}
         >
           <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
             <div
               style={{
+                display: "flex",
                 width: 28,
                 height: 28,
-                border: "5px solid #1b293b",
+                padding: 4,
+                backgroundColor: "#ffffff",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  width: "100%",
+                  height: "100%",
+                  padding: 4,
+                  backgroundColor: "#000000",
+                }}
+              >
+                <div
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    backgroundColor: "#49d158",
+                  }}
+                />
+              </div>
+            </div>
+            <span style={{ fontSize: 26, fontWeight: 700, letterSpacing: "-0.04em" }}>
+              Mackie Underdown · personal wiki
+            </span>
+          </div>
+
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "flex-start",
+              margin: "auto 0",
+            }}
+          >
+            <h1
+              style={{
+                maxWidth: 660,
+                margin: 0,
+                fontSize: 78,
+                fontWeight: 700,
+                lineHeight: 0.9,
+                letterSpacing: "-0.06em",
+              }}
+            >
+              {title}
+            </h1>
+            <div
+              style={{
+                width: 112,
+                height: 8,
+                marginTop: 28,
                 backgroundColor: "#49d158",
               }}
             />
-            <span style={{ fontSize: 26, fontWeight: 700, letterSpacing: "-0.04em" }}>Mackie</span>
+            <p
+              style={{
+                maxWidth: 620,
+                margin: "24px 0 0",
+                color: "#b8b8b8",
+                fontSize: 25,
+                lineHeight: 1.35,
+              }}
+            >
+              {description}
+            </p>
           </div>
 
-          <div
+          <span
             style={{
-              display: "flex",
-              alignSelf: "flex-start",
-              marginTop: 74,
-              padding: "7px 10px",
-              ...labelColor,
-              fontSize: 20,
-              fontWeight: 700,
-              letterSpacing: "0.05em",
-            }}
-          >
-            {labels[entry.kind]}
-          </div>
-          <h1
-            style={{
-              margin: "24px 0 0",
-              fontSize: 78,
-              fontWeight: 700,
-              lineHeight: 0.9,
-              letterSpacing: "-0.06em",
-            }}
-          >
-            {entry.title}
-          </h1>
-          <p
-            style={{
-              margin: "24px 0 0",
-              maxWidth: 620,
-              color: "#526377",
-              fontSize: 25,
-              lineHeight: 1.35,
-            }}
-          >
-            {entry.description}
-          </p>
-
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 16,
-              marginTop: "auto",
-              color: "#526377",
+              color: "#b8b8b8",
               fontSize: 22,
               letterSpacing: "0.02em",
             }}
           >
-            <div style={{ width: 72, height: 5, backgroundColor: "#266bb0" }} />
-            <span>mackie.underdown.wiki</span>
-          </div>
+            mackie.underdown.wiki
+          </span>
         </div>
 
         <aside
           style={{
             display: "flex",
-            width: 266,
-            alignItems: "flex-end",
-            justifyContent: "center",
+            width: 280,
             overflow: "hidden",
-            borderLeft: "6px solid #1b293b",
-            backgroundColor: "#f4f8fa",
+            borderLeft: "4px solid #ffffff",
+            backgroundColor: "#000000",
           }}
         >
           <img
@@ -129,7 +128,6 @@ export function entryImage(entry: { title: string; description: string; kind: Sh
               height: "100%",
               objectFit: "cover",
               objectPosition: "center",
-              filter: "brightness(1.25)",
             }}
             src={silly}
             alt=""

@@ -1,25 +1,29 @@
 ---
-import type { EntryKind } from '~/lib/Entry'
+import type { EntryKind } from '~/lib/EntryService'
+
+type ContentKind = EntryKind | 'place'
 
 interface Props {
-  kind: EntryKind
+  kind: ContentKind
   class?: string
 }
 
 const { kind, class: className } = Astro.props
 
-const labels: Record<EntryKind, string> = {
+const labels: Record<ContentKind, string> = {
   article: 'post',
   note: 'note',
   demo: 'demo',
   guide: 'guide',
+  place: 'place',
 }
 
-const variants: Record<EntryKind, string> = {
-  article: 'bg-site-blue text-site-paper',
-  note: 'bg-site-green text-site-green-ink',
-  demo: 'bg-site-coral text-site-paper',
-  guide: 'border border-site-ink bg-site-paper text-site-ink',
+const variants: Record<ContentKind, string> = {
+  article: 'border border-site-muted bg-site-paper text-site-muted',
+  note: 'border border-dashed border-site-muted bg-site-paper text-site-muted',
+  demo: 'border border-dotted border-site-muted bg-site-paper text-site-muted',
+  guide: 'border-2 border-site-muted bg-site-paper text-site-muted',
+  place: 'border border-site-muted bg-site-paper text-site-muted',
 }
 ---
 
