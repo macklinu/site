@@ -64,13 +64,13 @@ function describe(binding: Binding): { section: SectionId; description: string; 
   const { commands } = binding;
   if (commands.length === 2 && commands[1] === "mode main") {
     if (commands[0] === "reload-config")
-      return { section: "service", description: "Reload config; then exit" };
+      return { section: "service", description: "Reload config; exit" };
     if (commands[0] === "flatten-workspace-tree")
-      return { section: "service", description: "Reset tree; then exit" };
+      return { section: "service", description: "Reset tree; exit" };
     if (commands[0] === "layout floating tiling")
-      return { section: "service", description: "Float / tile; then exit" };
+      return { section: "service", description: "Float / tile; exit" };
     const join = commands[0]?.match(/^join-with (left|down|up|right)$/);
-    if (join) return { section: "service", description: `Join ${join[1]}; then exit` };
+    if (join) return { section: "service", description: `Join ${join[1]}; exit` };
   }
   if (commands.length !== 1)
     return { section: "other", description: "Configured commands", raw: true };
@@ -98,7 +98,7 @@ function describe(binding: Binding): { section: SectionId; description: string; 
           : `Send to workspace ${workspace[2]}; stay here`,
     };
   const resize = command.match(/^resize smart ([+-]?\d+)$/);
-  if (resize) return { section: "tiling", description: `Resize smart ${resize[1]} (tiled only)` };
+  if (resize) return { section: "tiling", description: `Resize ${resize[1]} (tiled only)` };
   switch (command) {
     case "layout tiles horizontal vertical":
       return { section: "tiling", description: "Tiles: switch orientation" };
@@ -109,7 +109,7 @@ function describe(binding: Binding): { section: SectionId; description: string; 
     case "move-workspace-to-monitor --wrap-around next":
       return { section: "workspaces", description: "Move workspace to next monitor" };
     case "mode service":
-      return { section: "service", description: "Enter service mode" };
+      return { section: "service", description: "Enter; release keys" };
     default:
       return { section: "other", description: "Configured command", raw: true };
   }
@@ -142,10 +142,10 @@ function takeGroup(options: {
 export function createAeroSpaceCheatsheet(source: string) {
   const config = parse(source);
   const sections: ShortcutSection[] = [
-    { id: "apps", title: "Open / activate apps", rows: [] },
+    { id: "apps", title: "Apps", rows: [] },
     { id: "workspaces", title: "Workspaces & monitors", rows: [] },
     { id: "windows", title: "Focus & move", rows: [] },
-    { id: "tiling", title: "Tiled window layout", rows: [] },
+    { id: "tiling", title: "Tiling", rows: [] },
     { id: "service", title: "Service mode", rows: [] },
     { id: "other", title: "Other main bindings", rows: [] },
   ];
@@ -204,7 +204,7 @@ export function createAeroSpaceCheatsheet(source: string) {
             commands: [`move ${direction}`],
           })),
           label: "H J K L",
-          description: "Move ← ↓ ↑ → in tiled tree",
+          description: "Move ← ↓ ↑ → (tiled)",
         },
       ]) {
         const row = takeGroup({ bindings, ...group });
@@ -219,7 +219,7 @@ export function createAeroSpaceCheatsheet(source: string) {
           commands: [`join-with ${direction}`, "mode main"],
         })),
         label: "H J K L",
-        description: "Join ← ↓ ↑ →; then exit",
+        description: "Join ← ↓ ↑ →; exit",
       });
       if (row) byId.get("service")?.rows.push(row);
     }
@@ -253,11 +253,5 @@ export function createAeroSpaceCheatsheet(source: string) {
     }
     if (customSection.rows.length) sections.push(customSection);
   }
-  const windowRules = config["on-window-detected"];
-  const floatingDefault =
-    Array.isArray(windowRules) &&
-    windowRules.length === 1 &&
-    table(windowRules[0]).if === "true" &&
-    table(windowRules[0]).run === "layout floating";
-  return { sections: sections.filter((section) => section.rows.length > 0), floatingDefault };
+  return { sections: sections.filter((section) => section.rows.length > 0) };
 }

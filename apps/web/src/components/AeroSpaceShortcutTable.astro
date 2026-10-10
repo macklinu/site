@@ -21,7 +21,6 @@ const { id, title, rows, appKeys = false } = Astro.props
   >
     {title}
   </h2>
-  <slot name='intro' />
   <table
     class='w-full table-fixed border-collapse text-left'
     aria-labelledby={id}
@@ -65,5 +64,4 @@ const { id, title, rows, appKeys = false } = Astro.props
       ))}
     </tbody>
   </table>
-  <slot />
 </section>
