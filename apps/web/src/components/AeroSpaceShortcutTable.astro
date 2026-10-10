@@ -1,0 +1,69 @@
+---
+import type { ShortcutRow } from '~/lib/AeroSpaceCheatsheet'
+
+interface Props {
+  id: string
+  title: string
+  rows: Pick<ShortcutRow, 'keys' | 'description' | 'commands'>[]
+  appKeys?: boolean
+}
+
+const { id, title, rows, appKeys = false } = Astro.props
+---
+
+<section
+  class='shortcut-section min-w-0 break-inside-avoid'
+  aria-labelledby={id}
+>
+  <h2
+    id={id}
+    class='mb-2 border-b-2 border-site-ink pb-1 font-display text-xl font-bold leading-tight tracking-[-0.025em]'
+  >
+    {title}
+  </h2>
+  <slot name='intro' />
+  <table
+    class='w-full table-fixed border-collapse text-left'
+    aria-labelledby={id}
+  >
+    <colgroup>
+      <col class={appKeys ? 'w-[32%]' : 'w-[46%]'} />
+      <col />
+    </colgroup>
+    <thead class='sr-only'>
+      <tr>
+        <th scope='col'>Keys</th>
+        <th scope='col'>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {rows.map((row) => (
+        <tr class='break-inside-avoid border-b border-site-line last:border-b-0'>
+          <th scope='row' class='py-1 pr-2 align-top font-normal'>
+            <kbd
+              class:list={[
+                'font-mono leading-[1.35] [overflow-wrap:anywhere]',
+                appKeys
+                  ? 'text-base font-semibold'
+                  : 'text-[0.875rem] font-medium',
+              ]}
+            >
+              {row.keys}
+            </kbd>
+          </th>
+          <td class='py-1 align-top [overflow-wrap:anywhere]'>
+            <span class:list={{ 'font-medium': appKeys }}>
+              {row.description}
+            </span>
+            {row.commands && (
+              <code class='mt-1 block whitespace-pre-wrap font-mono text-[0.875rem] leading-snug'>
+                {row.commands.join('\n')}
+              </code>
+            )}
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+  <slot />
+</section>

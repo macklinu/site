@@ -1,0 +1,230 @@
+---
+import '~/styles.css'
+import AeroSpaceShortcutTable from '~/components/AeroSpaceShortcutTable.astro'
+import snapshot from '~/data/cheatsheets/aerospace.toml?raw'
+import { createAeroSpaceCheatsheet } from '~/lib/AeroSpaceCheatsheet'
+
+const { sections, floatingDefault } = createAeroSpaceCheatsheet(snapshot)
+const leftSections = sections.filter((section) =>
+  ['apps', 'workspaces'].includes(section.id)
+)
+const rightSections = sections.filter((section) =>
+  ['windows', 'tiling', 'service'].includes(section.id)
+)
+const extraSections = sections.filter(
+  (section) =>
+    !['apps', 'workspaces', 'windows', 'tiling', 'service'].includes(section.id)
+)
+const macOSRows = [
+  {
+    keys: 'Fn ⌃ ← → ↑ ↓',
+    description: 'Half screen: left / right / top / bottom',
+  },
+  { keys: 'Fn ⌃ F', description: 'Fill desktop (not fullscreen)' },
+  { keys: 'Fn ⌃ C', description: 'Center window' },
+  { keys: 'Fn ⌃ R', description: 'Return to Previous Size' },
+]
+---
+
+<!doctype html>
+<html lang='en' data-theme='light' data-cheatsheet>
+  <head>
+    <meta charset='utf-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1' />
+    <meta
+      name='description'
+      content='A printable AeroSpace shortcut reference, generated from my config, with native macOS window sizing shortcuts.'
+    />
+    <title>AeroSpace cheat sheet · mackie.world</title>
+  </head>
+  <body class='m-0 bg-site-paper font-body text-[0.9375rem] leading-[1.35] text-site-ink antialiased'>
+    <main class='sheet mx-auto w-full max-w-[8.5in] px-4 py-6 sm:px-8 sm:py-8 print:p-0'>
+      <nav
+        aria-label='Cheat sheet actions'
+        class='mb-6 flex flex-wrap items-center justify-between gap-3 print:hidden'
+      >
+        <a
+          href='/notes/cheatsheets'
+          class='inline-flex min-h-11 items-center whitespace-nowrap underline decoration-1 underline-offset-4 hover:decoration-2'
+        >
+          ← Cheat sheets
+        </a>
+        <button
+          id='print-sheet'
+          type='button'
+          class='min-h-11 cursor-pointer whitespace-nowrap border border-site-ink px-4 py-2 font-medium hover:underline active:bg-site-surface'
+        >
+          Print sheet
+        </button>
+      </nav>
+
+      <header class='sheet-header mb-5 border-b-2 border-site-ink pb-4'>
+        <div class='flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1'>
+          <h1 class='min-w-0 font-display text-[2.5rem] font-bold leading-none tracking-[-0.045em] [overflow-wrap:anywhere]'>
+            AeroSpace
+          </h1>
+          <p class='text-base font-medium'>Keyboard reference</p>
+        </div>
+        <p class='mt-2'>Personal config · QWERTY · AeroSpace 0.21.3-Beta</p>
+        <p class='mt-3 flex flex-wrap gap-x-5 gap-y-1'>
+          <span>
+            <kbd class='font-mono font-medium'>⌥</kbd> Option
+          </span>
+          <span>
+            <kbd class='font-mono font-medium'>⇧</kbd> Shift
+          </span>
+          <span>
+            <kbd class='font-mono font-medium'>⌃</kbd> Control
+          </span>
+          <span>
+            <kbd class='font-mono font-medium'>Fn</kbd> Function / Globe
+          </span>
+        </p>
+      </header>
+
+      <div class='sheet-columns grid grid-cols-1 gap-x-7 gap-y-5 min-[44rem]:grid-cols-2 print:grid-cols-2'>
+        <div class='flex min-w-0 flex-col gap-5'>
+          {leftSections.map((section) => (
+            <AeroSpaceShortcutTable
+              {...section}
+              appKeys={section.id === 'apps'}
+            />
+          ))}
+          <AeroSpaceShortcutTable
+            id='macos-sizing'
+            title='macOS window sizing'
+            rows={macOSRows}
+          >
+            <p slot='intro' class='mb-2'>
+              Native macOS shortcuts, not AeroSpace.
+            </p>
+            <p class='mt-2'>
+              Return to Previous Size restores macOS tiling only. It cannot undo
+              AeroSpace resizing.
+            </p>
+          </AeroSpaceShortcutTable>
+        </div>
+        <div class='flex min-w-0 flex-col gap-5'>
+          {rightSections.map((section) => (
+            <AeroSpaceShortcutTable {...section}>
+              <Fragment slot='intro'>
+                {section.id === 'tiling' && (
+                  <p class='mb-2'>
+                    {floatingDefault && <strong>New windows float. </strong>}
+                    Resize fails on floating windows. Use service mode to switch
+                    to tiling first.
+                  </p>
+                )}
+                {section.id === 'service' && (
+                  <p class='mb-2'>
+                    Press the entry shortcut, <strong>release all keys</strong>,
+                    then press a service key.
+                  </p>
+                )}
+              </Fragment>
+            </AeroSpaceShortcutTable>
+          ))}
+        </div>
+      </div>
+
+      {extraSections.length > 0 && (
+        <div class='mt-5 grid grid-cols-1 gap-5 min-[44rem]:grid-cols-2 print:grid-cols-2'>
+          {extraSections.map((section) => (
+            <AeroSpaceShortcutTable {...section} />
+          ))}
+        </div>
+      )}
+
+      <footer class='sheet-footer mt-5 flex flex-wrap gap-x-5 gap-y-2 border-t border-site-ink pt-3 text-[0.875rem]'>
+        <a
+          href='https://nikitabobko.github.io/AeroSpace/commands'
+          class='inline-flex min-h-11 items-center whitespace-nowrap underline underline-offset-4 hover:decoration-2 print:min-h-0'
+        >
+          AeroSpace commands
+        </a>
+        <a
+          href='https://support.apple.com/guide/mac-help/mac-window-tiling-icons-keyboard-shortcuts-mchl9674d0b0/mac'
+          class='inline-flex min-h-11 items-center whitespace-nowrap underline underline-offset-4 hover:decoration-2 print:min-h-0'
+        >
+          Apple window tiling guide
+        </a>
+      </footer>
+
+      <aside
+        aria-label='Update this reference'
+        class='mt-6 border-t border-site-line pt-4 print:hidden'
+      >
+        <p class='font-medium'>From the tracked AeroSpace config</p>
+        <p class='mt-1'>
+          Sync your config, then build to regenerate this page:
+        </p>
+        <code class='mt-2 block whitespace-pre-wrap font-mono text-[0.875rem] [overflow-wrap:anywhere]'>
+          pnpm cheatsheets:sync /path/to/aerospace.toml
+        </code>
+      </aside>
+    </main>
+  </body>
+</html>
+
+<script>
+  document
+    .getElementById('print-sheet')
+    ?.addEventListener('click', () => window.print())
+</script>
+
+<style>
+  /* Hallmark · macrostructure: Catalogue · tone: utilitarian reference · anchor hue: neutral
+   * Existing Bricolage Grotesque / Archivo / IBM Plex Mono; monochrome for lamination.
+   */
+  /* Hallmark · pre-emit critique: P5 H4 E4 S5 R5 V4 */
+  :global(html[data-cheatsheet]) {
+    color-scheme: light;
+    --paper: oklch(1 0 0);
+    --surface: oklch(0.94 0 0);
+    --ink: oklch(0 0 0);
+    --muted: var(--ink);
+    --line: oklch(0.75 0 0);
+    --focus: var(--ink);
+  }
+
+  @page {
+    size: letter portrait;
+    margin: 0.45in;
+  }
+
+  @media print {
+    body {
+      font-size: 10.5pt;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    .sheet {
+      max-width: none;
+      padding: 0;
+    }
+
+    .sheet-header {
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+    }
+
+    .sheet-header h1 {
+      font-size: 2rem;
+    }
+
+    :global(.shortcut-section kbd),
+    :global(.shortcut-section code) {
+      font-size: 10.5pt;
+    }
+
+    .sheet-columns {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      column-gap: 24px;
+    }
+
+    .sheet-footer {
+      font-size: 10.5pt;
+    }
+  }
+</style>

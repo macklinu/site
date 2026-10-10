@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "turbo run dev",
+    "cheatsheets:sync": "node apps/web/scripts/sync-aerospace.mjs",
     "build": "turbo run build",
     "deploy": "turbo run deploy",
     "destroy": "turbo run destroy",
