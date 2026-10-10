@@ -37,8 +37,8 @@ const macOSRows = [
     />
     <title>AeroSpace cheat sheet · mackie.underdown.wiki</title>
   </head>
-  <body class='m-0 bg-site-paper font-body text-[0.9375rem] leading-[1.35] text-site-ink antialiased'>
-    <main class='sheet mx-auto w-full max-w-[8.5in] px-4 py-6 sm:px-8 sm:py-8 print:p-0'>
+  <body class='m-0 bg-site-paper font-body text-[0.9375rem] leading-[1.35] text-site-ink antialiased print:text-[10.5pt] print:[-webkit-print-color-adjust:exact] print:[print-color-adjust:exact]'>
+    <main class='mx-auto w-full max-w-[8.5in] px-4 py-6 sm:px-8 sm:py-8 print:max-w-none print:p-0'>
       <nav
         aria-label='Cheat sheet actions'
         class='mb-6 flex flex-wrap items-center justify-between gap-3 print:hidden'
@@ -58,13 +58,13 @@ const macOSRows = [
         </button>
       </nav>
 
-      <header class='sheet-header mb-5 border-b-2 border-site-ink pb-4'>
-        <h1 class='min-w-0 font-display text-[2.5rem] font-bold leading-none tracking-[-0.045em] [overflow-wrap:anywhere]'>
+      <header class='mb-5 border-b-2 border-site-ink pb-4 print:mb-4 print:pb-3'>
+        <h1 class='min-w-0 font-display text-[2.5rem] font-bold leading-none tracking-[-0.045em] [overflow-wrap:anywhere] print:text-[2rem]'>
           AeroSpace
         </h1>
       </header>
 
-      <div class='sheet-columns grid grid-cols-1 gap-x-7 gap-y-5 min-[44rem]:grid-cols-2 print:grid-cols-2'>
+      <div class='grid grid-cols-1 gap-x-7 gap-y-5 min-[44rem]:grid-cols-2 print:grid-cols-2 print:gap-x-6'>
         <div class='flex min-w-0 flex-col gap-5'>
           {leftSections.map((section) => (
             <AeroSpaceShortcutTable
@@ -92,7 +92,6 @@ const macOSRows = [
           ))}
         </div>
       )}
-
     </main>
   </body>
 </html>
@@ -121,38 +120,5 @@ const macOSRows = [
   @page {
     size: letter portrait;
     margin: 0.45in;
-  }
-
-  @media print {
-    body {
-      font-size: 10.5pt;
-      -webkit-print-color-adjust: exact;
-      print-color-adjust: exact;
-    }
-
-    .sheet {
-      max-width: none;
-      padding: 0;
-    }
-
-    .sheet-header {
-      margin-bottom: 16px;
-      padding-bottom: 12px;
-    }
-
-    .sheet-header h1 {
-      font-size: 2rem;
-    }
-
-    :global(.shortcut-section kbd),
-    :global(.shortcut-section code) {
-      font-size: 10.5pt;
-    }
-
-    .sheet-columns {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      column-gap: 24px;
-    }
-
   }
 </style>

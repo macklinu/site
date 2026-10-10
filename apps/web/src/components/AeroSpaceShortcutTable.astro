@@ -4,7 +4,7 @@ import type { ShortcutRow } from '~/lib/AeroSpaceCheatsheet'
 interface Props {
   id: string
   title: string
-  rows: Pick<ShortcutRow, 'keys' | 'description' | 'commands'>[]
+  rows: ShortcutRow[]
   appKeys?: boolean
 }
 
@@ -12,7 +12,7 @@ const { id, title, rows, appKeys = false } = Astro.props
 ---
 
 <section
-  class='shortcut-section min-w-0 break-inside-avoid'
+  class='min-w-0 break-inside-avoid'
   aria-labelledby={id}
 >
   <h2
@@ -41,7 +41,7 @@ const { id, title, rows, appKeys = false } = Astro.props
           <th scope='row' class='py-1 pr-2 align-top font-normal'>
             <kbd
               class:list={[
-                'font-mono leading-[1.35] [overflow-wrap:anywhere]',
+                'font-mono leading-[1.35] [overflow-wrap:anywhere] print:text-[10.5pt]',
                 appKeys
                   ? 'text-base font-semibold'
                   : 'text-[0.875rem] font-medium',
@@ -55,7 +55,7 @@ const { id, title, rows, appKeys = false } = Astro.props
               {row.description}
             </span>
             {row.commands && (
-              <code class='mt-1 block whitespace-pre-wrap font-mono text-[0.875rem] leading-snug'>
+              <code class='mt-1 block whitespace-pre-wrap font-mono text-[0.875rem] leading-snug print:text-[10.5pt]'>
                 {row.commands.join('\n')}
               </code>
             )}

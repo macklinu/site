@@ -2,7 +2,6 @@ import { parse } from "smol-toml";
 
 export interface ShortcutRow {
   keys: string;
-  bindingKeys: string[];
   description: string;
   commands?: string[];
 }
@@ -134,9 +133,8 @@ function takeGroup(options: {
     })
   )
     return;
-  const bindingKeys = members.map(({ key }) => `${prefix}${key}`);
-  for (const key of bindingKeys) bindings.delete(key);
-  return { keys: `${formatKey(prefix.slice(0, -1))} ${label}`, bindingKeys, description };
+  for (const { key } of members) bindings.delete(`${prefix}${key}`);
+  return { keys: `${formatKey(prefix.slice(0, -1))} ${label}`, description };
 }
 
 export function createAeroSpaceCheatsheet(source: string) {
@@ -228,7 +226,6 @@ export function createAeroSpaceCheatsheet(source: string) {
       const detail = describe(binding);
       const row: ShortcutRow = {
         keys: formatKey(binding.key),
-        bindingKeys: [binding.key],
         description: detail.description,
         ...(detail.raw ? { commands: binding.commands } : {}),
       };
