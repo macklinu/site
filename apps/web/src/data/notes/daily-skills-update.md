@@ -7,7 +7,7 @@ topics:
   - Agent skills
 ---
 
-Run [`skills update`](https://github.com/vercel-labs/skills#skills-update) every day at 08:00 UTC, then format with [oxfmt](https://oxc.rs/docs/guide/usage/formatter/cli.html). [Create Pull Request](https://github.com/peter-evans/create-pull-request) commits the changes and updates one PR; no changes means no empty commit or new PR.
+[Create Pull Request](https://github.com/peter-evans/create-pull-request#action-behaviour) skips empty commits and PRs.
 
 ```yaml title=".github/workflows/update-skills.yml"
 name: Update skills
@@ -49,6 +49,6 @@ jobs:
           body: "Daily skill updates, formatted with oxfmt."
 ```
 
-Use the default symlink installation and commit your project skills and `skills-lock.json` first. Save this workflow on the default branch and enable **Settings → Actions → General → Workflow permissions → Allow GitHub Actions to create and approve pull requests**. The schedule can run late; it is not an exact timer.
+Use symlink-based project skills and commit them with `skills-lock.json`. Keep the workflow on the default branch and enable **Settings → Actions → General → Workflow permissions → Allow GitHub Actions to create and approve pull requests**.
 
-This example uses `GITHUB_TOKEN` and public skill sources. Its PRs do not start other workflows; use a [GitHub App token](https://github.com/peter-evans/create-pull-request/blob/main/docs/concepts-guidelines.md#authenticating-with-github-app-generated-tokens) with Contents and Pull requests write access for checkout and PR creation if you need PR checks.
+Use public skill sources. `GITHUB_TOKEN` does not trigger PR checks; for checks, use a [GitHub App token](https://github.com/peter-evans/create-pull-request/blob/main/docs/concepts-guidelines.md#authenticating-with-github-app-generated-tokens) with Contents and Pull requests write access for both checkout and PR creation.
