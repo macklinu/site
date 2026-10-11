@@ -8,6 +8,8 @@ topics:
   - TypeScript
 ---
 
+import MermaidDiagram from "~/components/MermaidDiagram";
+
 I want commits and pull requests produced by AI to show up under a bot's name. [macklinu-machine](https://github.com/apps/macklinu-machine) is the GitHub App I use for that work. The workflow uses two TypeScript skills and a small runner.
 
 The [setup-macklinu-machine skill](https://github.com/macklinu/skills/tree/main/skills/setup-macklinu-machine) records the App key path and installation IDs in private local configuration and adds the checkout's machine-skill instruction. It reuses valid configuration. Missing or legacy setup asks for the path to an existing GitHub App RSA PEM, which is different from an SSH-agent key.
@@ -21,3 +23,21 @@ The [macklinu-machine skill](https://github.com/macklinu/skills/tree/main/skills
 For a push or a PR/API write, the runner reads the existing unencrypted local PEM and signs an App JWT. It exchanges that JWT for a fresh installation token limited to the requested repository. Git and `gh` use the token instead of my personal credentials. The token authenticates these writes independently of the commit's author and committer fields.
 
 The local key trusts processes running as the same user. Installation tokens have limited scope and lifetime, but the long-lived App key is not repository-scoped. This workflow is not a sandbox.
+
+<MermaidDiagram
+  client:load
+  label="Runner sequence: a local commit sets bot attribution without credentials; publication exchanges an App JWT for a repository-limited token before Git or gh writes to GitHub."
+  definition={`sequenceDiagram
+  participant Runner
+  participant Git as Local Git
+  participant Hub as GitHub
+  alt Commit: no key or token
+    Runner->>Git: Set bot author + committer
+    Git-->>Runner: Local commit (metadata)
+  else Push / PR / API
+    Runner->>Runner: Sign JWT with App PEM
+    Runner->>Hub: JWT: request token for one repo
+    Hub-->>Runner: Repository-limited token
+    Runner->>Hub: Git / gh write with token
+  end`}
+/>

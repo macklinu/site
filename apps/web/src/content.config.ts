@@ -12,7 +12,7 @@ const documentFields = z.object({
 });
 
 const articles = defineCollection({
-  loader: glob({ base: "./src/data/posts", pattern: "**/*.md" }),
+  loader: glob({ base: "./src/data/posts", pattern: "**/*.{md,mdx}" }),
   schema: documentFields.extend({
     kind: z.literal("article").default("article"),
   }),
