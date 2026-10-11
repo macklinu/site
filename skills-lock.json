@@ -17,7 +17,7 @@
       "source": "cli/cli",
       "sourceType": "github",
       "skillPath": "skills/gh/SKILL.md",
-      "computedHash": "d6812a8155e8db4aae6dffcfbc3a340ede4da0ea123bb98c16ba32d79f239906"
+      "computedHash": "ff23d50fee0f42708ffaf56686c7a34a2f8b7e1247f04d47033095ba33863418"
     },
     "probe-platforms": {
       "source": "nubjs/nub",
