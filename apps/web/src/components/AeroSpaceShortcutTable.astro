@@ -6,9 +6,10 @@ interface Props {
   title: string
   rows: ShortcutRow[]
   appKeys?: boolean
+  note?: string
 }
 
-const { id, title, rows, appKeys = false } = Astro.props
+const { id, title, rows, appKeys = false, note } = Astro.props
 ---
 
 <section
@@ -21,6 +22,7 @@ const { id, title, rows, appKeys = false } = Astro.props
   >
     {title}
   </h2>
+  {note && <p class='mb-2 text-[0.875rem] leading-snug'>{note}</p>}
   <table
     class='w-full table-fixed border-collapse text-left'
     aria-labelledby={id}

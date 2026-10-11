@@ -1,3 +1,4 @@
+import { Schema } from "effect";
 import { parse } from "smol-toml";
 
 export interface ShortcutRow {
@@ -12,7 +13,24 @@ export interface ShortcutSection {
   rows: ShortcutRow[];
 }
 
-type Binding = { key: string; commands: string[] };
+const Commands = Schema.mutable(Schema.Array(Schema.String));
+const AeroSpaceConfig = Schema.Struct({
+  mode: Schema.optionalKey(
+    Schema.Record(
+      Schema.String,
+      Schema.Struct({
+        binding: Schema.optionalKey(
+          Schema.Record(Schema.String, Schema.Union([Schema.String, Commands])),
+        ),
+      }),
+    ),
+  ),
+});
+interface AeroSpaceConfig extends Schema.Schema.Type<typeof AeroSpaceConfig> {}
+
+const decodeConfig = Schema.decodeUnknownSync(AeroSpaceConfig);
+
+type Binding = { key: string; commands: Schema.Schema.Type<typeof Commands> };
 type SectionId = "apps" | "workspaces" | "windows" | "tiling" | "service" | "other";
 
 const appNames: Record<string, string> = {
@@ -51,12 +69,6 @@ function formatKey(key: string) {
     .split("-")
     .map((part) => (Object.hasOwn(keyNames, part) ? keyNames[part] : part.toUpperCase()))
     .join(" ");
-}
-
-function table(value: unknown): Record<string, unknown> {
-  return value !== null && typeof value === "object" && !Array.isArray(value)
-    ? (value as Record<string, unknown>)
-    : {};
 }
 
 function describe(binding: Binding): { section: SectionId; description: string; raw?: true } {
@@ -108,7 +120,7 @@ function describe(binding: Binding): { section: SectionId; description: string; 
     case "move-workspace-to-monitor --wrap-around next":
       return { section: "workspaces", description: "Move workspace to next monitor" };
     case "mode service":
-      return { section: "service", description: "Enter; release keys" };
+      return { section: "service", description: "Enter" };
     default:
       return { section: "other", description: "Configured command", raw: true };
   }
@@ -138,7 +150,7 @@ function takeGroup(options: {
 }
 
 export function createAeroSpaceCheatsheet(source: string) {
-  const config = parse(source);
+  const config: AeroSpaceConfig = decodeConfig(parse(source));
   const sections: ShortcutSection[] = [
     { id: "apps", title: "Apps", rows: [] },
     { id: "workspaces", title: "Workspaces & monitors", rows: [] },
@@ -155,17 +167,10 @@ export function createAeroSpaceCheatsheet(source: string) {
     { key: "l", direction: "right" },
   ];
   const numbers = Array.from({ length: 9 }, (_, index) => String(index + 1));
-  const modes = table(config.mode);
-  for (const [mode, value] of Object.entries(modes)) {
+  for (const [mode, value] of Object.entries(config.mode ?? {})) {
     const bindings = new Map<string, Binding>();
-    for (const [key, command] of Object.entries(table(table(value).binding))) {
+    for (const [key, command] of Object.entries(value.binding ?? {})) {
       const commands = typeof command === "string" ? [command] : command;
-      if (
-        !Array.isArray(commands) ||
-        !commands.every((item): item is string => typeof item === "string")
-      ) {
-        throw new Error(`Unsupported AeroSpace binding: mode.${mode}.binding.${key}`);
-      }
       bindings.set(key, { key, commands });
     }
     if (mode === "main") {

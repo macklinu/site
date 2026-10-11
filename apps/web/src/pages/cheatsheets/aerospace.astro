@@ -80,7 +80,16 @@ const macOSRows = [
         </div>
         <div class='flex min-w-0 flex-col gap-5'>
           {rightSections.map((section) => (
-            <AeroSpaceShortcutTable {...section} />
+            <AeroSpaceShortcutTable
+              {...section}
+              note={
+                section.id === 'service'
+                  ? 'Enter, release the keys, then press a service shortcut. Main shortcuts are inactive; actions marked “exit” return to main.'
+                  : section.id === 'tiling'
+                    ? 'AeroSpace resize needs a tiled window. If floating, use the service Float / tile action, or macOS sizing to stay floating.'
+                    : undefined
+              }
+            />
           ))}
         </div>
       </div>
