@@ -18,3 +18,9 @@ flowchart TD
   DeployProd --> ProductionBuild["Alchemy build"]
   ProductionBuild --> Production["Publish production"]
 ```
+
+## Cheat sheets
+
+```sh
+pnpm cheatsheets:sync ~/dotfiles/aerospace/.config/aerospace/aerospace.toml
+```
