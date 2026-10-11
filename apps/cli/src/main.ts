@@ -18,7 +18,7 @@ import { format } from "oxfmt";
 import { selectWebMarkdownDocument, updateWebTimestamp } from "./web-timestamp.js";
 import { AppleMapsUrl, lookupAppleMapsPlace } from "./apple-maps.js";
 import { PlaceUpsertResult, upsertAppleMapsPlace } from "./places.js";
-import { syncAeroSpaceConfig } from "./cheatsheets.js";
+import { syncAeroSpaceConfig, syncNeruConfig } from "./cheatsheets.js";
 import pkg from "../package.json" with { type: "json" };
 
 const PLACES_DATA_DIRECTORY = fileURLToPath(new URL("../../web/src/data/places/", import.meta.url));
@@ -271,9 +271,26 @@ const syncCheatsheetCommand = Command.make(
   }),
 ).pipe(Command.withDescription("Refresh the tracked AeroSpace config snapshot."));
 
+const syncNeruCommand = Command.make(
+  "sync-neru",
+  {
+    source: Argument.file("config-dump", { mustExist: true }).pipe(
+      Argument.withDescription("JSON from neru config dump; only navigation fields are published."),
+    ),
+    version: Argument.string("version").pipe(
+      Argument.withDescription("Version reported by neru --version, without the v prefix."),
+    ),
+  },
+  Effect.fn("Cheatsheets.syncNeruCommand")(function* ({ source, version }) {
+    const path = yield* Path.Path;
+    const destination = yield* syncNeruConfig({ source, version });
+    yield* Console.log(`Updated ${path.relative(REPOSITORY_DIRECTORY, destination)}.`);
+  }),
+).pipe(Command.withDescription("Refresh the filtered Neru navigation snapshot."));
+
 const cheatsheetsCommand = Command.make("cheatsheets").pipe(
   Command.withDescription("Maintain cheat sheet config snapshots."),
-  Command.withSubcommands([syncCheatsheetCommand]),
+  Command.withSubcommands([syncCheatsheetCommand, syncNeruCommand]),
 );
 
 const touchCommand = Command.make(

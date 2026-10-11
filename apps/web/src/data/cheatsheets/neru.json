@@ -1,0 +1,120 @@
+{
+  "version": "1.57.0",
+  "hotkeys": {
+    "bindings": {
+      "Ctrl+Alt+C": ["recursive_grid"],
+      "Ctrl+Alt+S": ["scroll"],
+      "Ctrl+Alt+Space": ["hints"],
+      "Primary+Shift+B": ["bisect"],
+      "Primary+Shift+G": ["grid"]
+    }
+  },
+  "hints": {
+    "hotkeys": {
+      "/": ["action search_hints"],
+      "Backspace": ["action backspace"],
+      "Down": ["action move_mouse_relative --dx=0 --dy=10"],
+      "Escape": ["idle"],
+      "Left": ["action move_mouse_relative --dx=-10 --dy=0"],
+      "Right": ["action move_mouse_relative --dx=10 --dy=0"],
+      "Shift+I": ["action left_click --state down"],
+      "Shift+L": ["action left_click"],
+      "Shift+M": ["action middle_click"],
+      "Shift+R": ["action right_click"],
+      "Shift+Tab": ["action cycle_hint --backward"],
+      "Shift+U": ["action left_click --state up"],
+      "Tab": ["action cycle_hint"],
+      "Up": ["action move_mouse_relative --dx=0 --dy=-10"]
+    }
+  },
+  "grid": {
+    "hotkeys": {
+      "Backspace": ["action backspace"],
+      "Down": ["action move_mouse_relative --dx=0 --dy=10"],
+      "Escape": ["idle"],
+      "Left": ["action move_mouse_relative --dx=-10 --dy=0"],
+      "Right": ["action move_mouse_relative --dx=10 --dy=0"],
+      "Shift+I": ["action left_click --state down"],
+      "Shift+L": ["action left_click"],
+      "Shift+M": ["action middle_click"],
+      "Shift+R": ["action right_click"],
+      "Shift+U": ["action left_click --state up"],
+      "Space": ["action reset"],
+      "Up": ["action move_mouse_relative --dx=0 --dy=-10"],
+      "`": ["toggle-cursor-follow-selection"]
+    },
+    "sublayerKeys": "abcdefghijklmnpqrstuvwxyz"
+  },
+  "recursiveGrid": {
+    "hotkeys": {
+      "Backspace": ["action backspace"],
+      "Down": ["action move_mouse_relative --dx=0 --dy=10"],
+      "Escape": ["idle"],
+      "Left": ["action move_mouse_relative --dx=-10 --dy=0"],
+      "Right": ["action move_mouse_relative --dx=10 --dy=0"],
+      "Shift+I": ["action left_click --state down"],
+      "Shift+L": ["action left_click"],
+      "Shift+M": ["action middle_click"],
+      "Shift+R": ["action right_click"],
+      "Shift+U": ["action left_click --state up"],
+      "Space": ["action reset"],
+      "Up": ["action move_mouse_relative --dx=0 --dy=-10"],
+      "`": ["toggle-cursor-follow-selection"]
+    },
+    "keys": "rtyfghvbn",
+    "gridRows": 3,
+    "gridCols": 3
+  },
+  "bisect": {
+    "hotkeys": {
+      "Backspace": ["action backspace"],
+      "Down": ["action move_mouse_relative --dx=0 --dy=10"],
+      "Escape": ["idle"],
+      "Left": ["action move_mouse_relative --dx=-10 --dy=0"],
+      "Right": ["action move_mouse_relative --dx=10 --dy=0"],
+      "Shift+I": ["action left_click --state down"],
+      "Shift+L": ["action left_click"],
+      "Shift+M": ["action middle_click"],
+      "Shift+R": ["action right_click"],
+      "Shift+U": ["action left_click --state up"],
+      "Space": ["action reset"],
+      "Up": ["action move_mouse_relative --dx=0 --dy=-10"],
+      "`": ["toggle-cursor-follow-selection"],
+      "b": ["action bisect --direction=down_left"],
+      "h": ["action bisect --direction=left"],
+      "j": ["action bisect --direction=down"],
+      "k": ["action bisect --direction=up"],
+      "l": ["action bisect --direction=right"],
+      "n": ["action bisect --direction=down_right"],
+      "u": ["action bisect --direction=up_right"],
+      "y": ["action bisect --direction=up_left"]
+    }
+  },
+  "scroll": {
+    "hotkeys": {
+      "Down": ["action move_mouse_relative --dx=0 --dy=10"],
+      "Escape": ["idle"],
+      "Left": ["action move_mouse_relative --dx=-10 --dy=0"],
+      "PageDown": ["action page_down"],
+      "PageUp": ["action page_up"],
+      "Right": ["action move_mouse_relative --dx=10 --dy=0"],
+      "Shift+G": ["action go_bottom"],
+      "Shift+I": ["action left_click --state down"],
+      "Shift+L": ["action left_click"],
+      "Shift+M": ["action middle_click"],
+      "Shift+R": ["action right_click"],
+      "Shift+U": ["action left_click --state up"],
+      "Up": ["action move_mouse_relative --dx=0 --dy=-10"],
+      "d": ["action page_down"],
+      "gg": ["action go_top"],
+      "h": ["action scroll_left"],
+      "j": ["action scroll_down"],
+      "k": ["action scroll_up"],
+      "l": ["action scroll_right"],
+      "u": ["action page_up"]
+    }
+  },
+  "stickyModifiers": {
+    "enabled": true
+  }
+}

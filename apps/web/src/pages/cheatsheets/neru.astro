@@ -1,0 +1,95 @@
+---
+import '~/styles.css'
+import AeroSpaceShortcutTable from '~/components/AeroSpaceShortcutTable.astro'
+import snapshot from '~/data/cheatsheets/neru.json'
+import { createNeruCheatsheet } from '~/lib/NeruCheatsheet'
+
+const sections = createNeruCheatsheet(snapshot)
+const leftSections = sections.slice(0, 3)
+const rightSections = sections.slice(3)
+---
+
+<!doctype html>
+<html lang='en' data-theme='light' data-cheatsheet>
+  <head>
+    <meta charset='utf-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1' />
+    <meta
+      name='description'
+      content='A printable Neru shortcut reference from my active configuration.'
+    />
+    <title>Neru cheat sheet · mackie.underdown.wiki</title>
+  </head>
+  <body class='m-0 bg-site-paper font-body text-[0.9375rem] leading-[1.35] text-site-ink antialiased print:text-[10.5pt] print:[-webkit-print-color-adjust:exact] print:[print-color-adjust:exact]'>
+    <main class='mx-auto w-full max-w-[8.5in] px-4 py-6 sm:px-8 sm:py-8 print:max-w-none print:p-0'>
+      <nav
+        aria-label='Cheat sheet actions'
+        class='mb-6 flex flex-wrap items-center justify-between gap-3 print:hidden'
+      >
+        <a
+          href='/notes/cheatsheets'
+          class='inline-flex min-h-11 items-center whitespace-nowrap underline decoration-1 underline-offset-4 hover:decoration-2'
+        >
+          ← Cheat sheets
+        </a>
+        <button
+          id='print-sheet'
+          type='button'
+          class='min-h-11 cursor-pointer whitespace-nowrap border border-site-ink px-4 py-2 font-normal hover:underline active:bg-site-surface'
+        >
+          Print sheet
+        </button>
+      </nav>
+
+      <header class='mb-5 border-b-2 border-site-ink pb-4 print:mb-4 print:pb-3'>
+        <div class='flex items-baseline justify-between gap-3'>
+          <h1 class='min-w-0 font-display text-[2.5rem] font-bold leading-none tracking-[-0.045em] [overflow-wrap:anywhere] print:text-[2rem]'>
+            Neru
+          </h1>
+          <span class='font-normal text-[0.875rem]'>
+            {snapshot.version} · macOS
+          </span>
+        </div>
+        <p class='mt-2 font-normal text-[0.875rem] leading-snug'>
+          Neru must be running with Accessibility access.
+        </p>
+      </header>
+
+      <div class='grid grid-cols-1 gap-x-7 gap-y-5 min-[44rem]:grid-cols-2 print:grid-cols-2 print:gap-x-6'>
+        <div class='flex min-w-0 flex-col gap-5'>
+          {leftSections.map((section) => (
+            <AeroSpaceShortcutTable {...section} />
+          ))}
+        </div>
+        <div class='flex min-w-0 flex-col gap-5'>
+          {rightSections.map((section) => (
+            <AeroSpaceShortcutTable {...section} />
+          ))}
+        </div>
+      </div>
+    </main>
+  </body>
+</html>
+
+<script>
+  document
+    .getElementById('print-sheet')
+    ?.addEventListener('click', () => window.print())
+</script>
+
+<style>
+  :global(html[data-cheatsheet]) {
+    color-scheme: light;
+    --paper: oklch(1 0 0);
+    --surface: oklch(0.94 0 0);
+    --ink: oklch(0 0 0);
+    --muted: var(--ink);
+    --line: oklch(0.75 0 0);
+    --focus: var(--ink);
+  }
+
+  @page {
+    size: letter portrait;
+    margin: 0.45in;
+  }
+</style>
