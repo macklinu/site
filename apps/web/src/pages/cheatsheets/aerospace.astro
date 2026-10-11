@@ -15,15 +15,6 @@ const extraSections = sections.filter(
   (section) =>
     !['apps', 'workspaces', 'windows', 'tiling', 'service'].includes(section.id)
 )
-const macOSRows = [
-  {
-    keys: 'Fn ⌃ ← → ↑ ↓',
-    description: 'Half screen ← → ↑ ↓',
-  },
-  { keys: 'Fn ⌃ F', description: 'Fill desktop' },
-  { keys: 'Fn ⌃ C', description: 'Center' },
-  { keys: 'Fn ⌃ R', description: 'Previous size (macOS tiling)' },
-]
 ---
 
 <!doctype html>
@@ -33,7 +24,7 @@ const macOSRows = [
     <meta name='viewport' content='width=device-width, initial-scale=1' />
     <meta
       name='description'
-      content='A printable AeroSpace shortcut reference, generated from my config, with native macOS window sizing shortcuts.'
+      content='A printable AeroSpace shortcut reference generated from my config.'
     />
     <title>AeroSpace cheat sheet · mackie.underdown.wiki</title>
   </head>
@@ -72,11 +63,6 @@ const macOSRows = [
               appKeys={section.id === 'apps'}
             />
           ))}
-          <AeroSpaceShortcutTable
-            id='macos-sizing'
-            title='macOS sizing'
-            rows={macOSRows}
-          />
         </div>
         <div class='flex min-w-0 flex-col gap-5'>
           {rightSections.map((section) => (
@@ -86,7 +72,7 @@ const macOSRows = [
                 section.id === 'service'
                   ? 'Enter, release the keys, then press a service shortcut. Main shortcuts are inactive; actions marked “exit” return to main.'
                   : section.id === 'tiling'
-                    ? 'AeroSpace resize needs a tiled window. If floating, use the service Float / tile action, or macOS sizing to stay floating.'
+                    ? 'AeroSpace resize needs a tiled window. If floating, use the service Float / tile action to switch to tiling before resizing.'
                     : undefined
               }
             />
