@@ -18,26 +18,34 @@ The [setup-macklinu-machine skill](https://github.com/macklinu/skills/tree/main/
 
 The [macklinu-machine skill](https://github.com/macklinu/skills/tree/main/skills/macklinu-machine) sets both author and committer to `macklinu-machine[bot]` for local commits. Commit mode needs no App key or token. Those fields record attribution; they do not provide cryptographic proof or guarantee a signed commit.
 
+<div className="[&_svg]:mx-auto [&_svg]:min-w-0!">
+  <MermaidDiagram
+    client:load
+    label="Bot author and committer produce a local commit."
+    definition={`flowchart TD
+    Attribution["Bot author<br/>+ committer"] --> Commit["Local commit"]`}
+  />
+</div>
+
 ## Pushes and pull requests
 
 For a push or a PR/API write, the runner reads the existing unencrypted local PEM and signs an App JWT. It exchanges that JWT for a fresh installation token limited to the requested repository. Git and `gh` use the token instead of my personal credentials. The token authenticates these writes independently of the commit's author and committer fields.
 
 The local key trusts processes running as the same user. Installation tokens have limited scope and lifetime, but the long-lived App key is not repository-scoped. This workflow is not a sandbox.
 
-<MermaidDiagram
-  client:load
-  label="Runner sequence: a local commit sets bot attribution without credentials; publication exchanges an App JWT for a repository-limited token before Git or gh writes to GitHub."
-  definition={`sequenceDiagram
+<div className="[&_svg]:mx-auto [&_svg]:min-w-0!">
+  <MermaidDiagram
+    client:load
+    label="The runner signs a JWT, requests a repository token from GitHub, and uses it for publication."
+    definition={`---
+config: { sequence: { mirrorActors: false, actorMargin: 30, width: 80, diagramMarginX: 10 } }
+---
+sequenceDiagram
   participant Runner
-  participant Git as Local Git
-  participant Hub as GitHub
-  alt Commit: no key or token
-    Runner->>Git: Set bot author + committer
-    Git-->>Runner: Local commit (metadata)
-  else Push / PR / API
-    Runner->>Runner: Sign JWT with App PEM
-    Runner->>Hub: JWT: request token for one repo
-    Hub-->>Runner: Repository-limited token
-    Runner->>Hub: Git / gh write with token
-  end`}
-/>
+  participant GitHub
+  Runner->>Runner: Sign JWT
+  Runner->>GitHub: JWT + repo
+  GitHub-->>Runner: Repo token
+  Runner->>GitHub: Token write`}
+  />
+</div>
