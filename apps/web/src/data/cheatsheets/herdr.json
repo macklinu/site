@@ -1,0 +1,111 @@
+{
+  "version": "0.9.3",
+  "prefix": "Ctrl+A",
+  "columns": [
+    [
+      {
+        "id": "panes",
+        "title": "Panes",
+        "rows": [
+          { "keys": "v / Shift+\\", "description": "Split right" },
+          { "keys": "−", "description": "Split down" },
+          { "keys": "h/j/k/l", "description": "Focus ← / ↓ / ↑ / →" },
+          { "keys": "Shift+H/J/K/L", "description": "Swap ← / ↓ / ↑ / →" },
+          { "keys": "Tab", "description": "Next pane" },
+          { "keys": "Shift+Tab", "description": "Previous pane" },
+          { "keys": "z", "description": "Zoom / restore" },
+          { "keys": "Shift+P", "description": "Rename" },
+          { "keys": "x", "description": "Close" }
+        ]
+      },
+      {
+        "id": "tabs",
+        "title": "Tabs",
+        "rows": [
+          { "keys": "c", "description": "New" },
+          { "keys": "n / p", "description": "Next / previous" },
+          { "keys": "1–9", "description": "Switch" },
+          { "keys": "Shift+T", "description": "Rename" },
+          { "keys": "Shift+X", "description": "Close" }
+        ]
+      },
+      {
+        "id": "workspaces",
+        "title": "Workspaces",
+        "rows": [
+          { "keys": "Shift+N", "description": "New" },
+          { "keys": "Shift+G", "description": "New worktree" },
+          { "keys": "Shift+W", "description": "Rename" },
+          { "keys": "Shift+D", "description": "Close" },
+          { "keys": "b", "description": "Toggle sidebar" }
+        ]
+      },
+      {
+        "id": "plugins",
+        "title": "Plugins",
+        "note": "herdr-annotate / herdr-projects",
+        "rows": [
+          { "keys": "a", "description": "Annotate selected text" },
+          { "keys": "Shift+A", "description": "Copy annotation context" },
+          { "keys": "m", "description": "Manage annotations" },
+          { "keys": "Alt+o", "description": "Review pane’s folder" },
+          { "keys": "Shift+O", "description": "Review agent’s last reply" },
+          { "keys": "Ctrl+p", "description": "Open Projects popup" }
+        ]
+      }
+    ],
+    [
+      {
+        "id": "goto",
+        "title": "Agents / terminals",
+        "note": "Prefix+g. Enter opens; Esc exits. Filters outside search.",
+        "rows": [
+          { "keys": "↑ / ↓ or j / k", "description": "Previous / next row" },
+          { "keys": "← / →", "description": "Previous / next workspace" },
+          { "keys": "/", "description": "Search" },
+          { "keys": "b / w / i / d", "description": "Blocked / working / idle / done" },
+          { "keys": "a", "description": "All terminals" }
+        ]
+      },
+      {
+        "id": "navigate",
+        "title": "Navigate",
+        "note": "Prefix+w. Enter workspace for pane keys; Esc exits.",
+        "rows": [
+          { "keys": "↑ / ↓", "description": "Select workspace" },
+          { "keys": "1–9", "description": "Open workspace; exit" },
+          { "keys": "h/j/k/l", "description": "Focus ← / ↓ / ↑ / →" },
+          { "keys": "Tab / Shift+Tab", "description": "Next / previous pane; exit" }
+        ]
+      },
+      {
+        "id": "resize",
+        "title": "Resize",
+        "note": "Prefix+r in a split tab; Enter / Esc exits.",
+        "rows": [{ "keys": "h/j/k/l / ←↓↑→", "description": "Resize ← / ↓ / ↑ / →" }]
+      },
+      {
+        "id": "copy",
+        "title": "Copy",
+        "note": "Prefix+[. q exits; Esc clears search / selection first.",
+        "rows": [
+          { "keys": "h/j/k/l", "description": "Move ← / ↓ / ↑ / →" },
+          { "keys": "Ctrl+u / Ctrl+d", "description": "Half-page up / down" },
+          { "keys": "/ or ?", "description": "Search forward / backward" },
+          { "keys": "n / Shift+N", "description": "Next / previous match" },
+          { "keys": "v / Space", "description": "Start selection" },
+          { "keys": "y / Enter", "description": "Copy selection; exit" }
+        ]
+      },
+      {
+        "id": "session",
+        "title": "Session",
+        "rows": [
+          { "keys": "?", "description": "Active keybindings" },
+          { "keys": "o", "description": "Open notification target" },
+          { "keys": "q", "description": "Detach; keep running" }
+        ]
+      }
+    ]
+  ]
+}
