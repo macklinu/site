@@ -68,8 +68,9 @@ export function entryImage({
                 />
               </div>
             </div>
-            <span style={{ fontSize: 26, fontWeight: 700, letterSpacing: "-0.04em" }}>
-              Mackie Underdown<span style={{ color: "#b8b8b8" }}> // personal wiki</span>
+            <span style={{ fontSize: 26, fontWeight: "bold", letterSpacing: "-0.04em" }}>
+              Mackie Underdown
+              <span style={{ fontWeight: "normal", color: "#b8b8b8" }}> // personal wiki</span>
             </span>
           </div>
 
@@ -87,7 +88,7 @@ export function entryImage({
                   marginBottom: 18,
                   color: "#b8b8b8",
                   fontSize: 26,
-                  fontWeight: 400,
+                  fontWeight: "normal",
                 }}
               >
                 {label}
