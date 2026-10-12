@@ -92,6 +92,19 @@
           { "keys": "v / Space", "description": "Start selection" },
           { "keys": "y / Enter", "description": "Copy selection; exit" }
         ]
+      },
+      {
+        "id": "plugins",
+        "title": "Plugins",
+        "note": "Requires herdr-annotate and herdr-projects.",
+        "rows": [
+          { "keys": "a", "description": "Annotate selected text" },
+          { "keys": "Shift+A", "description": "Copy annotation context" },
+          { "keys": "m", "description": "Manage annotations" },
+          { "keys": "Alt+o", "description": "Review pane’s folder" },
+          { "keys": "Shift+O", "description": "Review agent’s last reply" },
+          { "keys": "Ctrl+p", "description": "Open Projects popup" }
+        ]
       }
     ]
   ]

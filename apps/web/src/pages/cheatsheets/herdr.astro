@@ -45,12 +45,23 @@ import snapshot from '~/data/cheatsheets/herdr.json'
             {snapshot.version}
           </span>
         </div>
-        <p class='mt-3 font-normal'>
-          Prefix: <kbd class='font-mono font-normal'>{snapshot.prefix}</kbd>.
-          Release, then press a key. Inside a mode, omit the prefix. Esc cancels
-          prefix mode; press the prefix twice to send it to the pane.
-        </p>
       </header>
+
+      <div class='mb-5 print:mb-3'>
+        <ShortcutTable
+          id='prefix'
+          title='Prefix'
+          note='Release the prefix before the next key. Other shortcuts use the prefix unless a mode is active.'
+          rows={[
+            { keys: snapshot.prefix, description: 'Enter prefix mode' },
+            { keys: 'Esc', description: 'Cancel prefix mode' },
+            {
+              keys: `${snapshot.prefix} then ${snapshot.prefix}`,
+              description: `Send ${snapshot.prefix} to the pane’s shell / app`,
+            },
+          ]}
+        />
+      </div>
 
       <div class='grid grid-cols-1 gap-x-7 gap-y-5 min-[44rem]:grid-cols-2 print:grid-cols-2 print:gap-x-6'>
         {snapshot.columns.map((sections) => (
