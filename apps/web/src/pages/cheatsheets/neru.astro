@@ -2,11 +2,6 @@
 import '~/styles.css'
 import AeroSpaceShortcutTable from '~/components/AeroSpaceShortcutTable.astro'
 import snapshot from '~/data/cheatsheets/neru.json'
-import { createNeruCheatsheet } from '~/lib/NeruCheatsheet'
-
-const sections = createNeruCheatsheet(snapshot)
-const leftSections = sections.slice(0, 3)
-const rightSections = sections.slice(3)
 ---
 
 <!doctype html>
@@ -56,16 +51,13 @@ const rightSections = sections.slice(3)
       </header>
 
       <div class='grid grid-cols-1 gap-x-7 gap-y-5 min-[44rem]:grid-cols-2 print:grid-cols-2 print:gap-x-6'>
-        <div class='flex min-w-0 flex-col gap-5'>
-          {leftSections.map((section) => (
-            <AeroSpaceShortcutTable {...section} />
-          ))}
-        </div>
-        <div class='flex min-w-0 flex-col gap-5'>
-          {rightSections.map((section) => (
-            <AeroSpaceShortcutTable {...section} />
-          ))}
-        </div>
+        {snapshot.columns.map((sections) => (
+          <div class='flex min-w-0 flex-col gap-5'>
+            {sections.map((section) => (
+              <AeroSpaceShortcutTable {...section} />
+            ))}
+          </div>
+        ))}
       </div>
     </main>
   </body>

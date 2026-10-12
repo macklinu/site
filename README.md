@@ -27,5 +27,3 @@ flowchart TD
 ```sh
 pnpm cheatsheets:sync ~/dotfiles/aerospace/.config/aerospace/aerospace.toml
 ```
-
-After a Neru upgrade, check mode behavior against the release documentation; config dumps describe bindings, not selection or exit behavior.
