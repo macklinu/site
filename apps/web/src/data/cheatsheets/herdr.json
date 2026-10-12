@@ -9,8 +9,8 @@
         "rows": [
           { "keys": "v / Shift+\\", "description": "Split right" },
           { "keys": "−", "description": "Split down" },
-          { "keys": "h/j/k/l", "description": "Focus left / down / up / right" },
-          { "keys": "Shift+H/J/K/L", "description": "Swap left / down / up / right" },
+          { "keys": "h/j/k/l", "description": "Focus ← / ↓ / ↑ / →" },
+          { "keys": "Shift+H/J/K/L", "description": "Swap ← / ↓ / ↑ / →" },
           { "keys": "Tab", "description": "Next pane" },
           { "keys": "Shift+Tab", "description": "Previous pane" },
           { "keys": "z", "description": "Zoom / restore" },
@@ -41,12 +41,16 @@
         ]
       },
       {
-        "id": "session",
-        "title": "Session",
+        "id": "plugins",
+        "title": "Plugins",
+        "note": "herdr-annotate / herdr-projects",
         "rows": [
-          { "keys": "?", "description": "Active keybindings" },
-          { "keys": "o", "description": "Open notification target" },
-          { "keys": "q", "description": "Detach; leave panes running" }
+          { "keys": "a", "description": "Annotate selected text" },
+          { "keys": "Shift+A", "description": "Copy annotation context" },
+          { "keys": "m", "description": "Manage annotations" },
+          { "keys": "Alt+o", "description": "Review pane’s folder" },
+          { "keys": "Shift+O", "description": "Review agent’s last reply" },
+          { "keys": "Ctrl+p", "description": "Open Projects popup" }
         ]
       }
     ],
@@ -54,7 +58,7 @@
       {
         "id": "goto",
         "title": "Agents / terminals",
-        "note": "Prefix+g. Filters apply outside search. Enter opens the pane; Esc closes.",
+        "note": "Prefix+g. Enter opens; Esc exits. Filters outside search.",
         "rows": [
           { "keys": "↑ / ↓ or j / k", "description": "Previous / next row" },
           { "keys": "← / →", "description": "Previous / next workspace" },
@@ -66,26 +70,26 @@
       {
         "id": "navigate",
         "title": "Navigate",
-        "note": "Prefix+w. Select a workspace, then Enter for pane actions. Esc exits.",
+        "note": "Prefix+w. Enter workspace for pane keys; Esc exits.",
         "rows": [
           { "keys": "↑ / ↓", "description": "Select workspace" },
           { "keys": "1–9", "description": "Open workspace; exit" },
-          { "keys": "h/j/k/l", "description": "Focus left / down / up / right" },
+          { "keys": "h/j/k/l", "description": "Focus ← / ↓ / ↑ / →" },
           { "keys": "Tab / Shift+Tab", "description": "Next / previous pane; exit" }
         ]
       },
       {
         "id": "resize",
         "title": "Resize",
-        "note": "Prefix+r in a split tab. Repeat keys; Enter or Esc exits.",
-        "rows": [{ "keys": "h/j/k/l or arrows", "description": "Resize left / down / up / right" }]
+        "note": "Prefix+r in a split tab; Enter / Esc exits.",
+        "rows": [{ "keys": "h/j/k/l / ←↓↑→", "description": "Resize ← / ↓ / ↑ / →" }]
       },
       {
         "id": "copy",
         "title": "Copy",
-        "note": "Prefix+[. Esc clears search or selection first; q exits. Output stays live.",
+        "note": "Prefix+[. q exits; Esc clears search / selection first.",
         "rows": [
-          { "keys": "h/j/k/l", "description": "Move left / down / up / right" },
+          { "keys": "h/j/k/l", "description": "Move ← / ↓ / ↑ / →" },
           { "keys": "Ctrl+u / Ctrl+d", "description": "Half-page up / down" },
           { "keys": "/ or ?", "description": "Search forward / backward" },
           { "keys": "n / Shift+N", "description": "Next / previous match" },
@@ -94,16 +98,12 @@
         ]
       },
       {
-        "id": "plugins",
-        "title": "Plugins",
-        "note": "Requires herdr-annotate and herdr-projects.",
+        "id": "session",
+        "title": "Session",
         "rows": [
-          { "keys": "a", "description": "Annotate selected text" },
-          { "keys": "Shift+A", "description": "Copy annotation context" },
-          { "keys": "m", "description": "Manage annotations" },
-          { "keys": "Alt+o", "description": "Review pane’s folder" },
-          { "keys": "Shift+O", "description": "Review agent’s last reply" },
-          { "keys": "Ctrl+p", "description": "Open Projects popup" }
+          { "keys": "?", "description": "Active keybindings" },
+          { "keys": "o", "description": "Open notification target" },
+          { "keys": "q", "description": "Detach; keep running" }
         ]
       }
     ]
