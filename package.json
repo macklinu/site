@@ -4,7 +4,6 @@
   "type": "module",
   "scripts": {
     "dev": "turbo run dev",
-    "cheatsheets:sync": "tsx --env-file-if-exists=apps/cli/.env apps/cli/src/main.ts cheatsheets sync",
     "build": "turbo run build",
     "deploy": "turbo run deploy",
     "destroy": "turbo run destroy",

@@ -18,7 +18,6 @@ import { format } from "oxfmt";
 import { selectWebMarkdownDocument, updateWebTimestamp } from "./web-timestamp.js";
 import { AppleMapsUrl, lookupAppleMapsPlace } from "./apple-maps.js";
 import { PlaceUpsertResult, upsertAppleMapsPlace } from "./places.js";
-import { syncAeroSpaceConfig } from "./cheatsheets.js";
 import pkg from "../package.json" with { type: "json" };
 
 const PLACES_DATA_DIRECTORY = fileURLToPath(new URL("../../web/src/data/places/", import.meta.url));
@@ -257,25 +256,6 @@ const obsidianCommand = Command.make("obsidian").pipe(
   Command.withSubcommands([syncCommand]),
 );
 
-const syncCheatsheetCommand = Command.make(
-  "sync",
-  {
-    source: Argument.File("aerospace-config", { mustExist: true }).pipe(
-      Argument.withDescription("AeroSpace TOML config to copy into the tracked snapshot."),
-    ),
-  },
-  Effect.fn("Cheatsheets.syncCommand")(function* ({ source }) {
-    const path = yield* Path.Path;
-    const destination = yield* syncAeroSpaceConfig({ source });
-    yield* Console.log(`Updated ${path.relative(REPOSITORY_DIRECTORY, destination)}.`);
-  }),
-).pipe(Command.withDescription("Refresh the tracked AeroSpace config snapshot."));
-
-const cheatsheetsCommand = Command.make("cheatsheets").pipe(
-  Command.withDescription("Maintain cheat sheet config snapshots."),
-  Command.withSubcommands([syncCheatsheetCommand]),
-);
-
 const touchCommand = Command.make(
   "touch",
   {
@@ -356,7 +336,7 @@ const placesCommand = Command.make("places").pipe(
 
 const cli = Command.make(pkg.name).pipe(
   Command.withDescription("mackie.underdown.wiki maintenance commands."),
-  Command.withSubcommands([obsidianCommand, placesCommand, webCommand, cheatsheetsCommand]),
+  Command.withSubcommands([obsidianCommand, placesCommand, webCommand]),
 );
 
 Command.run(cli, { version: pkg.version }).pipe(

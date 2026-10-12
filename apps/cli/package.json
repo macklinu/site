@@ -12,8 +12,7 @@
     "effect": "4.0.2",
     "gray-matter": "^4.0.3",
     "oxfmt": "^0.72.0",
-    "parse5": "^8.0.1",
-    "smol-toml": "^1.9.1"
+    "parse5": "^8.0.1"
   },
   "devDependencies": {
     "@effect/language-service": "^0.87.4",

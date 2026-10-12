@@ -1,0 +1,65 @@
+{
+  "version": "0.21.3-Beta",
+  "columns": [
+    [
+      {
+        "id": "apps",
+        "title": "Apps",
+        "rows": [
+          { "keys": "⌥ T", "description": "Ghostty" },
+          { "keys": "⌥ C", "description": "Chrome" },
+          { "keys": "⌥ I", "description": "Linear" },
+          { "keys": "⌥ M", "description": "Messages" },
+          { "keys": "⌥ F", "description": "Fantastical" },
+          { "keys": "⌥ R", "description": "Reminders" },
+          { "keys": "⌥ S", "description": "System Settings" },
+          { "keys": "⌥ W", "description": "WhatsApp" },
+          { "keys": "⌥ G", "description": "Gnome" }
+        ]
+      },
+      {
+        "id": "workspaces",
+        "title": "Workspaces & monitors",
+        "rows": [
+          { "keys": "⌥ 1–9", "description": "Switch workspace" },
+          { "keys": "⌥ ⇧ 1–9", "description": "Send window; stay here" },
+          { "keys": "⌥ Tab", "description": "Previous workspace" },
+          { "keys": "⌥ ⇧ Tab", "description": "Move workspace to next monitor" }
+        ]
+      }
+    ],
+    [
+      {
+        "id": "windows",
+        "title": "Focus & move",
+        "rows": [
+          { "keys": "⌥ H J K L", "description": "Focus ← ↓ ↑ →" },
+          { "keys": "⌥ ⇧ H J K L", "description": "Move ← ↓ ↑ → (tiled)" }
+        ]
+      },
+      {
+        "id": "tiling",
+        "title": "Tiling",
+        "note": "Resize needs a tiled window; use service Float / tile first.",
+        "rows": [
+          { "keys": "⌥ −", "description": "Resize −50" },
+          { "keys": "⌥ =", "description": "Resize +50" },
+          { "keys": "⌥ /", "description": "Tiles; toggle orientation" },
+          { "keys": "⌥ ,", "description": "Accordion; toggle orientation" }
+        ]
+      },
+      {
+        "id": "service",
+        "title": "Service mode",
+        "note": "Release keys after entering. Main shortcuts inactive; all actions exit.",
+        "rows": [
+          { "keys": "⌥ ⇧ ;", "description": "Enter" },
+          { "keys": "⌥ ⇧ H J K L", "description": "Join ← ↓ ↑ →; exit" },
+          { "keys": "Esc", "description": "Reload config; exit" },
+          { "keys": "R", "description": "Reset tree; exit" },
+          { "keys": "F", "description": "Float / tile; exit" }
+        ]
+      }
+    ]
+  ]
+}
