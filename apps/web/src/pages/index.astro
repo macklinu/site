@@ -129,6 +129,28 @@ const demoEntries = entries.filter((entry) => entry.kind === 'demo')
       </ol>
     </section>
 
+    <section class='py-18' aria-labelledby='cheatsheets-title'>
+      <a
+        class='grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4 border-y-2 border-site-ink p-4 text-inherit no-underline transition-colors duration-150 ease-[var(--ease-out)] hover:bg-site-surface focus-visible:bg-site-surface active:bg-site-line motion-reduce:duration-[0.01ms]'
+        href='/cheatsheets'
+      >
+        <div>
+          <h2
+            id='cheatsheets-title'
+            class='m-0 min-w-0 [overflow-wrap:anywhere] font-display text-[clamp(var(--home-heading-min),3.2vw,var(--home-heading-max))] font-[680] leading-[0.95] tracking-[-0.045em]'
+          >
+            Cheatsheets
+          </h2>
+          <p class='m-0 mt-3 text-sm leading-[1.45] text-site-muted'>
+            Printable references for the tools I use.
+          </p>
+        </div>
+        <span class='font-mono leading-none text-site-muted' aria-hidden='true'>
+          →
+        </span>
+      </a>
+    </section>
+
     <section class='py-18' id='recent' aria-labelledby='recent-title'>
       <header class='mb-6 min-w-0'>
         <h2

@@ -1,0 +1,43 @@
+---
+import Layout from '~/Layout.astro'
+---
+
+<Layout
+  title='Cheatsheets'
+  description='Printable references for the tools I use.'
+>
+  <section
+    class='w-full max-w-[38rem] pt-[clamp(2.5rem,5vw,4.5rem)] pb-16'
+    aria-labelledby='cheatsheets-title'
+  >
+    <header class='mb-8'>
+      <h1
+        id='cheatsheets-title'
+        class='m-0 min-w-0 font-display text-[clamp(2.6rem,5vw,4.5rem)] font-bold leading-[0.95] tracking-[-0.045em] [overflow-wrap:anywhere]'
+      >
+        Cheatsheets
+      </h1>
+      <p class='m-0 mt-4 text-lg leading-[1.5] text-site-muted'>
+        Printable references for the tools I use.
+      </p>
+    </header>
+    <ul class='m-0 list-none border-t-2 border-site-ink p-0'>
+      {['AeroSpace', 'Herdr', 'Neru'].map((title) => (
+        <li class='border-b border-site-line'>
+          <a
+            class='grid min-h-16 grid-cols-[minmax(0,1fr)_auto] items-center gap-4 p-4 text-lg text-inherit no-underline transition-colors duration-150 ease-[var(--ease-out)] hover:bg-site-surface focus-visible:bg-site-surface active:bg-site-line motion-reduce:duration-[0.01ms]'
+            href={`/cheatsheets/${title.toLowerCase()}`}
+          >
+            <span>{title}</span>
+            <span
+              class='font-mono leading-none text-site-muted'
+              aria-hidden='true'
+            >
+              →
+            </span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+</Layout>
