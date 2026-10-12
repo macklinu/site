@@ -1,6 +1,6 @@
 import { Effect, Schema } from "effect";
-import * as HttpClient from "effect/unstable/http/HttpClient";
-import * as HttpClientRequest from "effect/unstable/http/HttpClientRequest";
+import * as HttpClient from "effect/http/HttpClient";
+import * as HttpClientRequest from "effect/http/HttpClientRequest";
 import { parse, type DefaultTreeAdapterTypes } from "parse5";
 
 const AppleMapsPlaceUrl = Schema.URL.check(
@@ -47,7 +47,7 @@ export const AppleMapsPlace = Schema.Struct({
 
 export type AppleMapsPlace = Schema.Schema.Type<typeof AppleMapsPlace>;
 
-export class AppleMapsLookupError extends Schema.TaggedErrorClass<AppleMapsLookupError>()(
+export class AppleMapsLookupError extends Schema.TaggedError<AppleMapsLookupError>()(
   "AppleMapsLookupError",
   {
     message: Schema.String,

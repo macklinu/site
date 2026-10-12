@@ -4,6 +4,9 @@
 
 ## CI/CD
 
+For manual Alchemy commands, select the stage with `--stage` or `ALCHEMY_STAGE`.
+The `STAGE` environment variable does not select an Alchemy stage.
+
 ```mermaid
 flowchart TD
   PRUpdate["PR opened, reopened, or synchronized"] --> VerifyPR["Verify<br/>Astro check + typecheck"]

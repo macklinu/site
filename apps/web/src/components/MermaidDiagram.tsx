@@ -55,6 +55,8 @@ export default function MermaidDiagram({ definition, label = "Diagram" }: Props)
         startOnLoad: false,
         securityLevel: "strict",
         theme: "base",
+        layout: "dagre",
+        look: "classic",
         themeVariables: {
           ...palettes[theme],
           darkMode: theme === "dark",
