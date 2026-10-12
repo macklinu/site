@@ -54,7 +54,7 @@
       {
         "id": "goto",
         "title": "Agents / terminals",
-        "note": "Enter with prefix+g. Filters apply outside search. Enter opens the selected pane; Esc closes.",
+        "note": "Prefix+g. Filters apply outside search. Enter opens the pane; Esc closes.",
         "rows": [
           { "keys": "↑ / ↓ or j / k", "description": "Previous / next row" },
           { "keys": "← / →", "description": "Previous / next workspace" },
@@ -66,7 +66,7 @@
       {
         "id": "navigate",
         "title": "Navigate",
-        "note": "Enter with prefix+w. Select a workspace, then Enter before pane actions. Esc leaves.",
+        "note": "Prefix+w. Select a workspace, then Enter for pane actions. Esc exits.",
         "rows": [
           { "keys": "↑ / ↓", "description": "Select workspace" },
           { "keys": "1–9", "description": "Open workspace; exit" },
@@ -77,13 +77,13 @@
       {
         "id": "resize",
         "title": "Resize",
-        "note": "Enter with prefix+r in a split tab. Repeat keys to resize; Enter or Esc leaves.",
+        "note": "Prefix+r in a split tab. Repeat keys; Enter or Esc exits.",
         "rows": [{ "keys": "h/j/k/l or arrows", "description": "Resize left / down / up / right" }]
       },
       {
         "id": "copy",
         "title": "Copy",
-        "note": "Enter with prefix+[. Esc clears search or selection first; q leaves. Output stays live.",
+        "note": "Prefix+[. Esc clears search or selection first; q exits. Output stays live.",
         "rows": [
           { "keys": "h/j/k/l", "description": "Move left / down / up / right" },
           { "keys": "Ctrl+u / Ctrl+d", "description": "Half-page up / down" },

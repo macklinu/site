@@ -15,8 +15,8 @@ import snapshot from '~/data/cheatsheets/herdr.json'
     />
     <title>Herdr cheat sheet · mackie.underdown.wiki</title>
   </head>
-  <body class='m-0 bg-site-paper font-body text-[0.9375rem] font-normal leading-[1.35] text-site-ink antialiased print:text-[10.5pt] print:[-webkit-print-color-adjust:exact] print:[print-color-adjust:exact]'>
-    <main class='mx-auto w-full max-w-[8.5in] px-4 py-6 sm:px-8 sm:py-8 print:max-w-none print:p-0'>
+  <body class='m-0 bg-site-paper font-body text-[0.9375rem] font-normal leading-[1.35] text-site-ink antialiased print:text-[10.5pt] print:leading-[1.25] print:[-webkit-print-color-adjust:exact] print:[print-color-adjust:exact]'>
+    <main class='mx-auto w-full max-w-[8.5in] px-4 py-6 sm:px-8 sm:py-8 [&_kbd]:font-mono [&_kbd]:font-normal print:max-w-none print:p-0'>
       <nav
         aria-label='Cheat sheet actions'
         class='mb-6 flex flex-wrap items-center justify-between gap-3 print:hidden'
@@ -36,7 +36,7 @@ import snapshot from '~/data/cheatsheets/herdr.json'
         </button>
       </nav>
 
-      <header class='mb-5 border-b-2 border-site-ink pb-4 print:mb-4 print:pb-3'>
+      <header class='mb-5 border-b-2 border-site-ink pb-4 print:mb-2 print:pb-2'>
         <div class='flex items-baseline justify-between gap-4'>
           <h1 class='min-w-0 font-display text-[2.5rem] font-bold leading-none tracking-[-0.045em] [overflow-wrap:anywhere] print:text-[2rem]'>
             Herdr
@@ -47,25 +47,19 @@ import snapshot from '~/data/cheatsheets/herdr.json'
         </div>
       </header>
 
-      <div class='mb-5 print:mb-3'>
-        <ShortcutTable
-          id='prefix'
-          title='Prefix'
-          note='Release the prefix before the next key. Other shortcuts use the prefix unless a mode is active.'
-          rows={[
-            { keys: snapshot.prefix, description: 'Enter prefix mode' },
-            { keys: 'Esc', description: 'Cancel prefix mode' },
-            {
-              keys: `${snapshot.prefix} then ${snapshot.prefix}`,
-              description: `Send ${snapshot.prefix} to the pane’s shell / app`,
-            },
-          ]}
-        />
-      </div>
+      <p class='mb-5 text-[0.875rem] leading-snug print:mb-3 print:text-[10.5pt] print:leading-[1.25]'>
+        <kbd>{snapshot.prefix}</kbd> enters prefix mode; release before the next
+        key. <kbd>Esc</kbd> cancels prefix mode.{' '}
+        <kbd>
+          {snapshot.prefix} then {snapshot.prefix}
+        </kbd>{' '}
+        sends one <kbd>{snapshot.prefix}</kbd> to the pane. Use the prefix
+        except in modes.
+      </p>
 
-      <div class='grid grid-cols-1 gap-x-7 gap-y-5 min-[44rem]:grid-cols-2 print:grid-cols-2 print:gap-x-6'>
+      <div class='grid grid-cols-1 gap-x-7 gap-y-5 min-[44rem]:grid-cols-2 print:grid-cols-2 print:gap-x-5 print:[&_h2]:mb-1 print:[&_h2]:pb-0.5 print:[&_h2]:text-[14pt] print:[&_section>p]:mb-1 print:[&_section>p]:leading-[1.25] print:[&_th]:py-0.5 print:[&_td]:py-0.5 print:[&_kbd]:leading-[1.25]'>
         {snapshot.columns.map((sections) => (
-          <div class='flex min-w-0 flex-col gap-5 print:gap-3'>
+          <div class='flex min-w-0 flex-col gap-5 print:gap-2'>
             {sections.map((section) => (
               <ShortcutTable {...section} />
             ))}
