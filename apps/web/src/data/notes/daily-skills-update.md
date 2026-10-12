@@ -43,6 +43,7 @@ jobs:
       - run: npx oxfmt --write .
       - uses: peter-evans/create-pull-request@v8
         with:
+          # Daily runs with changes update the same open PR on this branch.
           branch: chore/update-skills
           commit-message: "chore: update agent skills"
           title: "chore: update agent skills"
@@ -50,5 +51,3 @@ jobs:
 ```
 
 Use symlink-based project skills and commit them with `skills-lock.json`. Keep the workflow on the default branch and enable **Settings → Actions → General → Workflow permissions → Allow GitHub Actions to create and approve pull requests**.
-
-Use public skill sources. `GITHUB_TOKEN` does not trigger PR checks; for checks, use a [GitHub App token](https://github.com/peter-evans/create-pull-request/blob/main/docs/concepts-guidelines.md#authenticating-with-github-app-generated-tokens) with Contents and Pull requests write access for both checkout and PR creation.
