@@ -69,7 +69,7 @@ export function entryImage({
               </div>
             </div>
             <span style={{ fontSize: 26, fontWeight: 700, letterSpacing: "-0.04em" }}>
-              Mackie Underdown · personal wiki
+              Mackie Underdown // personal wiki
             </span>
           </div>
 

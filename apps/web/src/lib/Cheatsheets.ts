@@ -1,14 +1,14 @@
 export const cheatsheets = {
   aerospace: {
     title: "AeroSpace",
-    description: "A printable AeroSpace shortcut reference from my reviewed configuration.",
+    description: "Printable AeroSpace keyboard cheatsheet.",
   },
   herdr: {
     title: "Herdr",
-    description: "A printable Herdr shortcut reference with my keybindings.",
+    description: "Printable Herdr keyboard cheatsheet.",
   },
   neru: {
     title: "Neru",
-    description: "A printable Neru shortcut reference from my active configuration.",
+    description: "Printable Neru keyboard cheatsheet.",
   },
 };
