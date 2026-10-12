@@ -33,8 +33,7 @@
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
     "satori": "^0.47.1",
-    "sharp": "^0.35.5",
-    "smol-toml": "^1.9.1"
+    "sharp": "^0.35.5"
   },
   "devDependencies": {
     "@effect/language-service": "^0.87.4",

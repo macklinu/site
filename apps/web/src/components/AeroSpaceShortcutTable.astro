@@ -1,21 +1,15 @@
 ---
-import type { ShortcutRow } from '~/lib/AeroSpaceCheatsheet'
-
 interface Props {
   id: string
   title: string
-  rows: ShortcutRow[]
-  appKeys?: boolean
+  rows: { keys: string; description: string }[]
   note?: string
 }
 
-const { id, title, rows, appKeys = false, note } = Astro.props
+const { id, title, rows, note } = Astro.props
 ---
 
-<section
-  class='min-w-0 break-inside-avoid'
-  aria-labelledby={id}
->
+<section class='min-w-0 break-inside-avoid' aria-labelledby={id}>
   <h2
     id={id}
     class='mb-2 border-b-2 border-site-ink pb-1 font-display text-xl font-bold leading-tight tracking-[-0.025em]'
@@ -28,7 +22,7 @@ const { id, title, rows, appKeys = false, note } = Astro.props
     aria-labelledby={id}
   >
     <colgroup>
-      <col class={appKeys ? 'w-[32%]' : 'w-[46%]'} />
+      <col class='w-[46%]' />
       <col />
     </colgroup>
     <thead class='sr-only'>
@@ -41,26 +35,12 @@ const { id, title, rows, appKeys = false, note } = Astro.props
       {rows.map((row) => (
         <tr class='break-inside-avoid border-b border-site-line last:border-b-0'>
           <th scope='row' class='py-1 pr-2 align-top font-normal'>
-            <kbd
-              class:list={[
-                'font-mono leading-[1.35] [overflow-wrap:anywhere] print:text-[10.5pt]',
-                appKeys
-                  ? 'text-base font-semibold'
-                  : 'text-[0.875rem] font-medium',
-              ]}
-            >
+            <kbd class='font-mono text-[0.875rem] font-normal leading-[1.35] [overflow-wrap:anywhere] print:text-[10.5pt]'>
               {row.keys}
             </kbd>
           </th>
           <td class='py-1 align-top [overflow-wrap:anywhere]'>
-            <span class:list={{ 'font-medium': appKeys }}>
-              {row.description}
-            </span>
-            {row.commands && (
-              <code class='mt-1 block whitespace-pre-wrap font-mono text-[0.875rem] leading-snug print:text-[10.5pt]'>
-                {row.commands.join('\n')}
-              </code>
-            )}
+            {row.description}
           </td>
         </tr>
       ))}
