@@ -5,6 +5,7 @@ export function entryImage({ title, description }: { title: string; description:
     <div
       style={{
         display: "flex",
+        boxSizing: "border-box",
         width: "100%",
         height: "100%",
         padding: 32,
@@ -16,6 +17,7 @@ export function entryImage({ title, description }: { title: string; description:
       <div
         style={{
           display: "flex",
+          boxSizing: "border-box",
           width: "100%",
           border: "4px solid #ffffff",
         }}
@@ -32,6 +34,7 @@ export function entryImage({ title, description }: { title: string; description:
             <div
               style={{
                 display: "flex",
+                boxSizing: "border-box",
                 width: 28,
                 height: 28,
                 padding: 4,
@@ -41,6 +44,7 @@ export function entryImage({ title, description }: { title: string; description:
               <div
                 style={{
                   display: "flex",
+                  boxSizing: "border-box",
                   width: "100%",
                   height: "100%",
                   padding: 4,
@@ -116,6 +120,8 @@ export function entryImage({ title, description }: { title: string; description:
         <aside
           style={{
             display: "flex",
+            boxSizing: "border-box",
+            flexShrink: 0,
             width: 280,
             overflow: "hidden",
             borderLeft: "4px solid #ffffff",

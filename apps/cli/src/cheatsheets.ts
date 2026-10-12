@@ -6,7 +6,7 @@ const AEROSPACE_SNAPSHOT = fileURLToPath(
   new URL("../../web/src/data/cheatsheets/aerospace.toml", import.meta.url),
 );
 
-class AeroSpaceConfigError extends Schema.TaggedErrorClass<AeroSpaceConfigError>()(
+class AeroSpaceConfigError extends Schema.TaggedError<AeroSpaceConfigError>()(
   "AeroSpaceConfigError",
   {
     message: Schema.String,

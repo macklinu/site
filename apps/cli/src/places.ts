@@ -43,13 +43,10 @@ export type PlaceUpsertResult = Data.TaggedEnum<{
 
 export const PlaceUpsertResult = Data.taggedEnum<PlaceUpsertResult>();
 
-export class PlaceUpsertError extends Schema.TaggedErrorClass<PlaceUpsertError>()(
-  "PlaceUpsertError",
-  {
-    message: Schema.String,
-    cause: Schema.optionalKey(Schema.Defect()),
-  },
-) {}
+export class PlaceUpsertError extends Schema.TaggedError<PlaceUpsertError>()("PlaceUpsertError", {
+  message: Schema.String,
+  cause: Schema.optionalKey(Schema.Defect()),
+}) {}
 
 const parsePlaceDocument = Effect.fn("Places.parseDocument")(function* ({
   content,

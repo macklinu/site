@@ -15,14 +15,14 @@
   },
   "devDependencies": {
     "@typescript/native": "npm:typescript@^7.0.2",
-    "lefthook": "^2.1.10",
-    "oxfmt": "^0.61.0",
-    "oxlint": "^1.76.0",
-    "prettier": "^3.9.8",
-    "prettier-plugin-astro": "^1.0.1",
+    "lefthook": "^2.2.1",
+    "oxfmt": "^0.72.0",
+    "oxlint": "^1.87.0",
+    "prettier": "^3.9.9",
+    "prettier-plugin-astro": "^1.1.1",
     "tsx": "^4.23.15",
-    "turbo": "^2.7.5",
-    "typescript": "^6.0.2"
+    "turbo": "^2.11.7",
+    "typescript": "^6.0.3"
   },
-  "packageManager": "pnpm@12.5.1"
+  "packageManager": "pnpm@12.11.2"
 }

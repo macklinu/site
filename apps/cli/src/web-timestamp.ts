@@ -1,14 +1,14 @@
 import { fileURLToPath } from "node:url";
 import { DateTime, Effect, FileSystem, Path, Schema } from "effect";
-import { Prompt } from "effect/unstable/cli";
-import { ChildProcess, ChildProcessSpawner } from "effect/unstable/process";
+import { Prompt } from "effect/cli";
+import { ChildProcess, ChildProcessSpawner } from "effect/process";
 import matter from "gray-matter";
 
 const DEFAULT_WEB_DIRECTORY = fileURLToPath(new URL("../../web/", import.meta.url));
 const WEB_DOCUMENT_EXTENSIONS = [".md", ".mdx"] as const;
 const WEB_IGNORED_DIRECTORY_NAMES = ["dist", "node_modules"] as const;
 
-class WebTimestampError extends Schema.TaggedErrorClass<WebTimestampError>()("WebTimestampError", {
+class WebTimestampError extends Schema.TaggedError<WebTimestampError>()("WebTimestampError", {
   message: Schema.String,
   cause: Schema.optionalKey(Schema.Defect()),
 }) {}
@@ -104,7 +104,7 @@ export const selectWebMarkdownDocument = Effect.fn("WebTimestamp.selectDocument"
   }
 
   return yield* Prompt.run(
-    Prompt.autoComplete({
+    Prompt.AutoComplete({
       message: "Select a Markdown or MDX file",
       choices: documents.map((relativePath) => {
         const gitStatus = gitStatuses.get(relativePath);

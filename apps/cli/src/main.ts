@@ -12,7 +12,7 @@ import {
   Path,
   Schema,
 } from "effect";
-import { Argument, Command, Flag } from "effect/unstable/cli";
+import { Argument, Command, Flag } from "effect/cli";
 import matter from "gray-matter";
 import { format } from "oxfmt";
 import { selectWebMarkdownDocument, updateWebTimestamp } from "./web-timestamp.js";
@@ -37,7 +37,7 @@ interface ParsedDocument {
   readonly webId: string;
 }
 
-class ObsidianSyncError extends Schema.TaggedErrorClass<ObsidianSyncError>()("ObsidianSyncError", {
+class ObsidianSyncError extends Schema.TaggedError<ObsidianSyncError>()("ObsidianSyncError", {
   message: Schema.String,
   cause: Schema.optionalKey(Schema.Defect()),
 }) {}
@@ -178,7 +178,7 @@ const indexDocuments = Effect.fn("ObsidianSync.indexDocuments")(function* ({
 const syncObsidian = Effect.fn("ObsidianSync.sync")(function* () {
   const fileSystem = yield* FileSystem.FileSystem;
   const path = yield* Path.Path;
-  const vault = yield* Config.string("OBSIDIAN_VAULT");
+  const vault = yield* Config.String("OBSIDIAN_VAULT");
   const vaultDocuments = yield* loadLinkedDocuments(vault);
   const webDocuments = yield* loadLinkedDocuments(DEFAULT_DATA_DIRECTORY);
   const vaultIndex = yield* indexDocuments({
@@ -260,7 +260,7 @@ const obsidianCommand = Command.make("obsidian").pipe(
 const syncCheatsheetCommand = Command.make(
   "sync",
   {
-    source: Argument.file("aerospace-config", { mustExist: true }).pipe(
+    source: Argument.File("aerospace-config", { mustExist: true }).pipe(
       Argument.withDescription("AeroSpace TOML config to copy into the tracked snapshot."),
     ),
   },
@@ -279,7 +279,7 @@ const cheatsheetsCommand = Command.make("cheatsheets").pipe(
 const touchCommand = Command.make(
   "touch",
   {
-    file: Argument.file("file", { mustExist: true }).pipe(
+    file: Argument.File("file", { mustExist: true }).pipe(
       Argument.optional,
       Argument.withDescription("Markdown or MDX file. Omit to select one interactively."),
     ),
@@ -308,7 +308,7 @@ const cliHttpLayer = Layer.merge(
 const lookupPlaceCommand = Command.make(
   "lookup",
   {
-    url: Argument.string("apple-maps-url").pipe(
+    url: Argument.String("apple-maps-url").pipe(
       Argument.withSchema(AppleMapsUrl),
       Argument.withDescription("Apple Maps place URL."),
     ),
@@ -321,11 +321,11 @@ const lookupPlaceCommand = Command.make(
 const upsertPlaceCommand = Command.make(
   "upsert",
   {
-    city: Flag.string("city").pipe(
+    city: Flag.String("city").pipe(
       Flag.optional,
       Flag.withDescription("City for a newly created place."),
     ),
-    url: Argument.string("apple-maps-url").pipe(
+    url: Argument.String("apple-maps-url").pipe(
       Argument.withSchema(AppleMapsUrl),
       Argument.withDescription("Apple Maps place URL."),
     ),
