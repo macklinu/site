@@ -27,21 +27,24 @@ const fetchFonts = Effect.runSync(
   ),
 );
 
-export const renderOpenGraphImage = (element: ReactNode) =>
-  Effect.gen(function* () {
-    const [regular, bold] = yield* fetchFonts;
-    const svg = yield* Effect.tryPromise(() =>
-      satori(element, {
-        width: 1200,
-        height: 630,
-        embedFont: true,
-        fonts: [
-          { name: "Inconsolata", data: regular, weight: 400, style: "normal" },
-          { name: "Inconsolata", data: bold, weight: 700, style: "normal" },
-        ],
-      }),
-    );
-    const png = yield* Effect.sync(() => new Resvg(svg).render().asPng());
+export const renderOpenGraphImageResponse = Effect.fn("OpenGraph.renderImageResponse")(function* (
+  element: ReactNode,
+) {
+  const [regular, bold] = yield* fetchFonts;
+  const svg = yield* Effect.tryPromise(() =>
+    satori(element, {
+      width: 1200,
+      height: 630,
+      embedFont: true,
+      fonts: [
+        { name: "Inconsolata", data: regular, weight: 400, style: "normal" },
+        { name: "Inconsolata", data: bold, weight: 700, style: "normal" },
+      ],
+    }),
+  );
+  const png = yield* Effect.sync(() => new Resvg(svg).render().asPng());
 
-    return new Uint8Array(png);
+  return new Response(new Uint8Array(png), {
+    headers: { "Content-Type": "image/png" },
   });
+});

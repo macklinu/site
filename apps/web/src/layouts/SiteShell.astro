@@ -1,5 +1,6 @@
 ---
 import '~/styles.css'
+import SocialMetadata from '~/components/SocialMetadata.astro'
 
 interface Props {
   title?: string
@@ -32,34 +33,14 @@ const includeAnalytics = import.meta.env.PROD
       .join(' ')}
   >
     <meta charset='UTF-8' />
-    <meta property='og:url' content={Astro.url.toString()} />
-    <link rel='canonical' href={Astro.url.toString()} />
-    <meta property='og:type' content={type} />
-    <meta property='og:title' content={title} />
-    {ogImage && (
-      <Fragment>
-        <meta property='og:image' content={ogImage} />
-        <meta property='og:image:type' content='image/png' />
-      </Fragment>
-    )}
-    {type === 'article' && (
-      <Fragment>
-        {publishedTime && (
-          <meta property='article:published_time' content={publishedTime} />
-        )}
-        {modifiedTime && (
-          <meta property='article:modified_time' content={modifiedTime} />
-        )}
-      </Fragment>
-    )}
-    <meta
-      name='twitter:card'
-      property={ogImage ? 'summary_large_image' : 'summary'}
+    <SocialMetadata
+      title={title}
+      description={description}
+      ogImage={ogImage}
+      type={type}
+      publishedTime={publishedTime}
+      modifiedTime={modifiedTime}
     />
-    <meta name='twitter:site' property='@macklinu' />
-    <meta name='twitter:creator' property='@macklinu' />
-    <meta name='description' content={description} />
-    <meta property='og:description' content={description} />
     <meta name='viewport' content='width=device-width,initial-scale=1' />
     <meta name='generator' content={Astro.generator} />
     <title>{title}</title>

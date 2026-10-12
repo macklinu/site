@@ -2,29 +2,19 @@ import type { APIRoute, GetStaticPaths } from "astro";
 import { Effect } from "effect";
 
 import * as EntryService from "~/lib/EntryService";
-import { renderOpenGraphImage } from "~/lib/OpenGraph";
+import { cheatsheets } from "~/lib/Cheatsheets";
+import { renderOpenGraphImageResponse } from "~/lib/OpenGraph";
 import { entryImage } from "~/og";
 
 type OpenGraphEntry = {
   readonly title: string;
   readonly description: string;
+  readonly label?: string;
 };
 
 type OpenGraphProps = {
   readonly entry: OpenGraphEntry;
 };
-
-const generateOpenGraphImageResponse = (entry: OpenGraphEntry) =>
-  renderOpenGraphImage(entryImage(entry)).pipe(
-    Effect.map(
-      (image) =>
-        new Response(image, {
-          headers: {
-            "Content-Type": "image/png",
-          },
-        }),
-    ),
-  );
 
 export const getStaticPaths: GetStaticPaths = () =>
   Effect.runPromise(
@@ -32,12 +22,18 @@ export const getStaticPaths: GetStaticPaths = () =>
       const entryService = yield* EntryService.EntryService;
       const routes = yield* entryService.listContentRoutes();
 
-      return routes.map(({ kind, entry }) => ({
-        params: { kind, slug: entry.id },
-        props: { entry: entry.data },
-      }));
+      return [
+        ...routes.map(({ kind, entry }) => ({
+          params: { kind, slug: entry.id },
+          props: { entry: entry.data },
+        })),
+        ...Object.entries(cheatsheets).map(([slug, sheet]) => ({
+          params: { kind: "cheatsheets", slug },
+          props: { entry: { ...sheet, label: "Cheat sheet" } },
+        })),
+      ];
     }).pipe(Effect.provide(EntryService.layer)),
   );
 
 export const GET: APIRoute<OpenGraphProps, Record<string, string | undefined>> = ({ props }) =>
-  Effect.runPromise(generateOpenGraphImageResponse(props.entry));
+  Effect.runPromise(renderOpenGraphImageResponse(entryImage(props.entry)));

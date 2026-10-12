@@ -2,6 +2,15 @@
 import '~/styles.css'
 import AeroSpaceShortcutTable from '~/components/AeroSpaceShortcutTable.astro'
 import snapshot from '~/data/cheatsheets/neru.json'
+import SocialMetadata from '~/components/SocialMetadata.astro'
+import { cheatsheets } from '~/lib/Cheatsheets'
+
+const sheet = cheatsheets.neru
+const title = `${sheet.title} cheat sheet | mackie.underdown.wiki`
+const ogImage = new URL(
+  '/cheatsheets/neru/og.png',
+  import.meta.env.SITE
+).toString()
 ---
 
 <!doctype html>
@@ -9,11 +18,12 @@ import snapshot from '~/data/cheatsheets/neru.json'
   <head>
     <meta charset='utf-8' />
     <meta name='viewport' content='width=device-width, initial-scale=1' />
-    <meta
-      name='description'
-      content='A printable Neru shortcut reference from my active configuration.'
+    <SocialMetadata
+      title={title}
+      description={sheet.description}
+      ogImage={ogImage}
     />
-    <title>Neru cheat sheet · mackie.underdown.wiki</title>
+    <title>{title}</title>
   </head>
   <body class='m-0 bg-site-paper font-body text-[0.9375rem] font-normal leading-[1.35] text-site-ink antialiased print:text-[10.5pt] print:leading-[1.25] print:[-webkit-print-color-adjust:exact] print:[print-color-adjust:exact]'>
     <main class='mx-auto w-full max-w-[8.5in] px-4 py-6 sm:px-8 sm:py-8 [&_kbd]:font-normal print:max-w-none print:p-0'>

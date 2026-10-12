@@ -1,6 +1,14 @@
 import silly from "./assets/silly.png?inline";
 
-export function entryImage({ title, description }: { title: string; description: string }) {
+export function entryImage({
+  title,
+  description,
+  label,
+}: {
+  title: string;
+  description: string;
+  label?: string;
+}) {
   return (
     <div
       style={{
@@ -60,8 +68,9 @@ export function entryImage({ title, description }: { title: string; description:
                 />
               </div>
             </div>
-            <span style={{ fontSize: 26, fontWeight: 700, letterSpacing: "-0.04em" }}>
-              Mackie Underdown · personal wiki
+            <span style={{ fontSize: 26, fontWeight: "bold", letterSpacing: "-0.04em" }}>
+              Mackie Underdown
+              <span style={{ fontWeight: "normal", color: "#b8b8b8" }}> // personal wiki</span>
             </span>
           </div>
 
@@ -73,6 +82,18 @@ export function entryImage({ title, description }: { title: string; description:
               margin: "auto 0",
             }}
           >
+            {label && (
+              <span
+                style={{
+                  marginBottom: 18,
+                  color: "#b8b8b8",
+                  fontSize: 26,
+                  fontWeight: "normal",
+                }}
+              >
+                {label}
+              </span>
+            )}
             <h1
               style={{
                 maxWidth: 660,
