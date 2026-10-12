@@ -26,8 +26,7 @@
             "keys": "⌘ ⇧ G",
             "description": "Grid"
           }
-        ],
-        "note": "Select moves the pointer; click separately. Esc exits."
+        ]
       },
       {
         "id": "pointer",
@@ -85,7 +84,7 @@
         "title": "Recursive grid",
         "rows": [
           {
-            "keys": "r t y · f g h · v b n",
+            "keys": "r t y · f g h",
             "description": "Select cell; repeat to narrow"
           },
           {
@@ -137,7 +136,7 @@
             "description": "Select cell → point"
           },
           {
-            "keys": "a b c · d e f · g h i",
+            "keys": "a b c · d e f",
             "description": "Subgrid cells"
           },
           {
