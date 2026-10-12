@@ -1,0 +1,181 @@
+{
+  "version": "1.57.0",
+  "columns": [
+    [
+      {
+        "id": "modes",
+        "title": "Modes",
+        "rows": [
+          {
+            "keys": "⌃ ⌥ C",
+            "description": "Recursive grid"
+          },
+          {
+            "keys": "⌃ ⌥ S",
+            "description": "Scroll"
+          },
+          {
+            "keys": "⌃ ⌥ Space",
+            "description": "Hints"
+          },
+          {
+            "keys": "⌘ ⇧ B",
+            "description": "Bisect"
+          },
+          {
+            "keys": "⌘ ⇧ G",
+            "description": "Grid"
+          }
+        ]
+      },
+      {
+        "id": "pointer",
+        "title": "Click & drag",
+        "rows": [
+          {
+            "keys": "⇧ L / ⇧ R / ⇧ M",
+            "description": "Left / right / middle click"
+          },
+          {
+            "keys": "⇧ I / ⇧ U",
+            "description": "Hold / release left button"
+          },
+          {
+            "keys": "← / ↓ / ↑ / →",
+            "description": "Move pointer 10 px"
+          },
+          {
+            "keys": "Esc",
+            "description": "Exit"
+          },
+          {
+            "keys": "⌘ ⌃ ⌥ ⇧ (tap)",
+            "description": "Hold / release modifier"
+          }
+        ],
+        "note": "Exit releases a held mouse button."
+      },
+      {
+        "id": "hints",
+        "title": "Hints",
+        "rows": [
+          {
+            "keys": "Label",
+            "description": "Select target"
+          },
+          {
+            "keys": "Tab / ⇧ Tab",
+            "description": "Next / previous hint"
+          },
+          {
+            "keys": "/",
+            "description": "Search text"
+          },
+          {
+            "keys": "⌫",
+            "description": "Undo"
+          }
+        ]
+      }
+    ],
+    [
+      {
+        "id": "recursive-grid",
+        "title": "Recursive grid",
+        "rows": [
+          {
+            "keys": "r t y · f g h",
+            "description": "Select cell; repeat to narrow"
+          },
+          {
+            "keys": "⌫",
+            "description": "Undo"
+          },
+          {
+            "keys": "Space",
+            "description": "Reset"
+          },
+          {
+            "keys": "`",
+            "description": "Toggle pointer follow"
+          }
+        ]
+      },
+      {
+        "id": "bisect",
+        "title": "Bisect",
+        "rows": [
+          {
+            "keys": "h / j / k / l",
+            "description": "Keep left / bottom / top / right half"
+          },
+          {
+            "keys": "y / u / b / n",
+            "description": "Keep top-left / top-right / bottom-left / bottom-right quarter"
+          },
+          {
+            "keys": "⌫",
+            "description": "Undo"
+          },
+          {
+            "keys": "Space",
+            "description": "Reset"
+          },
+          {
+            "keys": "`",
+            "description": "Toggle pointer follow"
+          }
+        ]
+      },
+      {
+        "id": "grid",
+        "title": "Grid",
+        "rows": [
+          {
+            "keys": "Label → sublabel",
+            "description": "Select cell → point"
+          },
+          {
+            "keys": "a b c · d e f",
+            "description": "Subgrid cells"
+          },
+          {
+            "keys": "⌫",
+            "description": "Undo"
+          },
+          {
+            "keys": "Space",
+            "description": "Reset"
+          },
+          {
+            "keys": "`",
+            "description": "Toggle pointer follow"
+          }
+        ]
+      },
+      {
+        "id": "scroll",
+        "title": "Scroll",
+        "note": "Place the pointer over the pane first.",
+        "rows": [
+          {
+            "keys": "j / k",
+            "description": "Down / up"
+          },
+          {
+            "keys": "h / l",
+            "description": "Left / right"
+          },
+          {
+            "keys": "PageDown or d / PageUp or u",
+            "description": "Page down / up"
+          },
+          {
+            "keys": "gg / ⇧ G",
+            "description": "Top / bottom"
+          }
+        ]
+      }
+    ]
+  ]
+}
