@@ -2,7 +2,7 @@
 title: Bison Paddock
 category: nature
 city: San Francisco
-address: "1237 John F Kennedy Dr, San Francisco, CA 94121, United States"
+address: '1237 John F Kennedy Dr, San Francisco, CA 94121, United States'
 latitude: 37.769714
 longitude: -122.4982131
 appleMapsPlaceId: I4BF76184961BC774

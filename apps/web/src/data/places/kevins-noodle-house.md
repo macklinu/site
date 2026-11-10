@@ -2,7 +2,7 @@
 title: Pho Huynh Hiep Kevin's Noodle House
 category: food
 city: San Francisco
-address: "1833 Irving St, San Francisco, CA  94122, United States"
+address: '1833 Irving St, San Francisco, CA  94122, United States'
 latitude: 37.7633594
 longitude: -122.4777585
 appleMapsPlaceId: I49AFA05556F85C4A

@@ -2,7 +2,7 @@
 title: The Gratitude Center
 city: San Francisco
 category: community
-address: "1320 7th Ave, San Francisco, CA  94122, United States"
+address: '1320 7th Ave, San Francisco, CA  94122, United States'
 latitude: 37.7637305
 longitude: -122.4640042
 appleMapsPlaceId: I5CDB59BB79B9C6D8

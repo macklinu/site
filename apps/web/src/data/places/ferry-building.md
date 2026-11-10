@@ -2,7 +2,7 @@
 title: Ferry Building
 city: San Francisco
 category: sights
-address: "1 Ferry Building, San Francisco, CA  94111, United States"
+address: '1 Ferry Building, San Francisco, CA  94111, United States'
 latitude: 37.7954349
 longitude: -122.393467
 appleMapsPlaceId: IBE1F65094A7A13B1

@@ -2,7 +2,7 @@
 title: Washington Square
 category: nature
 city: San Francisco
-address: "Filbert & Stockton St, San Francisco, CA 94133, United States"
+address: 'Filbert & Stockton St, San Francisco, CA 94133, United States'
 latitude: 37.8007985
 longitude: -122.4100435
 appleMapsPlaceId: I5210317A5DEA4BFE

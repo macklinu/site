@@ -1,7 +1,7 @@
 ---
-date: "2025-01-14"
-title: "Using Tailwind v4 with Storybook v8"
-description: "An initial look at Tailwind v4 with Storybook 8 and Vite."
+date: '2025-01-14'
+title: 'Using Tailwind v4 with Storybook v8'
+description: 'An initial look at Tailwind v4 with Storybook 8 and Vite.'
 ---
 
 One of the main changes in Tailwind v4 is configuration through CSS instead of `tailwind.config.ts`, which Tailwind supports through their own Vite plugin. I wanted to play around with Tailwind v4 while building a component library, and with Storybook v8.4's React and Vite support, we can load and test Tailwind as part of our Storybook.
@@ -15,7 +15,7 @@ pnpm add tailwindcss @tailwindcss/vite -D
 And let's set up a basic Tailwind v4 CSS file.
 
 ```css title="src/index.css"
-@import "tailwindcss";
+@import 'tailwindcss';
 ```
 
 Great! Now there are few Storybook steps needed to make it aware of Tailwind.
@@ -37,17 +37,17 @@ export default {
 This Storybook config file supports custom Vite plugins, ~~but instead of importing Tailwind's Vite plugin in a standard fashion, we will need to dynamically import it to work around an [open issue](https://github.com/tailwindlabs/tailwindcss/issues/13216) in the Tailwind GitHub repo.~~ so let's import the tailwindcss vite plugin.
 
 ```ts title=".storybook/main.ts" {'1':6} {'2':7} {'3':9}
-import type { StorybookConfig } from "@storybook/react-vite";
-import tailwindcss from "@tailwindcss/vite";
+import type { StorybookConfig } from '@storybook/react-vite'
+import tailwindcss from '@tailwindcss/vite'
 
 export default {
   viteFinal: async (config) => {
-    config.plugins ||= [];
-    config.plugins.push(tailwindcss());
+    config.plugins ||= []
+    config.plugins.push(tailwindcss())
 
-    return config;
+    return config
   },
-} satisfies StorybookConfig;
+} satisfies StorybookConfig
 ```
 
 1. Storybook's Vite config may have an undefined `plugins` property, and if so, we need to intialize it with an empty array.

@@ -1,7 +1,7 @@
-import "react";
+import 'react'
 
-declare module "react" {
+declare module 'react' {
   interface HTMLAttributes<T> {
-    tw?: string;
+    tw?: string
   }
 }

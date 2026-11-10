@@ -2,7 +2,7 @@
 title: Gus's
 category: shopping
 city: San Francisco
-address: "1530 Haight St, San Francisco, CA 94117, United States"
+address: '1530 Haight St, San Francisco, CA 94117, United States'
 latitude: 37.7700842
 longitude: -122.4475758
 appleMapsPlaceId: IA249BA2CE5D3193F

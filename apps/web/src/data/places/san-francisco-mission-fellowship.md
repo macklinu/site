@@ -2,7 +2,7 @@
 title: San Francisco Mission Fellowship
 category: community
 city: San Francisco
-address: "2900 24th St, San Francisco, CA  94110, United States"
+address: '2900 24th St, San Francisco, CA  94110, United States'
 latitude: 37.752859
 longitude: -122.410265
 appleMapsPlaceId: I64740BC446F22701

@@ -1,7 +1,7 @@
 ---
-date: "2024-10-09"
-title: "Deploying a Hono API to Cloudflare Workers using SST"
-description: "Deploy a Hono API to Cloudflare Workers with SST."
+date: '2024-10-09'
+title: 'Deploying a Hono API to Cloudflare Workers using SST'
+description: 'Deploy a Hono API to Cloudflare Workers with SST.'
 ---
 
 First, install SST.
@@ -24,15 +24,15 @@ At the root of your project, you should have an `sst.config.ts` that looks rough
 export default $config({
   app(input) {
     return {
-      name: "my-hono-api",
-      removal: input?.stage === "production" ? "retain" : "remove",
-      home: "cloudflare",
-    };
+      name: 'my-hono-api',
+      removal: input?.stage === 'production' ? 'retain' : 'remove',
+      home: 'cloudflare',
+    }
   },
   async run() {
     // ...
   },
-});
+})
 ```
 
 We will come back to this in a minute.

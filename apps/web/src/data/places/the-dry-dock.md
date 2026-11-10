@@ -2,7 +2,7 @@
 title: The Dry Dock
 category: community
 city: San Francisco
-address: "2118 Greenwich St, San Francisco, CA  94123, United States"
+address: '2118 Greenwich St, San Francisco, CA  94123, United States'
 latitude: 37.7991793
 longitude: -122.4354386
 appleMapsPlaceId: I18E0B922E340E1F4

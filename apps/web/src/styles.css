@@ -1,18 +1,18 @@
 /* Hallmark · macrostructure: Ecosystem Index · tone: neutral reference desk · anchor hue: warm graphite */
 /* Hallmark · pre-emit critique: P5 H5 E5 S5 R5 V5 */
-@import "@fontsource-variable/archivo/standard.css";
-@import "@fontsource-variable/bricolage-grotesque/standard.css";
-@import "@fontsource/ibm-plex-mono/400.css";
-@import "@fontsource/ibm-plex-mono/500.css";
-@import "@fontsource/ibm-plex-mono/600.css";
-@import "maplibre-gl/dist/maplibre-gl.css";
-@import "tailwindcss";
-@import "./typography.css" layer(components);
+@import '@fontsource-variable/archivo/standard.css';
+@import '@fontsource-variable/bricolage-grotesque/standard.css';
+@import '@fontsource/ibm-plex-mono/400.css';
+@import '@fontsource/ibm-plex-mono/500.css';
+@import '@fontsource/ibm-plex-mono/600.css';
+@import 'maplibre-gl/dist/maplibre-gl.css';
+@import 'tailwindcss';
+@import './typography.css' layer(components);
 
 @theme {
-  --font-display: "Bricolage Grotesque Variable", "Arial Narrow", sans-serif;
-  --font-body: "Archivo Variable", "Helvetica Neue", sans-serif;
-  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+  --font-display: 'Bricolage Grotesque Variable', 'Arial Narrow', sans-serif;
+  --font-body: 'Archivo Variable', 'Helvetica Neue', sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
   --breakpoint-catalogue: 53.75rem;
   --breakpoint-handset: 38.75rem;
 }
@@ -57,7 +57,7 @@
   --rule-strong: 2px solid var(--ink);
   --ease-out: cubic-bezier(0.2, 0.7, 0, 1);
 }
-:root[data-theme="dark"] {
+:root[data-theme='dark'] {
   color-scheme: dark;
   --paper: oklch(0.08 0 0);
   --surface: oklch(0.14 0 0);
@@ -152,39 +152,39 @@
   box-shadow: 0 0 0 1px var(--ink);
 }
 
-.sf-map__filter-swatch[data-kind="food"] {
+.sf-map__filter-swatch[data-kind='food'] {
   background: var(--coral);
 }
 
-.sf-map__filter-swatch[data-kind="coffee"] {
+.sf-map__filter-swatch[data-kind='coffee'] {
   background: var(--amber);
 }
 
-.sf-map__filter-swatch[data-kind="books"] {
+.sf-map__filter-swatch[data-kind='books'] {
   background: var(--blue);
 }
 
-.sf-map__filter-swatch[data-kind="art"] {
+.sf-map__filter-swatch[data-kind='art'] {
   background: var(--purple);
 }
 
-.sf-map__filter-swatch[data-kind="nature"] {
+.sf-map__filter-swatch[data-kind='nature'] {
   background: var(--green);
 }
 
-.sf-map__filter-swatch[data-kind="shopping"] {
+.sf-map__filter-swatch[data-kind='shopping'] {
   background: var(--orange);
 }
 
-.sf-map__filter-swatch[data-kind="community"] {
+.sf-map__filter-swatch[data-kind='community'] {
   background: var(--teal);
 }
 
-.sf-map__filter-swatch[data-kind="sights"] {
+.sf-map__filter-swatch[data-kind='sights'] {
   background: var(--ink);
 }
 
-.sf-map__filter-swatch[data-kind="transit"] {
+.sf-map__filter-swatch[data-kind='transit'] {
   background: var(--transit);
 }
 
@@ -208,7 +208,7 @@
     transform 150ms var(--ease-out);
 }
 
-.sf-map-marker[data-selected="true"] {
+.sf-map-marker[data-selected='true'] {
   outline: 3px solid var(--focus);
   outline-offset: 2px;
   transform: scale(1.12);
@@ -225,42 +225,42 @@
   stroke-width: 2;
 }
 
-.sf-map-marker[data-kind="food"] {
+.sf-map-marker[data-kind='food'] {
   background: var(--coral);
 }
 
-.sf-map-marker[data-kind="coffee"] {
+.sf-map-marker[data-kind='coffee'] {
   background: var(--amber);
   color: var(--green-ink);
 }
 
-.sf-map-marker[data-kind="books"] {
+.sf-map-marker[data-kind='books'] {
   background: var(--blue);
 }
 
-.sf-map-marker[data-kind="art"] {
+.sf-map-marker[data-kind='art'] {
   background: var(--purple);
 }
 
-.sf-map-marker[data-kind="nature"] {
+.sf-map-marker[data-kind='nature'] {
   background: var(--green);
   color: var(--green-ink);
 }
 
-.sf-map-marker[data-kind="shopping"] {
+.sf-map-marker[data-kind='shopping'] {
   background: var(--orange);
   color: var(--green-ink);
 }
 
-.sf-map-marker[data-kind="community"] {
+.sf-map-marker[data-kind='community'] {
   background: var(--teal);
 }
 
-.sf-map-marker[data-kind="sights"] {
+.sf-map-marker[data-kind='sights'] {
   background: var(--ink);
 }
 
-.sf-map-marker[data-kind="transit"] {
+.sf-map-marker[data-kind='transit'] {
   background: var(--transit);
   color: var(--green-ink);
 }

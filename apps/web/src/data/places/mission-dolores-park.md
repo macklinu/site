@@ -2,7 +2,7 @@
 title: Mission Dolores Park
 category: nature
 city: San Francisco
-address: "566 Dolores St, San Francisco, CA  94110, United States"
+address: '566 Dolores St, San Francisco, CA  94110, United States'
 latitude: 37.7597652
 longitude: -122.4271077
 appleMapsPlaceId: I501E3D5FE2B085EF

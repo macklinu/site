@@ -2,7 +2,7 @@
 title: Lyon Street Steps
 city: San Francisco
 category: sights
-address: "2990-2996 Lyon St, San Francisco, CA 94123, United States"
+address: '2990-2996 Lyon St, San Francisco, CA 94123, United States'
 latitude: 37.7940121
 longitude: -122.4466342
 appleMapsPlaceId: IEAA7A65EBB890964

@@ -2,7 +2,7 @@
 title: Lands End
 category: nature
 city: San Francisco
-address: "Crosstown Trail, San Francisco, CA  94121, United States"
+address: 'Crosstown Trail, San Francisco, CA  94121, United States'
 latitude: 37.7852814
 longitude: -122.5061876
 appleMapsPlaceId: IE30BEFE2898A5DFE

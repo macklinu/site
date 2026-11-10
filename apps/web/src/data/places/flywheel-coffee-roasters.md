@@ -2,7 +2,7 @@
 title: Flywheel Coffee Roasters
 category: coffee
 city: San Francisco
-address: "672 Stanyan St, San Francisco, CA 94117, United States"
+address: '672 Stanyan St, San Francisco, CA 94117, United States'
 latitude: 37.769714
 longitude: -122.4533826
 appleMapsPlaceId: IB34D8C6C52436795

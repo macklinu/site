@@ -1,94 +1,94 @@
-import silly from "./assets/silly.png?inline";
+import silly from './assets/silly.png?inline'
 
 export function entryImage({
   title,
   description,
   label,
 }: {
-  title: string;
-  description: string;
-  label?: string;
+  title: string
+  description: string
+  label?: string
 }) {
   return (
     <div
       style={{
-        display: "flex",
-        boxSizing: "border-box",
-        width: "100%",
-        height: "100%",
+        display: 'flex',
+        boxSizing: 'border-box',
+        width: '100%',
+        height: '100%',
         padding: 32,
-        backgroundColor: "#000000",
-        color: "#ffffff",
-        fontFamily: "Inconsolata",
+        backgroundColor: '#000000',
+        color: '#ffffff',
+        fontFamily: 'Inconsolata',
       }}
     >
       <div
         style={{
-          display: "flex",
-          boxSizing: "border-box",
-          width: "100%",
-          border: "4px solid #ffffff",
+          display: 'flex',
+          boxSizing: 'border-box',
+          width: '100%',
+          border: '4px solid #ffffff',
         }}
       >
         <div
           style={{
-            display: "flex",
+            display: 'flex',
             flex: 1,
-            flexDirection: "column",
-            padding: "40px 48px",
+            flexDirection: 'column',
+            padding: '40px 48px',
           }}
         >
-          <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
             <div
               style={{
-                display: "flex",
-                boxSizing: "border-box",
+                display: 'flex',
+                boxSizing: 'border-box',
                 width: 28,
                 height: 28,
                 padding: 4,
-                backgroundColor: "#ffffff",
+                backgroundColor: '#ffffff',
               }}
             >
               <div
                 style={{
-                  display: "flex",
-                  boxSizing: "border-box",
-                  width: "100%",
-                  height: "100%",
+                  display: 'flex',
+                  boxSizing: 'border-box',
+                  width: '100%',
+                  height: '100%',
                   padding: 4,
-                  backgroundColor: "#000000",
+                  backgroundColor: '#000000',
                 }}
               >
                 <div
                   style={{
-                    width: "100%",
-                    height: "100%",
-                    backgroundColor: "#49d158",
+                    width: '100%',
+                    height: '100%',
+                    backgroundColor: '#49d158',
                   }}
                 />
               </div>
             </div>
-            <span style={{ fontSize: 26, fontWeight: "bold", letterSpacing: "-0.04em" }}>
+            <span style={{ fontSize: 26, fontWeight: 'bold', letterSpacing: '-0.04em' }}>
               Mackie Underdown
-              <span style={{ fontWeight: "normal", color: "#b8b8b8" }}> // personal wiki</span>
+              <span style={{ fontWeight: 'normal', color: '#b8b8b8' }}> // personal wiki</span>
             </span>
           </div>
 
           <div
             style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "flex-start",
-              margin: "auto 0",
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'flex-start',
+              margin: 'auto 0',
             }}
           >
             {label && (
               <span
                 style={{
                   marginBottom: 18,
-                  color: "#b8b8b8",
+                  color: '#b8b8b8',
                   fontSize: 26,
-                  fontWeight: "normal",
+                  fontWeight: 'normal',
                 }}
               >
                 {label}
@@ -101,7 +101,7 @@ export function entryImage({
                 fontSize: 78,
                 fontWeight: 700,
                 lineHeight: 0.9,
-                letterSpacing: "-0.06em",
+                letterSpacing: '-0.06em',
               }}
             >
               {title}
@@ -111,14 +111,14 @@ export function entryImage({
                 width: 112,
                 height: 8,
                 marginTop: 28,
-                backgroundColor: "#49d158",
+                backgroundColor: '#49d158',
               }}
             />
             <p
               style={{
                 maxWidth: 620,
-                margin: "24px 0 0",
-                color: "#b8b8b8",
+                margin: '24px 0 0',
+                color: '#b8b8b8',
                 fontSize: 25,
                 lineHeight: 1.35,
               }}
@@ -129,9 +129,9 @@ export function entryImage({
 
           <span
             style={{
-              color: "#b8b8b8",
+              color: '#b8b8b8',
               fontSize: 22,
-              letterSpacing: "0.02em",
+              letterSpacing: '0.02em',
             }}
           >
             mackie.underdown.wiki
@@ -140,27 +140,27 @@ export function entryImage({
 
         <aside
           style={{
-            display: "flex",
-            boxSizing: "border-box",
+            display: 'flex',
+            boxSizing: 'border-box',
             flexShrink: 0,
             width: 280,
-            overflow: "hidden",
-            borderLeft: "4px solid #ffffff",
-            backgroundColor: "#000000",
+            overflow: 'hidden',
+            borderLeft: '4px solid #ffffff',
+            backgroundColor: '#000000',
           }}
         >
           <img
             style={{
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-              objectPosition: "center",
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              objectPosition: 'center',
             }}
             src={silly}
-            alt=""
+            alt=''
           />
         </aside>
       </div>
     </div>
-  );
+  )
 }

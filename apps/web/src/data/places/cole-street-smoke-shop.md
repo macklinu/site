@@ -2,7 +2,7 @@
 title: Cole Street Smoke Shop
 category: shopping
 city: San Francisco
-address: "610 Cole St, San Francisco, CA 94117, United States"
+address: '610 Cole St, San Francisco, CA 94117, United States'
 latitude: 37.7692984
 longitude: -122.4505073
 appleMapsPlaceId: ID0E7D86F33734D23

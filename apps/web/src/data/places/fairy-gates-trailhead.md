@@ -2,7 +2,7 @@
 title: Fairy Gates Trailhead
 category: nature
 city: San Francisco
-address: "211 Belgrave Ave, San Francisco, CA  94117, United States"
+address: '211 Belgrave Ave, San Francisco, CA  94117, United States'
 latitude: 37.7592263
 longitude: -122.4519024
 appleMapsPlaceId: IE4574AC7CB92BD73

@@ -2,7 +2,7 @@
 title: Réveille Coffee Co.
 category: coffee
 city: San Francisco
-address: "201 Steiner St, San Francisco, CA  94117, United States"
+address: '201 Steiner St, San Francisco, CA  94117, United States'
 latitude: 37.771041
 longitude: -122.4321176
 appleMapsPlaceId: IA381E994073AE0A3
