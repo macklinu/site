@@ -1,22 +1,28 @@
 import { LibsqlClient } from "@effect/sql-libsql"
 import { assert, describe, layer } from "@effect/vitest"
-import { Cause, Effect, Iterable } from "effect"
+import { Cause, Effect } from "effect"
+import * as Arr from "effect/Array"
 import * as Schema from "effect/Schema"
-import { SqlError, SqlResolver } from "effect/unstable/sql"
+import { SqlError, SqlResolver } from "effect/sql"
 import { LibsqlContainer } from "./util.ts"
 
 const seededClient = Effect.gen(function*() {
   const sql = yield* LibsqlClient.LibsqlClient
   yield* sql`CREATE TABLE test (id INTEGER PRIMARY KEY, name TEXT)`
-  for (const id of Iterable.range(1, 100)) {
-    yield* sql`INSERT INTO test ${sql.insert({ id, name: `name${id}` })}`
-  }
+  yield* sql`INSERT INTO test ${
+    sql.insert([
+      { id: 1, name: "name1" },
+      { id: 2, name: "name2" },
+      { id: 3, name: "name3" },
+      { id: 100, name: "name100" }
+    ])
+  }`
   yield* Effect.addFinalizer(() => sql`DROP TABLE test;`.pipe(Effect.orDie))
   return sql
 })
 
 layer(LibsqlContainer.layerClient, { timeout: "30 seconds" })("Resolver", (it) => {
-  describe.sequential("ordered", () => {
+  describe("ordered", { concurrent: false }, () => {
     it.effect("insert", () =>
       Effect.gen(function*() {
         const batches: Array<Array<string>> = []
@@ -26,7 +32,7 @@ layer(LibsqlContainer.layerClient, { timeout: "30 seconds" })("Resolver", (it) =
           Result: Schema.Struct({ id: Schema.Number, name: Schema.String }),
           execute: (names) => {
             batches.push(names)
-            return sql`INSERT INTO test ${sql.insert(names.map((name) => ({ name })))} RETURNING *`
+            return sql`INSERT INTO test ${sql.insert(Arr.map(names, (name) => ({ name })))} RETURNING *`
           }
         })
         const execute = SqlResolver.request(Insert)
@@ -71,7 +77,7 @@ layer(LibsqlContainer.layerClient, { timeout: "30 seconds" })("Resolver", (it) =
       }))
   })
 
-  describe.sequential("grouped", () => {
+  describe("grouped", { concurrent: false }, () => {
     it.effect("find by name", () =>
       Effect.gen(function*() {
         const sql = yield* seededClient
@@ -125,7 +131,7 @@ layer(LibsqlContainer.layerClient, { timeout: "30 seconds" })("Resolver", (it) =
       }))
   })
 
-  describe.sequential("findById", () => {
+  describe("findById", { concurrent: false }, () => {
     it.effect("find by id", () =>
       Effect.gen(function*() {
         const sql = yield* seededClient

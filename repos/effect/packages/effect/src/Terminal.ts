@@ -7,6 +7,7 @@
  * the `QuitError` used when a user cancels input, a guard for that error, and a
  * constructor for custom terminal service implementations.
  *
+ * @stability unstable
  * @since 4.0.0
  */
 import type * as Cause from "./Cause.ts"
@@ -19,12 +20,13 @@ import type * as Queue from "./Queue.ts"
 import * as Schema from "./Schema.ts"
 import type * as Scope from "./Scope.ts"
 
-const TypeId = "~effect/platform/Terminal"
+const TypeId = "~effect/Terminal"
 
 /**
  * A `Terminal` represents a command-line interface which can read input from a
  * user and display messages to a user.
  *
+ * @stability unstable
  * @category services
  * @since 4.0.0
  */
@@ -41,6 +43,12 @@ export interface Terminal {
 
   readonly rows: Effect.Effect<number>
   /**
+   * Subscribes to terminal size changes. The queue starts with the current
+   * dimensions, receives each resize until the scope closes, and keeps only the
+   * latest size.
+   */
+  readonly size: Effect.Effect<Queue.Dequeue<Size, Cause.Done>, never, Scope.Scope>
+  /**
    * Reads input events from the default standard input.
    */
   readonly readInput: Effect.Effect<Queue.Dequeue<UserInput, Cause.Done>, never, Scope.Scope>
@@ -55,9 +63,22 @@ export interface Terminal {
 }
 
 /**
+ * Terminal dimensions measured in character cells.
+ *
+ * @stability unstable
+ * @category models
+ * @since 4.0.0
+ */
+export interface Size {
+  readonly columns: number
+  readonly rows: number
+}
+
+/**
  * Keyboard key metadata for terminal input, including the key name and
  * modifier state.
  *
+ * @stability unstable
  * @category models
  * @since 4.0.0
  */
@@ -91,6 +112,7 @@ export interface Key {
  *
  * @see {@link Key} for the parsed key metadata stored on each input event
  *
+ * @stability unstable
  * @category models
  * @since 4.0.0
  */
@@ -105,7 +127,7 @@ export interface UserInput {
   readonly key: Key
 }
 
-const QuitErrorTypeId = "effect/platform/Terminal/QuitError"
+const QuitErrorTypeId = "~effect/Terminal/QuitError"
 
 /**
  * Represents an error that occurs when a user attempts to
@@ -118,10 +140,11 @@ const QuitErrorTypeId = "effect/platform/Terminal/QuitError"
  *
  * @see {@link isQuitError} for checking unknown errors when handling terminal cancellation
  *
+ * @stability unstable
  * @category errors
  * @since 4.0.0
  */
-export class QuitError extends Schema.ErrorClass<QuitError>("QuitError")({
+export class QuitError extends Schema.Error<QuitError>("QuitError")({
   _tag: Schema.tag("QuitError")
 }) {
   /**
@@ -147,6 +170,7 @@ export class QuitError extends Schema.ErrorClass<QuitError>("QuitError")({
  *
  * @see {@link QuitError} for the error value produced when terminal input is quit
  *
+ * @stability unstable
  * @category guards
  * @since 4.0.0
  */
@@ -160,10 +184,11 @@ export const isQuitError = (u: unknown): u is QuitError => Predicate.hasProperty
  * Use to access or provide platform terminal capabilities such as reading
  * input, writing output, and inspecting terminal dimensions.
  *
+ * @stability unstable
  * @category services
  * @since 4.0.0
  */
-export const Terminal: Context.Service<Terminal, Terminal> = Context.Service("effect/platform/Terminal")
+export const Terminal: Context.Service<Terminal, Terminal> = Context.Service("effect/Terminal")
 
 /**
  * Creates a `Terminal` service implementation.
@@ -176,10 +201,11 @@ export const Terminal: Context.Service<Terminal, Terminal> = Context.Service("ef
  *
  * **Details**
  *
- * The implementation object supplies `columns`, `rows`, `readInput`,
+ * The implementation object supplies `columns`, `rows`, `size`, `readInput`,
  * `readLine`, and `display`; `make` attaches the `Terminal` service marker so
  * the result can be provided through the `Terminal` context service.
  *
+ * @stability unstable
  * @category constructors
  * @since 4.0.0
  */

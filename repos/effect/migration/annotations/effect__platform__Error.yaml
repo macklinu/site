@@ -1,6 +1,3 @@
-"@effect/platform/Error#isPlatformError":
-  replacement: "value instanceof PlatformError.PlatformError"
-  note: "PlatformError is a class in v4; use an instanceof check or match its PlatformError tag."
 "@effect/platform/Error#Module":
   replacement: "string"
   note: "The closed module-name Schema was removed; PlatformError reason records accept any module string."
@@ -14,5 +11,5 @@
   replacement: "none"
   note: "The PlatformError runtime marker is internal in v4; use the PlatformError class/tag."
 "@effect/platform/Error#TypeIdError":
-  replacement: "Data.TaggedError or Schema.ErrorClass"
+  replacement: "Data.TaggedError or Schema.Error"
   note: "The platform-specific error-class factory was removed; define tagged data errors or schema-backed error classes directly."

@@ -2,12 +2,13 @@ import * as Effect from "effect/Effect"
 import * as FileSystem from "effect/FileSystem"
 import * as Path from "effect/Path"
 import * as Yaml from "yaml"
-import { ApiDiffError } from "./Error.ts"
+import { ApiDiffError, isApiDiffError } from "./Error.ts"
 
 export interface MigrationAnnotation {
   readonly replacement: string
   readonly note: string
   readonly example?: string | undefined
+  readonly include?: boolean | undefined
 }
 
 const compareStrings = (left: string, right: string): number => left < right ? -1 : left > right ? 1 : 0
@@ -17,14 +18,16 @@ const parseAnnotation = (id: string, value: unknown, file: string): MigrationAnn
     typeof value !== "object" || value === null ||
     typeof Reflect.get(value, "replacement") !== "string" ||
     typeof Reflect.get(value, "note") !== "string" ||
-    (Reflect.get(value, "example") !== undefined && typeof Reflect.get(value, "example") !== "string")
+    (Reflect.get(value, "example") !== undefined && typeof Reflect.get(value, "example") !== "string") ||
+    (Reflect.get(value, "include") !== undefined && typeof Reflect.get(value, "include") !== "boolean")
   ) {
     throw new Error(`Invalid annotation for ${id} in ${file}`)
   }
   return {
     replacement: Reflect.get(value, "replacement"),
     note: Reflect.get(value, "note"),
-    ...(Reflect.get(value, "example") === undefined ? {} : { example: Reflect.get(value, "example") })
+    ...(Reflect.get(value, "example") === undefined ? {} : { example: Reflect.get(value, "example") }),
+    ...(Reflect.get(value, "include") === undefined ? {} : { include: Reflect.get(value, "include") })
   }
 }
 
@@ -65,7 +68,7 @@ const loadAnnotationsInternal = Effect.fnUntraced(function*(directory: string) {
 export const loadAnnotations = (directory: string) =>
   loadAnnotationsInternal(directory).pipe(
     Effect.mapError((cause) =>
-      cause instanceof ApiDiffError
+      isApiDiffError(cause)
         ? cause
         : new ApiDiffError({ message: `Could not load annotations from ${directory}`, cause })
     )

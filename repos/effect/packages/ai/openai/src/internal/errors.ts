@@ -1,17 +1,18 @@
-import * as Duration from "effect/Duration"
+import * as AiError from "effect/ai/AiError"
+import * as Clock from "effect/Clock"
+import type * as Duration from "effect/Duration"
 import * as Effect from "effect/Effect"
+import type * as Sse from "effect/encoding/Sse"
 import { dual } from "effect/Function"
+import * as Headers from "effect/http/Headers"
+import type * as HttpClientError from "effect/http/HttpClientError"
+import type * as HttpClientResponse from "effect/http/HttpClientResponse"
 import * as Number from "effect/Number"
 import * as Option from "effect/Option"
 import * as Predicate from "effect/Predicate"
 import * as Redactable from "effect/Redactable"
+import * as Result from "effect/Result"
 import * as Schema from "effect/Schema"
-import * as AiError from "effect/unstable/ai/AiError"
-import type * as Response from "effect/unstable/ai/Response"
-import type * as Sse from "effect/unstable/encoding/Sse"
-import type * as HttpClientError from "effect/unstable/http/HttpClientError"
-import type * as HttpClientRequest from "effect/unstable/http/HttpClientRequest"
-import type * as HttpClientResponse from "effect/unstable/http/HttpClientResponse"
 import type { OpenAiErrorMetadata } from "../OpenAiError.ts"
 
 // =============================================================================
@@ -28,6 +29,11 @@ export const OpenAiErrorBody = Schema.Struct({
   })
 })
 
+const OpenAiCompatibleErrorBody = Schema.Struct({
+  error: Schema.String,
+  code: Schema.optional(Schema.String)
+})
+
 // =============================================================================
 // Error Mappers
 // =============================================================================
@@ -40,7 +46,7 @@ export const mapSchemaError = dual<
   AiError.make({
     module: "OpenAiClient",
     method,
-    reason: AiError.InvalidOutputError.fromSchemaError(error)
+    reason: AiError.InvalidResponseError.fromSchemaError(error)
   }))
 
 /** @internal */
@@ -51,7 +57,7 @@ export const mapSseError = dual<
   AiError.make({
     module: "OpenAiClient",
     method,
-    reason: new AiError.InvalidOutputError({ description: error.message })
+    reason: new AiError.InvalidResponseError({ description: error.message })
   }))
 
 /** @internal */
@@ -61,37 +67,15 @@ export const mapHttpClientError = dual<
 >(2, (error, method) => {
   const reason = error.reason
   switch (reason._tag) {
-    case "TransportError": {
-      return Effect.fail(AiError.make({
-        module: "OpenAiClient",
-        method,
-        reason: new AiError.NetworkError({
-          reason: "TransportError",
-          description: reason.description,
-          request: buildHttpRequestDetails(reason.request)
-        })
-      }))
-    }
-    case "EncodeError": {
-      return Effect.fail(AiError.make({
-        module: "OpenAiClient",
-        method,
-        reason: new AiError.NetworkError({
-          reason: "EncodeError",
-          description: reason.description,
-          request: buildHttpRequestDetails(reason.request)
-        })
-      }))
-    }
+    case "TransportError":
+    case "EncodeError":
     case "InvalidUrlError": {
       return Effect.fail(AiError.make({
         module: "OpenAiClient",
         method,
-        reason: new AiError.NetworkError({
-          reason: "InvalidUrlError",
-          description: reason.description,
-          request: buildHttpRequestDetails(reason.request)
-        })
+        reason: AiError.NetworkError.fromHttpClientError(
+          error as HttpClientError.HttpClientError & { readonly reason: typeof reason }
+        )
       }))
     }
     case "StatusCodeError": {
@@ -147,14 +131,29 @@ const mapStatusCodeError = Effect.fnUntraced(function*(
     json = undefined
   }
   const decoded = Schema.decodeUnknownOption(OpenAiErrorBody)(json)
+  const compatibleDecoded = Schema.decodeUnknownOption(OpenAiCompatibleErrorBody)(json)
+  const message = Option.isSome(decoded)
+    ? decoded.value.error.message
+    : Option.isSome(compatibleDecoded)
+    ? compatibleDecoded.value.error
+    : undefined
+  const errorCode = Option.isSome(decoded)
+    ? decoded.value.error.code ?? null
+    : Option.isSome(compatibleDecoded)
+    ? compatibleDecoded.value.code ?? null
+    : null
 
+  const now = yield* Clock.currentTimeMillis
   const reason = mapStatusCodeToReason({
+    now,
     status,
+    method: request.method,
+    url: request.url,
     headers,
-    message: Option.isSome(decoded) ? decoded.value.error.message : undefined,
-    http: buildHttpContext({ request, response, body }),
+    message,
+    http: buildHttpContext({ response, body }),
     metadata: {
-      errorCode: Option.isSome(decoded) ? decoded.value.error.code ?? null : null,
+      errorCode,
       errorType: Option.isSome(decoded) ? decoded.value.error.type ?? null : null,
       requestId: requestId ?? null
     }
@@ -167,16 +166,16 @@ const mapStatusCodeError = Effect.fnUntraced(function*(
 // Rate Limits
 // =============================================================================
 
+const retryAfterFromHeader = (raw: string, now: number): Duration.Duration | undefined => {
+  const retryAfter = Headers.parseRetryAfter(raw)
+  return Result.isSuccess(retryAfter) ? Headers.retryAfterDelay(retryAfter.success, now) : undefined
+}
+
 /** @internal */
-export const parseRateLimitHeaders = (headers: Record<string, string>) => {
+export const parseRateLimitHeaders = (headers: Record<string, string>, now: number) => {
   const retryAfterRaw = headers["retry-after"]
-  let retryAfter: Duration.Duration | undefined
-  if (Predicate.isNotUndefined(retryAfterRaw)) {
-    const parsed = Number.parse(retryAfterRaw)
-    if (Option.isSome(parsed)) {
-      retryAfter = Duration.seconds(parsed.value)
-    }
-  }
+  // an invalid Retry-After is treated as absent
+  const retryAfter = retryAfterRaw === undefined ? undefined : retryAfterFromHeader(retryAfterRaw, now)
   const remainingRaw = headers["x-ratelimit-remaining-requests"]
   const remaining = Predicate.isNotUndefined(remainingRaw)
     ? Option.getOrNull(Number.parse(remainingRaw))
@@ -195,23 +194,10 @@ export const parseRateLimitHeaders = (headers: Record<string, string>) => {
 // =============================================================================
 
 /** @internal */
-export const buildHttpRequestDetails = (
-  request: HttpClientRequest.HttpClientRequest
-): typeof Response.HttpRequestDetails.Type => ({
-  method: request.method,
-  url: request.url,
-  urlParams: Array.from(request.urlParams),
-  hash: Option.getOrUndefined(request.hash),
-  headers: Redactable.redact(request.headers) as Record<string, string>
-})
-
-/** @internal */
 export const buildHttpContext = (params: {
-  readonly request: HttpClientRequest.HttpClientRequest
   readonly response?: HttpClientResponse.HttpClientResponse
   readonly body?: string | undefined
 }): typeof AiError.HttpContext.Type => ({
-  request: buildHttpRequestDetails(params.request),
   response: Predicate.isNotUndefined(params.response)
     ? {
       status: params.response.status,
@@ -225,64 +211,23 @@ export const buildHttpContext = (params: {
 // HTTP Status Code
 // =============================================================================
 
-const buildInvalidRequestDescription = (params: {
+/** @internal */
+export const mapStatusCodeToReason = ({ status, method, url, headers, message, metadata, http, now }: {
   readonly status: number
-  readonly message: string | undefined
+  /** Current time in epoch milliseconds, used to measure a Retry-After date. */
+  readonly now: number
   readonly method: string
   readonly url: string
-  readonly errorCode: string | null
-  readonly errorType: string | null
-  readonly requestId: string | null
-  readonly body: string | undefined
-}): string => {
-  const parts: Array<string> = []
-
-  // Primary message or status description
-  if (params.message) {
-    parts.push(params.message)
-  } else {
-    parts.push(`HTTP ${params.status}`)
-  }
-
-  // Request context
-  parts.push(`(${params.method} ${params.url})`)
-
-  // Error code/type if available
-  if (params.errorCode) {
-    parts.push(`[code: ${params.errorCode}]`)
-  } else if (params.errorType) {
-    parts.push(`[type: ${params.errorType}]`)
-  }
-
-  // Request ID for debugging
-  if (params.requestId) {
-    parts.push(`[requestId: ${params.requestId}]`)
-  }
-
-  // If no message and we have body, show truncated body
-  if (!params.message && params.body) {
-    const truncated = params.body.length > 200
-      ? params.body.slice(0, 200) + "..."
-      : params.body
-    parts.push(`Response: ${truncated}`)
-  }
-
-  return parts.join(" ")
-}
-
-/** @internal */
-export const mapStatusCodeToReason = ({ status, headers, message, metadata, http }: {
-  readonly status: number
   readonly headers: Record<string, string>
   readonly message: string | undefined
   readonly metadata: OpenAiErrorMetadata
   readonly http: typeof AiError.HttpContext.Type
 }): AiError.AiErrorReason => {
-  const invalidRequestDescription = buildInvalidRequestDescription({
+  const errorDescription = AiError.buildErrorDescription({
     status,
     message,
-    method: http.request.method,
-    url: http.request.url,
+    method,
+    url,
     errorCode: metadata.errorCode,
     errorType: metadata.errorType,
     requestId: metadata.requestId,
@@ -292,32 +237,39 @@ export const mapStatusCodeToReason = ({ status, headers, message, metadata, http
   switch (status) {
     case 400:
       return new AiError.InvalidRequestError({
-        description: invalidRequestDescription,
+        description: errorDescription,
         metadata: { openai: metadata },
         http
       })
     case 401:
       return new AiError.AuthenticationError({
         kind: "InvalidKey",
-        metadata,
+        description: errorDescription,
+        metadata: { openai: metadata },
         http
       })
     case 403:
       return new AiError.AuthenticationError({
         kind: "InsufficientPermissions",
-        metadata,
+        description: errorDescription,
+        metadata: { openai: metadata },
         http
       })
     case 404:
       return new AiError.InvalidRequestError({
-        description: invalidRequestDescription,
+        description: errorDescription,
         metadata: { openai: metadata },
         http
       })
     case 409:
     case 422:
       return new AiError.InvalidRequestError({
-        description: invalidRequestDescription,
+        description: errorDescription,
+        metadata: { openai: metadata },
+        http
+      })
+    case 402:
+      return new AiError.QuotaExhaustedError({
         metadata: { openai: metadata },
         http
       })
@@ -325,14 +277,16 @@ export const mapStatusCodeToReason = ({ status, headers, message, metadata, http
       // Best-effort detection: OpenAI returns insufficient_quota for billing/quota issues
       if (
         metadata.errorCode === "insufficient_quota" ||
-        metadata.errorType === "insufficient_quota"
+        metadata.errorType === "insufficient_quota" ||
+        metadata.errorCode === "billing_insufficient_balance" ||
+        metadata.errorType === "billing_insufficient_balance"
       ) {
         return new AiError.QuotaExhaustedError({
           metadata: { openai: metadata },
           http
         })
       }
-      const { retryAfter, ...rateLimitMetadata } = parseRateLimitHeaders(headers)
+      const { retryAfter, ...rateLimitMetadata } = parseRateLimitHeaders(headers, now)
       return new AiError.RateLimitError({
         retryAfter,
         metadata: {
@@ -348,13 +302,13 @@ export const mapStatusCodeToReason = ({ status, headers, message, metadata, http
       if (status >= 500) {
         return new AiError.InternalProviderError({
           description: message ?? "Server error",
-          metadata,
+          metadata: { openai: metadata },
           http
         })
       }
       return new AiError.UnknownError({
         description: message,
-        metadata,
+        metadata: { openai: metadata },
         http
       })
   }
