@@ -35,7 +35,7 @@ export default function PeleDiagram({ definition, label = "Diagram" }: Props) {
       role="img"
       aria-label={label}
       tabIndex={0}
-      className="my-6 overflow-x-auto border border-site-line bg-site-surface p-4 font-mono [&_svg]:block"
+      className="my-6 overflow-x-auto border border-site-line bg-site-surface p-4 font-mono catalogue:w-[min(64rem,calc(100vw_-_3rem))] [&_svg]:block"
     />
   );
   /* oxlint-enable jsx-a11y/prefer-tag-over-role, jsx-a11y/no-noninteractive-tabindex */
