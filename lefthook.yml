@@ -1,7 +1,8 @@
 pre-commit:
   commands:
     format:
-      glob: '*.{js,mjs,cjs,jsx,ts,mts,cts,tsx,json,jsonc,css,md,mdx,yaml,yml}'
+      glob: '*'
+      exclude: '*.astro'
       run: pnpm run format --no-error-on-unmatched-pattern {staged_files}
       stage_fixed: true
     format-astro:

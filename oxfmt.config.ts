@@ -1,6 +1,7 @@
 import config from '@macklinu/oxfmt-config'
+import { defineConfig } from 'oxfmt'
 
-export default {
+export default defineConfig({
   ...config,
   ignorePatterns: [
     ...config.ignorePatterns,
@@ -9,4 +10,4 @@ export default {
     'skills-lock.json',
     '**/*.astro',
   ],
-}
+})
