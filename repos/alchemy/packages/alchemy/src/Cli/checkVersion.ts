@@ -1,17 +1,24 @@
+import { AlchemyContext } from "alchemy/AlchemyContext";
 import * as Clock from "effect/Clock";
-import * as Console from "effect/Console";
+import * as Data from "effect/Data";
 import * as Duration from "effect/Duration";
 import * as Effect from "effect/Effect";
 import * as Fiber from "effect/Fiber";
 import * as FileSystem from "effect/FileSystem";
+import * as HttpClient from "effect/http/HttpClient";
 import * as Path from "effect/Path";
-import * as HttpClient from "effect/unstable/http/HttpClient";
-
-import { AlchemyContext } from "alchemy/AlchemyContext";
+import * as Result from "effect/Result";
+import * as SemVer from "effect/SemVer";
 import packageJson from "../../package.json" with { type: "json" };
 
-const NPM_DIST_TAGS_URL =
-  "https://registry.npmjs.org/-/package/alchemy/dist-tags";
+export class CheckVersionUnexpectedResponse extends Data.TaggedError(
+  "CheckVersionUnexpectedResponse",
+)<{
+  readonly message: string;
+  readonly cause?: unknown;
+}> {}
+
+const NPM_DIST_TAGS_URL = "https://registry.npmjs.org/-/package/alchemy/dist-tags";
 
 const CACHE_FILE = "version-check.json";
 const CACHE_TTL_MILLIS = Duration.toMillis(Duration.days(1));
@@ -26,34 +33,23 @@ interface VersionCheckCache {
 }
 
 /**
- * Pick the dist-tag matching the current channel. For pre-release versions
- * like `2.0.0-beta.33`, npm's `latest` tag points at the most recent stable
- * release — not the newest beta — so we match the prerelease identifier
- * (`beta`, `next`, etc.), falling back through `next` → `latest`.
+ * Semver precedence: negative when a < b, positive when a > b. Versions that
+ * don't parse compare equal, so they never trigger an upgrade notice.
  */
-const pickDistTag = (
-  current: string,
-  distTags: Record<string, string>,
-): string | undefined => {
-  const pre = current.split("-", 2)[1];
-  if (pre) {
-    const id = pre.split(".")[0];
-    if (id && distTags[id]) return distTags[id];
-    if (distTags.next) return distTags.next;
-  }
-  return distTags.latest;
+const compareVersions = (a: string, b: string): number => {
+  const pa = Result.getOrUndefined(SemVer.parse(a));
+  const pb = Result.getOrUndefined(SemVer.parse(b));
+  return pa === undefined || pb === undefined ? 0 : SemVer.Order(pa, pb);
 };
 
 const readCache = Effect.fn(
   function* (cachePath: string) {
     const fs = yield* FileSystem.FileSystem;
     const raw = yield* fs.readFileString(cachePath);
-    const parsed = yield* Effect.try(
-      () => JSON.parse(raw) as VersionCheckCache | null | undefined,
-    );
+    const parsed = yield* Effect.try(() => JSON.parse(raw) as VersionCheckCache | null | undefined);
     return typeof parsed?.checkedAt === "number" ? parsed : undefined;
   },
-  Effect.catch(() => Effect.succeed(undefined)),
+  Effect.orElseSucceed(() => undefined),
 );
 
 const writeCache = Effect.fn(
@@ -63,7 +59,7 @@ const writeCache = Effect.fn(
     const cache: VersionCheckCache = { checkedAt, distTags };
     yield* fs.writeFileString(cachePath, JSON.stringify(cache));
   },
-  Effect.catch(() => Effect.void),
+  (effect) => Effect.ignore(effect),
 );
 
 const fetchDistTags = Effect.gen(function* () {
@@ -71,7 +67,7 @@ const fetchDistTags = Effect.gen(function* () {
   const response = yield* http.get(NPM_DIST_TAGS_URL);
   const distTags = (yield* response.json) as Record<string, string> | null;
   if (typeof distTags !== "object" || distTags === null) {
-    return yield* Effect.fail(new Error("malformed dist-tags response"));
+    return yield* new CheckVersionUnexpectedResponse({ message: "malformed dist-tags response" });
   }
   return distTags;
 });
@@ -95,13 +91,12 @@ const refreshDistTags = Effect.fn(function* (cachePath: string) {
   );
   return yield* Fiber.join(fetch).pipe(
     Effect.timeout(SYNC_WAIT),
-    Effect.catch(() => Effect.succeed(undefined)),
+    Effect.orElseSucceed(() => undefined),
   );
 });
 
 /**
- * Warn if a newer `alchemy` version is published on the dist-tag matching
- * the current channel. Runs to completion before any interactive prompts so
+ * Warn if a newer `alchemy` version is published on the `latest` dist-tag. Runs to completion before any interactive prompts so
  * the warning never interleaves with prompt rendering, and is bounded so it
  * can never stall the CLI: dist-tags are cached in
  * `.alchemy/version-check.json` for a day (failed attempts included), so at
@@ -122,22 +117,21 @@ export const checkLatestVersion = Effect.gen(function* () {
   if (distTags === undefined) return;
 
   const current = packageJson.version;
-  const latest = pickDistTag(current, distTags);
-  if (latest === undefined || latest === current) return;
+  const { latest } = distTags;
+  // Strictly newer only: `latest` at (or behind) the installed version must
+  // not prompt a "downgrade".
+  if (latest === undefined || compareVersions(latest, current) <= 0) return;
 
   const installCmd =
-    typeof process !== "undefined" && (process as any).versions?.bun
+    typeof process !== "undefined" && process.versions.bun !== undefined
       ? `bun add alchemy@${latest}`
       : `pnpm add alchemy@${latest}`;
-  // Print via the Console service, not Effect.logWarning: TelemetryLive
-  // replaces the default stdout logger with an OTLP-only logger at this
-  // stage of the program, so log output would never reach the terminal.
-  const useColor = process.stderr.isTTY === true;
-  const message =
-    `alchemy ${latest} is available (you're on ${current}). ` +
-    `Run \`${installCmd}\` to upgrade.`;
-  yield* Console.warn(useColor ? `\x1b[33m${message}\x1b[0m` : message);
-}).pipe(Effect.catch(() => Effect.void));
+  // A warning record: above the default console floor, and a JSON record
+  // under --log-format json (commands run this check, after the flags parse).
+  yield* Effect.logWarning(
+    `alchemy ${latest} is available (you're on ${current}). Run \`${installCmd}\` to upgrade.`,
+  );
+}).pipe(Effect.ignore);
 
 // Exported for tests.
-export const _internal = { pickDistTag };
+export const _internal = { compareVersions };

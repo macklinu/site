@@ -34,10 +34,9 @@ export type ProviderMode = "live" | "local";
  * explicit distinction is load-bearing for conflict detection at
  * registration (see `Resource.ts`).
  */
-export const ProviderModePolicy = Context.Reference<boolean | undefined>(
-  "ProviderModePolicy",
-  { defaultValue: () => undefined },
-);
+export const ProviderModePolicy = Context.Reference<boolean | undefined>("ProviderModePolicy", {
+  defaultValue: () => undefined,
+});
 
 /**
  * The same resource (identified by FQN) was registered (`yield*`ed) from two
@@ -48,9 +47,7 @@ export const ProviderModePolicy = Context.Reference<boolean | undefined>(
  * Fix: register the resource once and close over the returned value, or make
  * both registration sites agree.
  */
-export class ConflictingProviderModeError extends Data.TaggedError(
-  "ConflictingProviderModeError",
-)<{
+export class ConflictingProviderModeError extends Data.TaggedError("ConflictingProviderModeError")<{
   message: string;
   fqn: string;
   /** The mode captured at the first registration site (undefined = default). */
@@ -58,6 +55,61 @@ export class ConflictingProviderModeError extends Data.TaggedError(
   /** The explicit mode at the conflicting registration site. */
   conflictingMode: ProviderMode | undefined;
 }> {}
+
+/**
+ * Prefix marking a locally-emulated resource's physical identity. Local
+ * providers fabricate ids/names with this prefix (`dev:<uuid>` queue and
+ * namespace ids, `dev:`-prefixed bucket names, ...) so a resource's
+ * persisted attributes reveal which runtime hosts it even without the
+ * `providerMode` stamp.
+ */
+export const LOCAL_ID_PREFIX = "dev:";
+
+/**
+ * Does a persisted attributes value carry a local identity marker — any
+ * string value (at any depth) with the {@link LOCAL_ID_PREFIX}? Persisted
+ * attrs are plain JSON (state commits strip unresolved values), so a
+ * structural scan is safe.
+ */
+export const hasLocalIdentity = (value: unknown): boolean => {
+  if (typeof value === "string") return value.startsWith(LOCAL_ID_PREFIX);
+  if (Array.isArray(value)) return value.some(hasLocalIdentity);
+  if (typeof value === "object" && value !== null) {
+    return Object.values(value).some(hasLocalIdentity);
+  }
+  return false;
+};
+
+/**
+ * The mode a persisted state row was actually reconciled with: its stamped
+ * `providerMode`, or — for legacy rows written before stamping existed —
+ * `"local"` when the persisted attributes carry a {@link LOCAL_ID_PREFIX}
+ * identity marker, `"live"` otherwise.
+ *
+ * An unstamped row without a marker predates provider modes or was written
+ * by a mode-agnostic provider — in both cases the write acted on the REAL
+ * cloud, so the row's physical resource is `"live"`. Assuming the current
+ * run's mode instead silently adopts a deployed cloud resource as a local
+ * instance during `alchemy dev`: the row noops (or restarts locally over
+ * the live attrs), gets re-stamped `"local"`, and the live resource becomes
+ * untracked — it is never deleted by a later destroy or replacement, and
+ * its deployed URL keeps serving.
+ *
+ * An unstamped row WITH a marker (e.g. a queue with a `dev:<uuid>` id
+ * written by `alchemy dev` on a pre-stamping version) is the mirror case:
+ * assuming `"live"` hands the `dev:` identity to the live provider, which
+ * sends it to the real cloud API (Cloudflare rejects it as a malformed
+ * parameter, permanently wedging the destroy). The marker proves the row
+ * was reconciled locally, so it is handled as `"local"`.
+ *
+ * For mode-agnostic providers the returned mode is harmless either way:
+ * `providerForMode` ignores the mode when the provider has a single
+ * implementation.
+ */
+export const stampedMode = (row: {
+  readonly providerMode?: ProviderMode | undefined;
+  readonly attr?: unknown;
+}): ProviderMode => row.providerMode ?? (hasLocalIdentity(row.attr) ? "local" : "live");
 
 /**
  * Run the wrapped resources **remotely (against the real cloud) even during
@@ -85,16 +137,12 @@ export class ConflictingProviderModeError extends Data.TaggedError(
  * live in dev; `remote()` on them is a no-op.
  */
 export const remote: {
-  (
-    enabled?: boolean,
-  ): <A, E, R = never>(
-    effect: Effect.Effect<A, E, R>,
-  ) => Effect.Effect<A, E, R>;
+  // Identity-typed so branded effect interfaces (e.g. a Worker-only
+  // binding's `BindingEffect`) survive the pipe with their brand intact.
+  (enabled?: boolean): <Eff extends Effect.Effect<any, any, any>>(effect: Eff) => Eff;
   <R1 = never>(
     enabled: Effect.Effect<boolean, never, R1>,
-  ): <A, E, R2 = never>(
-    effect: Effect.Effect<A, E, R2>,
-  ) => Effect.Effect<A, E, R1 | R2>;
+  ): <A, E, R2 = never>(effect: Effect.Effect<A, E, R2>) => Effect.Effect<A, E, R1 | R2>;
 } = ((enabled: boolean | Effect.Effect<boolean, never, any> = true) =>
   (eff: Effect.Effect<any, any, any>) =>
     eff.pipe(
@@ -111,13 +159,11 @@ export const remote: {
  * 2. Otherwise `AlchemyContext.dev` decides: `dev: true` → `"local"`.
  * 3. Without an AlchemyContext (bare engine tests), default to `"live"`.
  */
-export const defaultProviderMode: Effect.Effect<ProviderMode> = Effect.gen(
-  function* () {
-    if (yield* ProviderModePolicy) return "live" as const;
-    const ctx = yield* Effect.serviceOption(AlchemyContext);
-    return Option.match(ctx, {
-      onNone: () => "live" as const,
-      onSome: (c) => (c.dev ? ("local" as const) : ("live" as const)),
-    });
-  },
-);
+export const defaultProviderMode: Effect.Effect<ProviderMode> = Effect.gen(function* () {
+  if (yield* ProviderModePolicy) return "live" as const;
+  const ctx = yield* Effect.serviceOption(AlchemyContext);
+  return Option.match(ctx, {
+    onNone: () => "live" as const,
+    onSome: (c) => (c.dev ? ("local" as const) : ("live" as const)),
+  });
+});
