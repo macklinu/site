@@ -1,20 +1,20 @@
-import { useEffect, useRef } from "react";
-import { mount, register } from "pele/core";
-import flowchart from "pele/diagrams/flowchart";
+import { mount, register } from 'pele/core'
+import flowchart from 'pele/diagrams/flowchart'
+import { useEffect, useRef } from 'react'
 
 interface Props {
-  definition: string;
-  label?: string;
+  definition: string
+  label?: string
 }
 
-register(flowchart);
+register(flowchart)
 
-export default function PeleDiagram({ definition, label = "Diagram" }: Props) {
-  const container = useRef<HTMLDivElement>(null);
+export default function PeleDiagram({ definition, label = 'Diagram' }: Props) {
+  const container = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (!container.current) {
-      return;
+      return
     }
 
     const diagram = mount(container.current, definition, {
@@ -22,21 +22,21 @@ export default function PeleDiagram({ definition, label = "Diagram" }: Props) {
       // Keep labels readable when a layout still needs horizontal scrolling.
       responsive: false,
       zoom: false,
-    });
+    })
 
-    return () => diagram.destroy();
-  }, [definition]);
+    return () => diagram.destroy()
+  }, [definition])
 
   // The SVG is one labelled graphic. Keyboard users can focus its scroll container.
   /* oxlint-disable jsx-a11y/prefer-tag-over-role, jsx-a11y/no-noninteractive-tabindex */
   return (
     <div
       ref={container}
-      role="img"
+      role='img'
       aria-label={label}
       tabIndex={0}
-      className="my-6 overflow-x-auto border border-site-line bg-site-surface p-4 font-mono catalogue:w-[min(64rem,calc(100vw_-_3rem))] [&_svg]:block"
+      className='border-site-line bg-site-surface catalogue:w-[min(64rem,calc(100vw_-_3rem))] my-6 overflow-x-auto border p-4 font-mono [&_svg]:block'
     />
-  );
+  )
   /* oxlint-enable jsx-a11y/prefer-tag-over-role, jsx-a11y/no-noninteractive-tabindex */
 }

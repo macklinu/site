@@ -2,7 +2,7 @@
 title: Bi-Rite Creamery
 category: food
 city: San Francisco
-address: "3692 18th St, San Francisco, CA 94110, United States"
+address: '3692 18th St, San Francisco, CA 94110, United States'
 latitude: 37.7615761
 longitude: -122.4257161
 appleMapsPlaceId: I23E5F82325F65474

@@ -2,7 +2,7 @@
 title: Hot Cookie
 category: food
 city: San Francisco
-address: "407 Castro St, San Francisco, CA  94114, United States"
+address: '407 Castro St, San Francisco, CA  94114, United States'
 latitude: 37.7622925
 longitude: -122.4350311
 appleMapsPlaceId: IFF46F90C4DD525D9

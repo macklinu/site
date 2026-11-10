@@ -2,7 +2,7 @@
 title: Alamo Square
 city: San Francisco
 category: nature
-address: "Hayes St & Steiner St, San Francisco, CA 94117, United States"
+address: 'Hayes St & Steiner St, San Francisco, CA 94117, United States'
 latitude: 37.7762779
 longitude: -122.4347305
 appleMapsPlaceId: I547A7224AED2C54D

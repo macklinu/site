@@ -2,7 +2,7 @@
 title: Philz Coffee
 category: coffee
 city: San Francisco
-address: "201 Berry St, San Francisco, CA  94158, United States"
+address: '201 Berry St, San Francisco, CA  94158, United States'
 latitude: 37.7755742
 longitude: -122.3934749
 appleMapsPlaceId: IFDD573412B449AB8

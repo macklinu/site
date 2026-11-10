@@ -2,7 +2,7 @@
 title: Tacko
 category: food
 city: San Francisco
-address: "3115 Fillmore St, San Francisco, CA  94123, United States"
+address: '3115 Fillmore St, San Francisco, CA  94123, United States'
 latitude: 37.7982637
 longitude: -122.4359268
 appleMapsPlaceId: I7C7BC45B8418690A

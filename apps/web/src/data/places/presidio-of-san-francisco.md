@@ -2,7 +2,7 @@
 title: Presidio of San Francisco
 category: nature
 city: San Francisco
-address: "220 Halleck St, San Francisco, CA  94129, United States"
+address: '220 Halleck St, San Francisco, CA  94129, United States'
 latitude: 37.7972581
 longitude: -122.4658998
 appleMapsPlaceId: I51FA4BA7132F8256

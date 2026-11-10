@@ -2,7 +2,7 @@
 title: Morning Due Cafe
 city: San Francisco
 category: coffee
-address: "3698 17th St, San Francisco, CA  94114, United States"
+address: '3698 17th St, San Francisco, CA  94114, United States'
 latitude: 37.7630477
 longitude: -122.4283576
 appleMapsPlaceId: IAC9BE164A10D62BC

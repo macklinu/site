@@ -2,7 +2,7 @@
 title: Salesforce Park
 city: San Francisco
 category: nature
-address: "425 Mission St, San Francisco, CA 94105, United States"
+address: '425 Mission St, San Francisco, CA 94105, United States'
 latitude: 37.789764
 longitude: -122.39608
 appleMapsPlaceId: I3DFDF75F9695553B

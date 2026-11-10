@@ -1,16 +1,16 @@
 /** @type {import("prettier").Config} */
 export default {
-  jsxSingleQuote: true,
-  semi: false,
-  singleQuote: true,
-  trailingComma: "es5",
-  plugins: ["prettier-plugin-astro"],
+  plugins: ['prettier-plugin-astro'],
   overrides: [
     {
-      files: "*.astro",
+      files: '*.astro',
       options: {
-        parser: "astro",
+        parser: 'astro',
+        jsxSingleQuote: true,
+        semi: false,
+        singleQuote: true,
+        trailingComma: 'es5',
       },
     },
   ],
-};
+}

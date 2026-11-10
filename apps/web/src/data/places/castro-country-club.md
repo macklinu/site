@@ -2,7 +2,7 @@
 title: Castro Country Club
 category: community
 city: San Francisco
-address: "4058 18th St, San Francisco, CA  94114, United States"
+address: '4058 18th St, San Francisco, CA  94114, United States'
 latitude: 37.7610574
 longitude: -122.4341926
 appleMapsPlaceId: I50651FBCBFABA2DC

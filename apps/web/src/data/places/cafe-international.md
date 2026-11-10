@@ -2,7 +2,7 @@
 title: Cafe International
 city: San Francisco
 category: coffee
-address: "508 Haight St, San Francisco, CA  94117, United States"
+address: '508 Haight St, San Francisco, CA  94117, United States'
 latitude: 37.7721918
 longitude: -122.4307572
 appleMapsPlaceId: IDF9575D90B6C8929

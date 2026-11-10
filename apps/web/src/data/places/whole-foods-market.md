@@ -2,7 +2,7 @@
 title: Whole Foods Market
 category: shopping
 city: San Francisco
-address: "690 Stanyan St, San Francisco, CA 94117, United States"
+address: '690 Stanyan St, San Francisco, CA 94117, United States'
 latitude: 37.7694814
 longitude: -122.4530367
 appleMapsPlaceId: I4EAB98E709ABB6F3

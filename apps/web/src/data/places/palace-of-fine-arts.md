@@ -2,7 +2,7 @@
 title: Palace of Fine Arts
 city: San Francisco
 category: sights
-address: "3601 Lyon Street, San Francisco, CA 94123, United States"
+address: '3601 Lyon Street, San Francisco, CA 94123, United States'
 latitude: 37.8029221
 longitude: -122.4484313
 appleMapsPlaceId: I26027E9B3E6F26F0

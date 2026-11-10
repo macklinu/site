@@ -1,6 +1,6 @@
-import { defineCollection } from "astro:content";
-import { glob } from "astro/loaders";
-import { z } from "astro/zod";
+import { glob } from 'astro/loaders'
+import { z } from 'astro/zod'
+import { defineCollection } from 'astro:content'
 
 const documentFields = z.object({
   title: z.string().trim().min(1),
@@ -9,54 +9,54 @@ const documentFields = z.object({
   updatedAt: z.iso.datetime().optional(),
   topics: z.array(z.string().trim().min(1)).max(4).default([]),
   related: z.array(z.string().trim().min(1)).max(6).default([]),
-});
+})
 
 const articles = defineCollection({
-  loader: glob({ base: "./src/data/posts", pattern: "**/*.md" }),
+  loader: glob({ base: './src/data/posts', pattern: '**/*.md' }),
   schema: documentFields.extend({
-    kind: z.literal("article").default("article"),
+    kind: z.literal('article').default('article'),
   }),
-});
+})
 
 const notes = defineCollection({
-  loader: glob({ base: "./src/data/notes", pattern: "**/*.{md,mdx}" }),
+  loader: glob({ base: './src/data/notes', pattern: '**/*.{md,mdx}' }),
   schema: documentFields.extend({
-    kind: z.literal("note").default("note"),
+    kind: z.literal('note').default('note'),
   }),
-});
+})
 
 const demos = defineCollection({
-  loader: glob({ base: "./src/data/demos", pattern: "**/*.md" }),
+  loader: glob({ base: './src/data/demos', pattern: '**/*.md' }),
   schema: documentFields.extend({
-    kind: z.literal("demo").default("demo"),
-    status: z.enum(["prototype", "active", "archived"]).default("prototype"),
+    kind: z.literal('demo').default('demo'),
+    status: z.enum(['prototype', 'active', 'archived']).default('prototype'),
   }),
-});
+})
 
 const guides = defineCollection({
-  loader: glob({ base: "./src/data/guides", pattern: "**/*.md" }),
+  loader: glob({ base: './src/data/guides', pattern: '**/*.md' }),
   schema: documentFields.extend({
-    kind: z.literal("guide").default("guide"),
+    kind: z.literal('guide').default('guide'),
   }),
-});
+})
 
 const placeCategory = z.enum([
-  "food",
-  "coffee",
-  "books",
-  "art",
-  "nature",
-  "shopping",
-  "community",
-  "sights",
-  "transit",
-]);
+  'food',
+  'coffee',
+  'books',
+  'art',
+  'nature',
+  'shopping',
+  'community',
+  'sights',
+  'transit',
+])
 
 const places = defineCollection({
-  loader: glob({ base: "./src/data/places", pattern: "**/*.md" }),
+  loader: glob({ base: './src/data/places', pattern: '**/*.md' }),
   schema: z.union([
     z.object({
-      kind: z.literal("place").default("place"),
+      kind: z.literal('place').default('place'),
       title: z.string().trim().min(1),
       category: placeCategory,
       city: z.string().trim().min(1),
@@ -68,34 +68,34 @@ const places = defineCollection({
       tags: z.array(z.string().trim().min(1)).default([]),
     }),
     z.object({
-      kind: z.literal("neighborhood"),
+      kind: z.literal('neighborhood'),
       title: z.string().trim().min(1),
       city: z.string().trim().min(1),
       boundary: z.object({
-        type: z.literal("Polygon"),
+        type: z.literal('Polygon'),
         coordinates: z.array(z.array(z.tuple([z.number(), z.number()]))).min(1),
       }),
     }),
   ]),
-});
+})
 
 const placeGuides = defineCollection({
-  loader: glob({ base: "./src/data/place-guides", pattern: "**/*.md" }),
+  loader: glob({ base: './src/data/place-guides', pattern: '**/*.md' }),
   schema: z.object({
-    kind: z.literal("place").default("place"),
+    kind: z.literal('place').default('place'),
     title: z.string().trim().min(1),
     description: z.string().trim().min(1),
   }),
-});
+})
 
 const projects = defineCollection({
-  loader: glob({ base: "./src/data/projects", pattern: "**/*.yaml" }),
+  loader: glob({ base: './src/data/projects', pattern: '**/*.yaml' }),
   schema: z.object({
     title: z.string().trim().min(1),
     description: z.string().trim().min(1),
     href: z.url(),
   }),
-});
+})
 
 export const collections = {
   articles,
@@ -105,4 +105,4 @@ export const collections = {
   places,
   placeGuides,
   projects,
-};
+}

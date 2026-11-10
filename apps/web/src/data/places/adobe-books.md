@@ -2,7 +2,7 @@
 title: Adobe Books
 category: books
 city: San Francisco
-address: "3130 24th St, San Francisco, CA 94110, United States"
+address: '3130 24th St, San Francisco, CA 94110, United States'
 latitude: 37.7526187
 longitude: -122.4147588
 appleMapsPlaceId: IACF2BBBDC0AEED2C

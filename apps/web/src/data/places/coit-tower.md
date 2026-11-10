@@ -2,7 +2,7 @@
 title: Coit Tower
 city: San Francisco
 category: sights
-address: "1 Telegraph Hill Blvd, San Francisco, CA  94133, United States"
+address: '1 Telegraph Hill Blvd, San Francisco, CA  94133, United States'
 latitude: 37.8023371
 longitude: -122.4058378
 appleMapsPlaceId: IE9C565A395E9AAF2
