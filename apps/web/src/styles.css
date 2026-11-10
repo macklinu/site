@@ -98,6 +98,18 @@
     --brand-green: oklch(0.78 0.2 145);
   }
 }
+.pele {
+  --pele-bg: var(--surface);
+  --pele-fg: var(--ink);
+  --pele-muted: var(--muted);
+  --pele-line: var(--muted);
+  --pele-surface: var(--paper);
+  --pele-surface-alt: var(--surface);
+  --pele-border: var(--muted);
+  --pele-accent: var(--blue);
+  --pele-font: var(--font-mono);
+  --pele-font-mono: var(--font-mono);
+}
 
 .sf-page {
   --blue: oklch(0.52 0.18 255);
