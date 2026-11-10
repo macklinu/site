@@ -1,8 +1,11 @@
 "effect/Schedule#addDelayEffect":
   replacement: "Schedule.addDelay"
   note: "The v4 function is effectful by default and its callback receives full Schedule.Metadata; read metadata.output when only the prior output is needed."
+"effect/Schedule#andThen":
+  replacement: "Schedule.concat"
+  note: "The sequencing combinator was renamed to Schedule.concat."
 "effect/Schedule#andThenEither":
-  replacement: "Schedule.andThenResult"
+  replacement: "Schedule.concatResult"
   note: "Sequential phase tagging now uses Result: self outputs are Result.fail and the following schedule outputs are Result.succeed."
 "effect/Schedule#as":
   replacement: "Schedule.map"
@@ -83,8 +86,8 @@
   replacement: "Schedule.duration"
   note: "The duration constructor recurs once after the supplied delay."
 "effect/Schedule#fromDelays":
-  replacement: "Schedule.duration + Schedule.andThen"
-  note: "Build one Schedule.duration per delay and sequence them with Schedule.andThen."
+  replacement: "Schedule.duration + Schedule.concat"
+  note: "Build one Schedule.duration per delay and sequence them with Schedule.concat."
 "effect/Schedule#fromFunction":
   replacement: "Schedule.identity + Schedule.map"
   note: "Start with Schedule.identity<A>() and map metadata.input through the function."
@@ -133,9 +136,6 @@
 "effect/Schedule#modifyDelayEffect":
   replacement: "Schedule.modifyDelay"
   note: "The v4 delay modifier is effectful by default and receives full Schedule.Metadata."
-"effect/Schedule#once":
-  replacement: "Schedule.duration(Duration.zero)"
-  note: "A zero-duration schedule recurs once and then completes; map its Duration output to void if needed."
 "effect/Schedule#onDecision":
   replacement: "Schedule.tap"
   note: "Use Schedule.tap for effects on recurrence metadata. To also observe final completion, wrap Schedule.toStep with Pull.matchEffect in Schedule.fromStep."

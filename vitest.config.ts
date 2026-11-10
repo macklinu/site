@@ -9,6 +9,8 @@ const isNode = typeof process !== "undefined" &&
   !isDeno &&
   !isBun
 const integrationTestsEnabled = process.env.EFFECT_INTEGRATION_TESTS === "1"
+// Set EFFECT_MSSQL_INTEGRATION_TESTS=0 to skip only the MSSQL integration tests.
+const mssqlIntegrationTestsDisabled = integrationTestsEnabled && process.env.EFFECT_MSSQL_INTEGRATION_TESTS === "0"
 const clusterTestsEnabled = process.env.EFFECT_CLUSTER_TESTS === "1"
 
 const project = (
@@ -69,10 +71,7 @@ const shared: ViteUserConfig = {
   test: {
     exclude,
     passWithNoTests: true,
-    setupFiles: [path.join(__dirname, "vitest.setup.ts")],
-    fakeTimers: {
-      toFake: undefined
-    },
+    setupFiles: [path.join(import.meta.dirname, "vitest.setup.ts")],
     sequence: {
       concurrent: true
     },
@@ -89,21 +88,39 @@ const shared: ViteUserConfig = {
 export default defineConfig({
   test: {
     passWithNoTests: true,
+    // The shared cluster storage suite runs MSSQL alongside the other databases.
+    ...(mssqlIntegrationTestsDisabled ? { testNamePattern: /^(?!.*SqlMessageStorage > mssql > )/ } : {}),
     projects: [
-      ...project("effect", "packages/effect", true, {
-        test: {
-          // @see https://github.com/denoland/deno/issues/23882
-          exclude: isDeno ? ["test/cluster/**"] : []
-        }
-      }),
+      ...project("scripts", "scripts", true, {}, undefined, ["codemods/jsdoc.test.ts"]),
+      ...project(
+        "effect",
+        "packages/effect",
+        true,
+        {},
+        isBun
+          ? [
+            ...exclude,
+            // These tests assert Node-specific Web API or stack trace behavior.
+            "test/reactivity/Atom.test.ts",
+            "test/schema/Schema.test.ts",
+            "test/schema/SchemaGetter.test.ts",
+            "test/schema/toCodec.test.ts",
+            "test/schema/toDifferJsonPatch.test.ts",
+            "test/http/HttpEffect.test.ts",
+            "test/http/HttpServerRequest.test.ts"
+          ]
+          : undefined
+      ),
       ...project("@effect/ai-anthropic", "packages/ai/anthropic"),
+      ...project("@effect/ai-cloudflare", "packages/ai/cloudflare"),
       ...project("@effect/ai-openai", "packages/ai/openai"),
+      ...project("@effect/ai-typesafe", "packages/ai/typesafe"),
       ...project("@effect/ai-openai-compat", "packages/ai/openai-compat"),
       ...project("@effect/ai-openrouter", "packages/ai/openrouter"),
       ...project("@effect/atom-react", "packages/atom/react", true, {
         test: {
           environment: "jsdom",
-          setupFiles: [path.join(__dirname, "packages/atom/react/vitest.setup.ts")]
+          setupFiles: [path.join(import.meta.dirname, "packages/atom/react/vitest.setup.ts")]
         }
       }),
       ...project("@effect/atom-solid", "packages/atom/solid", true, {
@@ -112,7 +129,7 @@ export default defineConfig({
         },
         test: {
           environment: "jsdom",
-          setupFiles: [path.join(__dirname, "packages/atom/solid/vitest.setup.ts")]
+          setupFiles: [path.join(import.meta.dirname, "packages/atom/solid/vitest.setup.ts")]
         }
       }),
       ...project("@effect/atom-vue", "packages/atom/vue", true, {
@@ -121,25 +138,36 @@ export default defineConfig({
         }
       }),
       ...project("@effect/opentelemetry", "packages/opentelemetry"),
-      ...project("@effect/platform-browser", "packages/platform-browser", true, {
+      ...project("@effect/platform-browser", "packages/platform/browser", true, {
         test: {
           environment: "happy-dom",
-          execArgv: [
-            "--localstorage-file",
-            path.resolve(os.tmpdir(), `vitest-${process.pid}.localstorage`)
-          ],
-          setupFiles: [path.join(__dirname, "packages/platform-browser/vitest.setup.ts")]
+          // Bun interprets Node's --localstorage-file value as a module path.
+          execArgv: isBun
+            ? []
+            : [
+              "--localstorage-file",
+              path.resolve(os.tmpdir(), `vitest-${process.pid}.localstorage`)
+            ],
+          setupFiles: [path.join(import.meta.dirname, "packages/platform/browser/vitest.setup.ts")]
         }
       }),
-      ...project("@effect/platform-deno", "packages/platform-deno", isDeno),
-      ...project("@effect/platform-node", "packages/platform-node", isNode),
+      ...project("@effect/platform-bun", "packages/platform/bun", isBun),
+      ...project("@effect/platform-cloudflare", "packages/platform/cloudflare", !isDeno, {
+        test: {
+          setupFiles: [path.join(import.meta.dirname, "packages/platform/cloudflare/vitest.setup.ts")]
+        }
+      }),
+      ...project("@effect/platform-deno", "packages/platform/deno", isDeno),
+      ...project("@effect/platform-node", "packages/platform/node", isNode),
       ...project(
         "cluster-integration",
-        "packages/platform-node",
+        "packages/platform/node",
         isNode && clusterTestsEnabled,
         {
           test: {
-            globalSetup: [path.join(__dirname, "packages/platform-node/test/cluster-integration/globalSetup.ts")],
+            globalSetup: [
+              path.join(import.meta.dirname, "packages/platform/node/test/cluster-integration/globalSetup.ts")
+            ],
             include: ["test/cluster-integration/**/*.test.ts"],
             retry: 0,
             sequence: {
@@ -153,26 +181,59 @@ export default defineConfig({
           "test/cluster-integration/**/*.test.ts"
         ]
       ),
-      ...project("@effect/platform-node-shared", "packages/platform-node-shared", !isDeno),
+      ...project("@effect/platform-node-shared", "packages/platform/node-shared", isNode),
       ...project("@effect/vitest", "packages/vitest"),
       ...project("@effect/sql-clickhouse", "packages/sql/clickhouse"),
       ...project("@effect/sql-d1", "packages/sql/d1", !isDeno),
       ...project("@effect/sql-libsql", "packages/sql/libsql"),
-      ...project("@effect/sql-mssql", "packages/sql/mssql"),
-      ...project("@effect/sql-mysql2", "packages/sql/mysql2"),
+      ...project(
+        "@effect/sql-mssql",
+        "packages/sql/mssql",
+        true,
+        {},
+        mssqlIntegrationTestsDisabled ? [...exclude, "**/*.integration.test.{ts,tsx}"] : undefined
+      ),
+      // MySQL starts a fresh container per integration test suite, so avoid competing
+      // with the other container-backed projects on integration-test runners.
+      ...project(
+        "@effect/sql-mysql2",
+        "packages/sql/mysql2",
+        true,
+        integrationTestsEnabled
+          ? {
+            test: {
+              fileParallelism: false,
+              sequence: {
+                groupOrder: 1
+              }
+            }
+          }
+          : {}
+      ),
       ...project("@effect/sql-pg", "packages/sql/pg"),
       ...project("@effect/sql-pglite", "packages/sql/pglite"),
       ...project("@effect/sql-sqlite-bun", "packages/sql/sqlite-bun"),
-      ...project("@effect/sql-sqlite-do", "packages/sql/sqlite-do"),
-      ...project("@effect/sql-sqlite-node", "packages/sql/sqlite-node", !isDeno),
+      ...project(
+        "@effect/sql-sqlite-do",
+        "packages/sql/sqlite-do",
+        true,
+        {},
+        // Miniflare needs Node/Bun; keep the in-process client tests on Deno.
+        isDeno ? [...exclude, "test/Miniflare.test.ts"] : undefined
+      ),
+      ...project("@effect/sql-sqlite-node", "packages/sql/sqlite-node", isNode || isDeno),
       ...project("@effect/sql-sqlite-react-native", "packages/sql/sqlite-react-native"),
       ...project("@effect/sql-sqlite-wasm", "packages/sql/sqlite-wasm"),
+      ...project("@effect/ai-codegen", "packages/tools/ai-codegen", isNode),
       ...project("@effect/api-diff", "packages/tools/api-diff"),
       ...project("@effect/bundle", "packages/tools/bundle"),
       ...project("@effect/doctest", "packages/tools/doctest"),
       ...project("@effect/docgen", "packages/tools/docgen"),
       ...project("@effect/jsdocs", "packages/tools/jsdocs"),
+      ...project("@effect/npm-promote", "packages/tools/npm-promote"),
       ...project("@effect/openapi-generator", "packages/tools/openapi-generator"),
+      ...project("@effect/graphql-generator", "packages/tools/graphql-generator"),
+      ...project("@effect/utils", "packages/tools/utils", isNode),
       ...project("@effect/oxc", "packages/tools/oxc")
     ]
   }
