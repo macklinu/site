@@ -37,6 +37,10 @@ Want pull-request previews without making production deployment a separate syste
 ## 1. Stage the resource
 
 ```ts title="apps/web/alchemy.run.ts"
+import * as Cloudflare from "@alchemy.run/cloudflare";
+import * as Alchemy from "alchemy";
+import * as Effect from "effect/Effect";
+
 Effect.gen(function* () {
   const stage = yield* Alchemy.Stage;
   const website = yield* Cloudflare.Website.StaticSite("website", {
@@ -54,6 +58,8 @@ Effect.gen(function* () {
 Use `pr-<number>` for previews and `prod` for production. For previews, comment `website.url` back to the pull request.
 
 ```ts title="apps/web/alchemy.run.ts"
+import * as GitHub from "@alchemy.run/github";
+
 Effect.gen(function* () {
   if (stage.startsWith("pr-") && process.env.PULL_REQUEST) {
     yield* GitHub.Comment("preview-comment", {
