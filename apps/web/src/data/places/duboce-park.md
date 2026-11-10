@@ -2,7 +2,7 @@
 title: Duboce Park
 category: nature
 city: San Francisco
-address: "Steiner St & Duboce Ave, San Francisco, CA 94117, United States"
+address: 'Steiner St & Duboce Ave, San Francisco, CA 94117, United States'
 latitude: 37.769615
 longitude: -122.4334278
 appleMapsPlaceId: IB850E74A4204CC95

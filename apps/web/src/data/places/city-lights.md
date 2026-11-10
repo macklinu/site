@@ -2,7 +2,7 @@
 title: City Lights
 category: books
 city: San Francisco
-address: "261 Columbus Ave, San Francisco, CA 94133, United States"
+address: '261 Columbus Ave, San Francisco, CA 94133, United States'
 latitude: 37.7976361
 longitude: -122.4065929
 appleMapsPlaceId: I69305E1B97FBDD3B

@@ -2,7 +2,7 @@
 title: MaMa Ji's
 category: food
 city: San Francisco
-address: "4416 18th St, San Francisco, CA  94114, United States"
+address: '4416 18th St, San Francisco, CA  94114, United States'
 latitude: 37.7608679
 longitude: -122.4386466
 appleMapsPlaceId: I57ED57492FBE1D10

@@ -2,7 +2,7 @@
 title: Tartine Bakery
 category: food
 city: San Francisco
-address: "600 Guerrero St, San Francisco, CA 94110, United States"
+address: '600 Guerrero St, San Francisco, CA 94110, United States'
 latitude: 37.761447
 longitude: -122.423979
 appleMapsPlaceId: IC3CACACBE6503201

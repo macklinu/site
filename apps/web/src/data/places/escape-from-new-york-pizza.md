@@ -2,7 +2,7 @@
 title: Escape From New York Pizza
 category: food
 city: San Francisco
-address: "1737 Haight St, San Francisco, CA 94117, United States"
+address: '1737 Haight St, San Francisco, CA 94117, United States'
 latitude: 37.7693541
 longitude: -122.4513519
 appleMapsPlaceId: I49A6446A1B8383FF

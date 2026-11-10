@@ -2,7 +2,7 @@
 title: Idle Hand
 category: art
 city: San Francisco
-address: "575 Haight St, San Francisco, CA  94117, United States"
+address: '575 Haight St, San Francisco, CA  94117, United States'
 latitude: 37.7718549
 longitude: -122.4316458
 appleMapsPlaceId: IFAA3A57DC4923EE7

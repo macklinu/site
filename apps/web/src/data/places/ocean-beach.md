@@ -2,7 +2,7 @@
 title: Ocean Beach
 category: nature
 city: San Francisco
-address: "Outer Richmond, San Francisco, CA, United States"
+address: 'Outer Richmond, San Francisco, CA, United States'
 latitude: 37.7752466
 longitude: -122.51312
 appleMapsPlaceId: I2E225EC42818F89C

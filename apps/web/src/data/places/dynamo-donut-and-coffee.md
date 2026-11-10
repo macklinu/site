@@ -2,7 +2,7 @@
 title: Dynamo Donut & Coffee
 category: coffee
 city: San Francisco
-address: "2760 24th St, San Francisco, CA  94110, United States"
+address: '2760 24th St, San Francisco, CA  94110, United States'
 latitude: 37.7530298
 longitude: -122.4076536
 appleMapsPlaceId: IC9B615FA74B94404

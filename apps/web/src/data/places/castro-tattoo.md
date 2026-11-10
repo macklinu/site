@@ -2,7 +2,7 @@
 title: Castro Tattoo
 category: art
 city: San Francisco
-address: "3991 17th St, San Francisco, CA  94114, United States"
+address: '3991 17th St, San Francisco, CA  94114, United States'
 latitude: 37.7623607
 longitude: -122.4349076
 appleMapsPlaceId: I56A8F83C0B3B46B5

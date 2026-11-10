@@ -2,7 +2,7 @@
 title: 4505 Burgers & BBQ
 category: food
 city: San Francisco
-address: "705 Divisadero St, San Francisco, CA  94117, United States"
+address: '705 Divisadero St, San Francisco, CA  94117, United States'
 latitude: 37.7761815
 longitude: -122.4382456
 appleMapsPlaceId: IF355B302D5A43E58

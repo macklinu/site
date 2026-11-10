@@ -2,7 +2,7 @@
 title: Sutro Tower
 category: sights
 city: San Francisco
-address: "1 La Avanzada St, San Francisco, CA  94131, United States"
+address: '1 La Avanzada St, San Francisco, CA  94131, United States'
 latitude: 37.755225
 longitude: -122.4527737
 appleMapsPlaceId: I59206577D4050574

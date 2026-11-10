@@ -2,7 +2,7 @@
 title: Japan Center Malls
 city: San Francisco
 category: food
-address: "1737 Post St, San Francisco, CA  94115, United States"
+address: '1737 Post St, San Francisco, CA  94115, United States'
 latitude: 37.785262
 longitude: -122.430587
 appleMapsPlaceId: I2B5582D5E6F40A8D

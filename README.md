@@ -2,6 +2,11 @@
 
 > My personal website built with [Astro](https://astro.build/)
 
+## Formatting
+
+Astro files stay on Prettier with `prettier-plugin-astro`. Oxfmt's Astro support requires
+a separate opt-in compiler, so it does not replace that path.
+
 ## CI/CD
 
 For manual Alchemy commands, select the stage with `--stage` or `ALCHEMY_STAGE`.

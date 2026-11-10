@@ -2,7 +2,7 @@
 title: Bob's Donuts
 city: San Francisco
 category: coffee
-address: "1621 Polk St, San Francisco, CA 94109, United States"
+address: '1621 Polk St, San Francisco, CA 94109, United States'
 latitude: 37.791882
 longitude: -122.421178
 appleMapsPlaceId: I3AB8CA6D7124DE0D

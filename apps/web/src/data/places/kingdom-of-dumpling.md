@@ -2,7 +2,7 @@
 title: Kingdom Of Dumpling
 category: food
 city: San Francisco
-address: "1713 Taraval St, San Francisco, CA  94116, United States"
+address: '1713 Taraval St, San Francisco, CA  94116, United States'
 latitude: 37.7425405
 longitude: -122.4846628
 appleMapsPlaceId: I8B526419E4CEA830

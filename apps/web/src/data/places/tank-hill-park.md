@@ -2,7 +2,7 @@
 title: Tank Hill Park
 city: San Francisco
 category: nature
-address: "Clarendon Ave. and Twin Peaks Blvd, San Francisco, CA 94114, United States"
+address: 'Clarendon Ave. and Twin Peaks Blvd, San Francisco, CA 94114, United States'
 latitude: 37.759948
 longitude: -122.4476864
 appleMapsPlaceId: I7AF10F7C54FD8419

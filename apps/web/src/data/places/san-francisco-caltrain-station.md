@@ -2,7 +2,7 @@
 title: San Francisco Caltrain Station
 category: transit
 city: San Francisco
-address: "San Francisco, CA, United States"
+address: 'San Francisco, CA, United States'
 latitude: 37.7764122
 longitude: -122.3948728
 appleMapsPlaceId: IB16AB359586C18A0

@@ -1,7 +1,7 @@
 ---
 title: OpenTUI React cheat sheet
 description: Commands and links to create and test an OpenTUI React app.
-date: "2026-08-21"
+date: '2026-08-21'
 topics:
   - OpenTUI
   - React
@@ -34,23 +34,23 @@ bun dev
 ```
 
 ```tsx title="src/index.tsx"
-import { createCliRenderer } from "@opentui/core";
-import { createRoot, useKeyboard, useRenderer } from "@opentui/react";
+import { createCliRenderer } from '@opentui/core'
+import { createRoot, useKeyboard, useRenderer } from '@opentui/react'
 
 function App() {
-  const renderer = useRenderer();
+  const renderer = useRenderer()
 
   useKeyboard((key) => {
-    if (key.name === "escape") {
-      renderer.destroy();
+    if (key.name === 'escape') {
+      renderer.destroy()
     }
-  });
+  })
 
-  return <text>Press Escape to quit.</text>;
+  return <text>Press Escape to quit.</text>
 }
 
-const renderer = await createCliRenderer();
-createRoot(renderer).render(<App />);
+const renderer = await createCliRenderer()
+createRoot(renderer).render(<App />)
 ```
 
 TypeScript JSX:
@@ -67,10 +67,10 @@ TypeScript JSX:
 ## Test renderer
 
 ```tsx
-import { testRender } from "@opentui/react/test-utils";
+import { testRender } from '@opentui/react/test-utils'
 
-const app = await testRender(<App />, { width: 80, height: 24 });
-await app.renderer.destroy();
+const app = await testRender(<App />, { width: 80, height: 24 })
+await app.renderer.destroy()
 ```
 
 ## Terminal control
