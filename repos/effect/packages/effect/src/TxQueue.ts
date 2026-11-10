@@ -8,6 +8,7 @@
  * full bounded queue. This makes the queue useful for coordinating producers
  * and consumers alongside other transactional state changes.
  *
+ * @stability stable
  * @since 4.0.0
  */
 import type * as Arr from "./Array.ts"
@@ -17,6 +18,7 @@ import * as Effect from "./Effect.ts"
 import { dual } from "./Function.ts"
 import type { Inspectable } from "./Inspectable.ts"
 import { NodeInspectSymbol, toJson } from "./Inspectable.ts"
+import * as Count from "./internal/count.ts"
 import * as Option from "./Option.ts"
 import { hasProperty } from "./Predicate.ts"
 import { type ExcludeDone, isDoneCause } from "./Pull.ts"
@@ -43,6 +45,7 @@ import type * as Types from "./Types.ts"
  * state._tag // => "Open"
  * ```
  *
+ * @stability stable
  * @category models
  * @since 4.0.0
  */
@@ -59,13 +62,14 @@ export type State<_A, E> =
     readonly cause: Cause.Cause<E>
   }
 
-const EnqueueTypeId = "~effect/transactions/TxQueue/Enqueue"
-const DequeueTypeId = "~effect/transactions/TxQueue/Dequeue"
-const TypeId = "~effect/transactions/TxQueue"
+const EnqueueTypeId = "~effect/TxQueue/Enqueue"
+const DequeueTypeId = "~effect/TxQueue/Dequeue"
+const TypeId = "~effect/TxQueue"
 
 /**
  * Namespace containing type definitions for TxEnqueue variance annotations.
  *
+ * @stability stable
  * @since 4.0.0
  */
 export declare namespace TxEnqueue {
@@ -84,6 +88,7 @@ export declare namespace TxEnqueue {
 /**
  * Namespace containing type definitions for TxDequeue variance annotations.
  *
+ * @stability stable
  * @since 4.0.0
  */
 export declare namespace TxDequeue {
@@ -102,6 +107,7 @@ export declare namespace TxDequeue {
 /**
  * Namespace containing type definitions for TxQueue variance annotations.
  *
+ * @stability stable
  * @since 4.0.0
  */
 export declare namespace TxQueue {
@@ -122,6 +128,7 @@ export declare namespace TxQueue {
  * This interface contains the core properties needed for queue state inspection
  * operations like size, capacity, and completion status.
  *
+ * @stability unstable
  * @category models
  * @since 4.0.0
  */
@@ -166,6 +173,7 @@ export interface TxQueueState extends Inspectable {
  * await Effect.runPromise(program) // => true
  * ```
  *
+ * @stability unstable
  * @category models
  * @since 4.0.0
  */
@@ -201,6 +209,7 @@ export interface TxEnqueue<in A, in E = never> extends TxQueueState {
  * await Effect.runPromise(program) // => [42, "processing failed", "processing failed"]
  * ```
  *
+ * @stability unstable
  * @category models
  * @since 4.0.0
  */
@@ -237,6 +246,7 @@ export interface TxDequeue<out A, out E = never> extends TxQueueState {
  * await Effect.runPromise(program) // => [true, 42, "queue failed"]
  * ```
  *
+ * @stability unstable
  * @category models
  * @since 4.0.0
  */
@@ -256,6 +266,7 @@ export interface TxQueue<in out A, in out E = never> extends TxEnqueue<A, E>, Tx
  * TxQueue.isTxEnqueue(someValue) // => false
  * ```
  *
+ * @stability unstable
  * @category guards
  * @since 4.0.0
  */
@@ -273,6 +284,7 @@ export const isTxEnqueue = <A = unknown, E = unknown>(u: unknown): u is TxEnqueu
  * TxQueue.isTxDequeue(someValue) // => false
  * ```
  *
+ * @stability unstable
  * @category guards
  * @since 4.0.0
  */
@@ -290,6 +302,7 @@ export const isTxDequeue = <A = unknown, E = unknown>(u: unknown): u is TxDequeu
  * TxQueue.isTxQueue(someValue) // => false
  * ```
  *
+ * @stability unstable
  * @category guards
  * @since 4.0.0
  */
@@ -351,6 +364,7 @@ const TxQueueProto = {
  * await Effect.runPromise(program) // => 1
  * ```
  *
+ * @stability unstable
  * @category constructors
  * @since 2.0.0
  */
@@ -398,6 +412,7 @@ export const bounded = <A = never, E = never>(
  * await Effect.runPromise(program) // => 2
  * ```
  *
+ * @stability unstable
  * @category constructors
  * @since 2.0.0
  */
@@ -441,6 +456,7 @@ export const unbounded = <A = never, E = never>(): Effect.Effect<TxQueue<A, E>> 
  * await Effect.runPromise(program) // => false
  * ```
  *
+ * @stability unstable
  * @category constructors
  * @since 2.0.0
  */
@@ -488,6 +504,7 @@ export const dropping = <A = never, E = never>(
  * await Effect.runPromise(program) // => 2
  * ```
  *
+ * @stability unstable
  * @category constructors
  * @since 2.0.0
  */
@@ -532,6 +549,7 @@ export const sliding = <A = never, E = never>(
  * await Effect.runPromise(program) // => true
  * ```
  *
+ * @stability unstable
  * @category combinators
  * @since 2.0.0
  */
@@ -600,6 +618,7 @@ export const offer: {
  * await Effect.runPromise(program) // => []
  * ```
  *
+ * @stability unstable
  * @category combinators
  * @since 2.0.0
  */
@@ -608,11 +627,13 @@ export const offerAll: {
   <A, E>(self: TxEnqueue<A, E>, values: Iterable<A>): Effect.Effect<Array<A>>
 } = dual(
   2,
-  <A, E>(self: TxEnqueue<A, E>, values: Iterable<A>): Effect.Effect<Array<A>> =>
-    Effect.gen(function*() {
+  <A, E>(self: TxEnqueue<A, E>, values: Iterable<A>): Effect.Effect<Array<A>> => {
+    const valuesArray = Array.from(values)
+
+    return Effect.gen(function*() {
       const rejected: Array<A> = []
 
-      for (const value of values) {
+      for (const value of valuesArray) {
         const accepted = yield* offer(self, value)
         if (!accepted) {
           rejected.push(value)
@@ -621,6 +642,7 @@ export const offerAll: {
 
       return rejected
     }).pipe(Effect.tx)
+  }
 )
 
 /**
@@ -652,6 +674,7 @@ export const offerAll: {
  * await Effect.runPromise(program) // => [42, Exit.fail("queue error")]
  * ```
  *
+ * @stability unstable
  * @category combinators
  * @since 2.0.0
  */
@@ -708,6 +731,7 @@ export const take = <A, E>(self: TxDequeue<A, E>): Effect.Effect<A, E> =>
  * await Effect.runPromise(program) // => [Option.none(), Option.some(42)]
  * ```
  *
+ * @stability unstable
  * @category combinators
  * @since 2.0.0
  */
@@ -725,6 +749,11 @@ export const poll = <A, E>(self: TxDequeue<A, E>): Effect.Effect<Option.Option<A
     }
 
     yield* TxChunk.drop(self.items, 1)
+
+    if (state._tag === "Closing" && (yield* isEmpty(self))) {
+      yield* TxRef.set(self.stateRef, { _tag: "Done", cause: state.cause })
+    }
+
     return Option.some(head.value)
   }).pipe(Effect.tx)
 
@@ -762,6 +791,7 @@ export const poll = <A, E>(self: TxDequeue<A, E>): Effect.Effect<Option.Option<A
  * await Effect.runPromise(errorExample) // => Exit.fail("processing error")
  * ```
  *
+ * @stability unstable
  * @category combinators
  * @since 2.0.0
  */
@@ -798,7 +828,7 @@ export const takeAll = <A, E>(self: TxDequeue<A, E>): Effect.Effect<Arr.NonEmpty
  *
  * **Details**
  *
- * For an open queue, waits until `min(n, capacity)` items are available, then removes that many items. If `n` is less than or equal to zero, returns an empty array without modifying the queue. If the queue is closing, drains the currently available items and transitions to `Done`. If the queue is already done, the effect fails with the queue's completion cause. This function mutates the original TxQueue by removing the taken items. It does not return a new TxQueue reference.
+ * For an open queue, waits until `min(n, capacity)` items are available, then removes that many items. Finite fractional values of `n` are rounded down. If `n` is `NaN` or non-positive, returns an empty array without modifying the queue. If the queue is closing, drains the currently available items and transitions to `Done`. If the queue is already done, the effect fails with the queue's completion cause. This function mutates the original TxQueue by removing the taken items. It does not return a new TxQueue reference.
  *
  * **Example** (Taking a fixed number of values)
  *
@@ -820,6 +850,7 @@ export const takeAll = <A, E>(self: TxDequeue<A, E>): Effect.Effect<Arr.NonEmpty
  * await Effect.runPromise(program) // => [[1, 2, 3, 4], [5, 6, 7, 8, 9]]
  * ```
  *
+ * @stability unstable
  * @category combinators
  * @since 2.0.0
  */
@@ -828,8 +859,9 @@ export const takeN: {
   <A, E>(self: TxDequeue<A, E>, n: number): Effect.Effect<Array<A>, E>
 } = dual(
   2,
-  <A, E>(self: TxDequeue<A, E>, n: number): Effect.Effect<Array<A>, E> =>
-    Effect.gen(function*() {
+  <A, E>(self: TxDequeue<A, E>, n: number): Effect.Effect<Array<A>, E> => {
+    const requestedCount = Count.normalize(n)
+    return Effect.gen(function*() {
       const state = yield* TxRef.get(self.stateRef)
 
       // Check if queue is done - forward the cause directly
@@ -840,7 +872,6 @@ export const takeN: {
       const currentSize = yield* size(self)
 
       // Determine how many items we can/should take
-      const requestedCount = n
       const maxPossible = Math.min(requestedCount, self.capacity)
 
       // If we can't get the requested amount due to capacity constraints,
@@ -881,6 +912,7 @@ export const takeN: {
 
       return Chunk.toArray(taken)
     }).pipe(Effect.tx)
+  }
 )
 
 /**
@@ -889,7 +921,7 @@ export const takeN: {
  *
  * **Details**
  *
- * If the queue is closing, drains the currently available items even when fewer than `min` are available and transitions to `Done`. Invalid ranges (`min <= 0`, `max <= 0`, or `min > max`) return an empty array. If the queue is already done, the effect fails with the queue's completion cause.
+ * Finite fractional bounds are rounded down, while `NaN` and non-positive bounds are treated as `0`. If the queue is closing, drains the currently available items even when fewer than `min` are available and transitions to `Done`. Invalid normalized ranges (`min <= 0`, `max <= 0`, or `min > max`) return an empty array. If the queue is already done, the effect fails with the queue's completion cause.
  *
  * **Example** (Taking batches within bounds)
  *
@@ -914,6 +946,7 @@ export const takeN: {
  * await Effect.runPromise(program) // => [[1, 2, 3, 4, 5], [6, 7, 8]]
  * ```
  *
+ * @stability unstable
  * @category taking
  * @since 2.0.0
  */
@@ -922,8 +955,10 @@ export const takeBetween: {
   <A, E>(self: TxDequeue<A, E>, min: number, max: number): Effect.Effect<Array<A>, E>
 } = dual(
   3,
-  <A, E>(self: TxDequeue<A, E>, min: number, max: number): Effect.Effect<Array<A>, E> =>
-    Effect.gen(function*() {
+  <A, E>(self: TxDequeue<A, E>, min: number, max: number): Effect.Effect<Array<A>, E> => {
+    const minimum = Count.normalize(min)
+    const maximum = Count.normalize(max)
+    return Effect.gen(function*() {
       const state = yield* TxRef.get(self.stateRef)
 
       // Check if queue is done - forward the cause directly
@@ -932,14 +967,14 @@ export const takeBetween: {
       }
 
       // Validate parameters
-      if (min <= 0 || max <= 0 || min > max) {
+      if (minimum <= 0 || maximum <= 0 || minimum > maximum) {
         return []
       }
 
       const currentSize = yield* size(self)
 
       // If we have less than minimum required items
-      if (currentSize < min) {
+      if (currentSize < minimum) {
         // If queue is closing, transition to done and return what we have
         if (state._tag === "Closing") {
           if (yield* isEmpty(self)) {
@@ -959,7 +994,7 @@ export const takeBetween: {
       }
 
       // We have at least the minimum, take up to the maximum
-      const toTake = Math.min(currentSize, max)
+      const toTake = Math.min(currentSize, maximum)
       const chunk = yield* TxChunk.get(self.items)
       const taken = Chunk.take(chunk, toTake)
       yield* TxChunk.drop(self.items, toTake)
@@ -971,6 +1006,7 @@ export const takeBetween: {
 
       return Chunk.toArray(taken)
     }).pipe(Effect.tx)
+  }
 )
 
 /**
@@ -1010,6 +1046,7 @@ export const takeBetween: {
  * await Effect.runPromise(errorExample) // => Exit.fail("queue failed")
  * ```
  *
+ * @stability unstable
  * @category combinators
  * @since 2.0.0
  */
@@ -1047,6 +1084,7 @@ export const peek = <A, E>(self: TxDequeue<A, E>): Effect.Effect<A, E> =>
  * await Effect.runPromise(program) // => 3
  * ```
  *
+ * @stability unstable
  * @category combinators
  * @since 2.0.0
  */
@@ -1073,10 +1111,38 @@ export const size = (self: TxQueueState): Effect.Effect<number> => TxChunk.size(
  * await Effect.runPromise(program) // => [true, false]
  * ```
  *
+ * @stability unstable
  * @category predicates
  * @since 2.0.0
  */
 export const isEmpty = (self: TxQueueState): Effect.Effect<boolean> => TxChunk.isEmpty(self.items)
+
+/**
+ * Checks whether the queue is non-empty.
+ *
+ * **Example** (Checking whether a queue is non-empty)
+ *
+ * ```ts import.meta.vitest
+ * import { Effect, TxQueue } from "effect"
+ *
+ * const program = Effect.gen(function*() {
+ *   const queue = yield* TxQueue.bounded<number>(10)
+ *
+ *   const empty = yield* TxQueue.isNonEmpty(queue)
+ *
+ *   yield* TxQueue.offer(queue, 42)
+ *   const nonEmpty = yield* TxQueue.isNonEmpty(queue)
+ *   return [empty, nonEmpty] as const
+ * })
+ *
+ * await Effect.runPromise(program) // => [false, true]
+ * ```
+ *
+ * @stability unstable
+ * @category predicates
+ * @since 4.0.0
+ */
+export const isNonEmpty = (self: TxQueueState): Effect.Effect<boolean> => TxChunk.isNonEmpty(self.items)
 
 /**
  * Checks whether the queue is at capacity.
@@ -1099,6 +1165,7 @@ export const isEmpty = (self: TxQueueState): Effect.Effect<boolean> => TxChunk.i
  * await Effect.runPromise(program) // => [false, true]
  * ```
  *
+ * @stability unstable
  * @category predicates
  * @since 2.0.0
  */
@@ -1130,6 +1197,7 @@ export const isFull = (self: TxQueueState): Effect.Effect<boolean> =>
  * await Effect.runPromise(program) // => true
  * ```
  *
+ * @stability unstable
  * @category combinators
  * @since 4.0.0
  */
@@ -1158,6 +1226,7 @@ export const interrupt = <A, E>(self: TxEnqueue<A, E>): Effect.Effect<boolean> =
  * await Effect.runPromise(program) // => true
  * ```
  *
+ * @stability unstable
  * @category combinators
  * @since 4.0.0
  */
@@ -1206,6 +1275,7 @@ export const fail: {
  * await Effect.runPromise(program) // => [Cause.interrupt(), true]
  * ```
  *
+ * @stability unstable
  * @category combinators
  * @since 4.0.0
  */
@@ -1262,6 +1332,7 @@ export const failCause: {
  * await Effect.runPromise(program) // => [true, Exit.fail(Cause.Done()), Exit.fail(Cause.Done())]
  * ```
  *
+ * @stability unstable
  * @category combinators
  * @since 4.0.0
  */
@@ -1269,12 +1340,11 @@ export const end = <A, E>(self: TxEnqueue<A, E | Cause.Done>): Effect.Effect<boo
   failCause(self, Cause.fail(Cause.Done()))
 
 /**
- * Removes and returns all currently buffered elements without changing the
- * queue state.
+ * Removes and returns all currently buffered elements.
  *
  * **Details**
  *
- * If the queue is already done with a `Cause.Done` error, returns an empty array. If the queue is done for any other cause, including interruption or failure, that cause is propagated.
+ * If the queue is closing, draining its buffered elements transitions it to done. If the queue is already done with a `Cause.Done` error, returns an empty array. If the queue is done for any other cause, including interruption or failure, that cause is propagated.
  *
  * **Example** (Clearing queues)
  *
@@ -1296,6 +1366,7 @@ export const end = <A, E>(self: TxEnqueue<A, E | Cause.Done>): Effect.Effect<boo
  * await Effect.runPromise(program) // => [5, [1, 2, 3, 4, 5], 0]
  * ```
  *
+ * @stability unstable
  * @category combinators
  * @since 4.0.0
  */
@@ -1311,6 +1382,9 @@ export const clear = <A, E>(self: TxEnqueue<A, E>): Effect.Effect<Array<A>, Excl
     }
     const chunk = yield* TxChunk.get(self.items)
     yield* TxChunk.set(self.items, Chunk.empty())
+    if (state._tag === "Closing") {
+      yield* TxRef.set(self.stateRef, { _tag: "Done", cause: state.cause })
+    }
     return Chunk.toArray(chunk)
   }).pipe(Effect.tx)
 
@@ -1343,12 +1417,13 @@ export const clear = <A, E>(self: TxEnqueue<A, E>): Effect.Effect<Array<A>, Excl
  * await Effect.runPromise(program) // => [5, 0, true]
  * ```
  *
+ * @stability unstable
  * @category combinators
  * @since 2.0.0
  */
 export const shutdown = <A, E>(self: TxEnqueue<A, E>): Effect.Effect<boolean> =>
   Effect.gen(function*() {
-    yield* Effect.ignore(clear(self))
+    yield* Effect.ignoreCause(clear(self))
     return yield* interrupt(self)
   }).pipe(Effect.tx)
 
@@ -1373,6 +1448,7 @@ export const shutdown = <A, E>(self: TxEnqueue<A, E>): Effect.Effect<boolean> =>
  * await Effect.runPromise(program) // => [true, false]
  * ```
  *
+ * @stability unstable
  * @category predicates
  * @since 4.0.0
  */
@@ -1401,6 +1477,7 @@ export const isOpen = (self: TxQueueState): Effect.Effect<boolean> =>
  * await Effect.runPromise(program) // => [false, true]
  * ```
  *
+ * @stability unstable
  * @category predicates
  * @since 4.0.0
  */
@@ -1428,6 +1505,7 @@ export const isClosing = (self: TxQueueState): Effect.Effect<boolean> =>
  * await Effect.runPromise(program) // => [false, true]
  * ```
  *
+ * @stability unstable
  * @category predicates
  * @since 4.0.0
  */
@@ -1455,6 +1533,7 @@ export const isDone = (self: TxQueueState): Effect.Effect<boolean> =>
  * await Effect.runPromise(program) // => [false, true]
  * ```
  *
+ * @stability unstable
  * @category predicates
  * @since 2.0.0
  */
@@ -1481,6 +1560,7 @@ export const isShutdown = (self: TxQueueState): Effect.Effect<boolean> => isDone
  * await Effect.runPromise(program) // => "Queue completed successfully"
  * ```
  *
+ * @stability unstable
  * @category combinators
  * @since 4.0.0
  */

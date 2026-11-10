@@ -1,5 +1,5 @@
 import { assert, describe, it } from "@effect/vitest"
-import { Schema } from "effect"
+import { Schema, type SchemaRepresentation } from "effect"
 
 describe("Schema.toJsonSchemaDocument", () => {
   it("uses the encoded side for representations and JSON Schema", () => {
@@ -16,6 +16,80 @@ describe("Schema.toJsonSchemaDocument", () => {
     })
   })
 
+  it("shares a named definition across required and optional keys when JSON codec derivation rebuilds it", () => {
+    const Value = Schema.Struct({ value: Schema.Unknown }).annotate({ identifier: "Value" })
+    const schema = Schema.Struct({
+      required: Value,
+      optional: Schema.optionalKey(Value)
+    })
+
+    const document = Schema.toJsonSchemaDocument(schema)
+
+    assert.deepStrictEqual(Object.keys(document.definitions), ["Value"])
+    assert.deepStrictEqual(document.schema, {
+      type: "object",
+      properties: {
+        required: { $ref: "#/$defs/Value" },
+        optional: { $ref: "#/$defs/Value" }
+      },
+      required: ["required"],
+      additionalProperties: true
+    })
+  })
+
+  it("inlines repeated anonymous schemas by default", () => {
+    const shared = Schema.Struct({ value: Schema.String })
+
+    assert.deepStrictEqual(
+      Schema.toJsonSchemaDocument(Schema.Struct({ first: shared, second: shared })),
+      {
+        dialect: "draft-2020-12",
+        schema: {
+          type: "object",
+          properties: {
+            first: {
+              type: "object",
+              properties: { value: { type: "string" } },
+              required: ["value"],
+              additionalProperties: true
+            },
+            second: {
+              type: "object",
+              properties: { value: { type: "string" } },
+              required: ["value"],
+              additionalProperties: true
+            }
+          },
+          required: ["first", "second"],
+          additionalProperties: true
+        },
+        definitions: {}
+      }
+    )
+  })
+
+  it("forwards the reference policy to representation and JSON Schema generation", () => {
+    const shared = Schema.String.annotate({ identifier: "Shared" })
+    const options = { referencePolicy: () => undefined }
+
+    assert.deepStrictEqual(Schema.toRepresentation(shared, options).references, {})
+    assert.deepStrictEqual(Schema.toJsonSchemaDocument(shared, options), {
+      dialect: "draft-2020-12",
+      schema: { type: "string" },
+      definitions: {}
+    })
+
+    const inputs: Array<SchemaRepresentation.ReferencePolicyInput> = []
+    Schema.toJsonSchemaDocument(Schema.Date.annotate({ identifier: "Date" }), {
+      referencePolicy: (input) => {
+        inputs.push(input)
+        return undefined
+      }
+    })
+    assert.strictEqual(inputs[0].ast._tag, "String")
+    assert.strictEqual(inputs[0].identifier, "DateEncoded")
+  })
+
   it("projects encoded tuple elements for JSON Schema", () => {
     assert.deepStrictEqual(Schema.toJsonSchemaDocument(Schema.Tuple([Schema.NumberFromString])).schema, {
       type: "array",
@@ -25,17 +99,14 @@ describe("Schema.toJsonSchemaDocument", () => {
     })
   })
 
-  it("preserves Number checks on the finite encoded branch", () => {
+  it("does not project checks through an artificial JSON encoding", () => {
     assert.deepStrictEqual(
       Schema.toJsonSchemaDocument(Schema.Number.check(Schema.isGreaterThan(0))),
       {
         dialect: "draft-2020-12",
         schema: {
           anyOf: [
-            {
-              type: "number",
-              allOf: [{ exclusiveMinimum: 0 }]
-            },
+            { type: "number" },
             {
               type: "string",
               enum: ["Infinity", "-Infinity", "NaN"]
@@ -45,6 +116,37 @@ describe("Schema.toJsonSchemaDocument", () => {
         definitions: {}
       }
     )
+  })
+
+  it("preserves checks when no artificial JSON encoding is needed", () => {
+    assert.deepStrictEqual(
+      Schema.toJsonSchemaDocument(Schema.Number.check(Schema.isFinite(), Schema.isGreaterThan(0))),
+      {
+        dialect: "draft-2020-12",
+        schema: {
+          type: "number",
+          exclusiveMinimum: 0
+        },
+        definitions: {}
+      }
+    )
+  })
+
+  it("does not project annotations through an artificial JSON encoding", () => {
+    const schema = Schema.Number.annotate({ description: "source description" })
+    const expected = {
+      dialect: "draft-2020-12" as const,
+      schema: {
+        anyOf: [
+          { type: "number" },
+          { type: "string", enum: ["Infinity", "-Infinity", "NaN"] }
+        ]
+      },
+      definitions: {}
+    }
+
+    assert.deepStrictEqual(Schema.toJsonSchemaDocument(schema), expected)
+    assert.deepStrictEqual(Schema.toJsonSchemaDocument(Schema.toCodecJson(schema)), expected)
   })
 
   it("preserves output, references and generation options", () => {
@@ -59,7 +161,7 @@ describe("Schema.toJsonSchemaDocument", () => {
       count: Schema.FiniteFromString
     }).annotate({ description: "root" })
     const options: Schema.ToJsonSchemaOptions = {
-      additionalProperties: true,
+      onExcessProperty: "ignore",
       generateDescriptions: true,
       includeAnnotationKey: (key) => key === "x-consumer"
     }
@@ -84,7 +186,7 @@ describe("Schema.toJsonSchemaDocument", () => {
         Shared: {
           type: "string",
           allOf: [{
-            minLength: 2,
+            minLength: 1,
             description: "shared text",
             "x-consumer": "kept"
           }]
@@ -106,7 +208,7 @@ describe("Schema.toJsonSchemaDocument", () => {
       dialect: "draft-2020-12",
       schema: {
         type: "string",
-        allOf: [{ minLength: 2 }]
+        minLength: 2
       },
       definitions: {}
     })
@@ -119,7 +221,15 @@ describe("Schema.toJsonSchemaDocument", () => {
 
     assert.deepStrictEqual(Schema.toJsonSchemaDocument(schema).schema, {
       type: "string",
-      contentMediaType: "application/json"
+      contentMediaType: "application/json",
+      contentSchema: {
+        type: "object",
+        properties: {
+          value: { type: "string" }
+        },
+        required: ["value"],
+        additionalProperties: true
+      }
     })
   })
 

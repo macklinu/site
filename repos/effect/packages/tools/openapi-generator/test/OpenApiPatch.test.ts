@@ -92,9 +92,10 @@ describe("OpenApiPatch", () => {
             "fixtures/patches/valid-patch.yaml"
           )
           const result = yield* OpenApiPatch.parsePatchInput(filePath)
-          assert.strictEqual(result.length, 2)
-          assert.strictEqual(result[0].op, "replace")
-          assert.strictEqual(result[1].op, "add")
+          assert.deepStrictEqual(result, [
+            { op: "replace", path: "/info/title", value: "YAML Patched Title" },
+            { op: "add", path: "/info/x-yaml-patch", value: true }
+          ])
         }).pipe(Effect.provide(testLayer)))
 
       it.effect("parses multiple operations from JSON file", () =>
@@ -141,6 +142,25 @@ describe("OpenApiPatch", () => {
   })
 
   describe("applyPatches", () => {
+    it.effect("moves a schema to a new name, removing the source (RFC 6902)", () =>
+      Effect.gen(function*() {
+        const document = { components: { schemas: { Skill: { type: "object" } } } }
+        const patch = yield* OpenApiPatch.parsePatchInput(
+          "[{\"op\":\"move\",\"from\":\"/components/schemas/Skill\",\"path\":\"/components/schemas/SkillResource\"}]"
+        )
+        const result = yield* OpenApiPatch.applyPatches([{ source: "inline", patch }], document)
+        assert.deepStrictEqual(result, {
+          components: { schemas: { SkillResource: { type: "object" } } }
+        })
+      }).pipe(Effect.provide(testLayer)))
+
+    it.effect("treats a move from the root to the root as a no-op (RFC 6902)", () =>
+      Effect.gen(function*() {
+        const patch = yield* OpenApiPatch.parsePatchInput("[{\"op\":\"move\",\"from\":\"\",\"path\":\"\"}]")
+        const result = yield* OpenApiPatch.applyPatches([{ source: "inline", patch }], { a: 1 })
+        assert.deepStrictEqual(result, { a: 1 })
+      }).pipe(Effect.provide(testLayer)))
+
     it.effect("applies single add patch", () =>
       Effect.gen(function*() {
         const document = { info: { title: "Test" } }
