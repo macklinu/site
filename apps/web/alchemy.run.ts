@@ -9,7 +9,7 @@ export default Alchemy.Stack(
   'mackie-underdown-wiki',
   {
     providers: Layer.mergeAll(Cloudflare.providers(), GitHub.providers()),
-    state: Cloudflare.state(),
+    state: Cloudflare.state({ workerName: 'mackie-underdown-wiki-state' }),
   },
   Effect.gen(function* () {
     const stage = yield* Alchemy.Stage
